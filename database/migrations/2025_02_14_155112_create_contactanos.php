@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('contactanos_id'); 
             $table->string('name', 100); 
             $table->string('apellido', 100); 
-            $table->integer('celular',9)->unique();
+            $table->integer('celular')->unique();
             $table->string('email', 100)->unique(); 
             $table->string('mensaje',1000); 
             $table->string('comentario',1000); 
