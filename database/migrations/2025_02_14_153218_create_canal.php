@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('canal', function (Blueprint $table) {
-            $table->increments('canal_id')->unique(); 
-            $table->string('name',100);
+            $table->increments('idCanal')->unique(); 
+            $table->string('nombre',100);
         });
     }
 

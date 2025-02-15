@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('etiqueta', function (Blueprint $table) {
-            $table->increments('etiqueta_id')->unique(); 
-            $table->string('name',100);
+            $table->increments('idEtiqueta')->unique(); 
+            $table->string('nombre',100);
         });
     }
 

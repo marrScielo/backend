@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tipocita', function (Blueprint $table) {
-            $table->increments('tipoCita_id')->unique(); 
-            $table->string('name',100);
-            $table->integer('tiempoCita'); 
+            $table->increments('idTipoCita')->unique(); 
+            $table->string('nombre',100); 
         });
     }
 
