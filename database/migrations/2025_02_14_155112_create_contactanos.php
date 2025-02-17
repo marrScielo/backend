@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('apellido', 100); 
             $table->integer('celular')->unique();
             $table->string('email', 100)->unique(); 
-            $table->string('mensaje',1000); 
-            $table->string('comentario',1000); 
+            $table->text('mensaje'); 
+            $table->text('comentario'); 
             $table->timestamp('fecha_envio')->useCurrent();
         });
     }

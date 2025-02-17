@@ -11,12 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('especialidades', function (Blueprint $table) {
+            $table->increments('idEspecialidad');
+            $table->string('nombre',100);
+        });
+
         Schema::create('psicologos', function (Blueprint $table) {
             $table->increments('idPsicologo');
-            $table->integer('idEspecialidad');
-            $table->string('introduccion', 400)->charset('utf8');
+            $table->unsignedInteger('idEspecialidad');
+            $table->text('introduccion');
     
-            $table->foreign('idEspecialidad')->references('idEspecialidad')->on('especialidad')->onDelete('cascade');
+            $table->foreign('idEspecialidad')->references('idEspecialidad')->on('especialidades')->onDelete('cascade');
         });
     }
 
@@ -26,5 +31,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('psicologos');
+        Schema::dropIfExists('especialidades');
     }
 };

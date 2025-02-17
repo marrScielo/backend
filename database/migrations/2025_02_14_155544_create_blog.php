@@ -11,15 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('blog', function (Blueprint $table) {
+        Schema::create('categorias', function (Blueprint $table) {
+            $table->increments('idCategoria');
+            $table->string('nombre');
+        });
+
+
+        Schema::create('blogs', function (Blueprint $table) {
             $table->increments('idBlog');
-            $table->string('tema');
-            $table->string('descripcion');
-            $table->string('imagen');
-            $table->integer('idPsicologo');
+            $table->unsignedInteger('idCategoria');
+            $table->text('contenido');
+            $table->string('imagen', 200);
+            $table->unsignedInteger('idPsicologo');
             $table->timestamp('fecha_publicado')->useCurrent();
 
             $table->foreign('idPsicologo')->references('idPsicologo')->on('psicologos')->onDelete('cascade');
+            $table->foreign('idCategoria')->references('idCategoria')->on('categorias')->onDelete('cascade');
         });
     }
 
@@ -28,6 +35,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('blog');
+        Schema::dropIfExists('blogs');
+        Schema::dropIfExists('categorias');
     }
 };
