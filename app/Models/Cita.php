@@ -8,7 +8,7 @@ class Cita extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'cita_id'; // Si usas un campo distinto a 'id' como clave primaria
+    protected $primaryKey = 'idCita'; 
 
     public function etiqueta()
     {
