@@ -11,6 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('enfoques', function (Blueprint $table) {
+            $table->increments('idEnfoque');
+            $table->string('nombre');
+        });
+
         Schema::create('especialidades', function (Blueprint $table) {
             $table->increments('idEspecialidad');
             $table->string('nombre',100);
@@ -19,9 +24,13 @@ return new class extends Migration
         Schema::create('psicologos', function (Blueprint $table) {
             $table->increments('idPsicologo');
             $table->unsignedInteger('idEspecialidad');
+            $table->unsignedInteger('idEnfoque');
             $table->text('introduccion');
+            $table->unsignedInteger('user_id');
     
             $table->foreign('idEspecialidad')->references('idEspecialidad')->on('especialidades')->onDelete('cascade');
+            $table->foreign('idEnfoque')->references('idEnfoque')->on('enfoques')->onDelete('cascade');
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -32,5 +41,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('psicologos');
         Schema::dropIfExists('especialidades');
+        Schema::dropIfExists('enfoques');
     }
 };

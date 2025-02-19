@@ -4,15 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Canal extends Model
+class Enfoque extends Model
 {
     use HasFactory;
     public $timestamps = false; 
     protected $fillable = ['nombre'];
-
-    public function citas()
+    
+    public function psicologos(): HasMany
     {
-        return $this->hasMany(Cita::class);
+        return $this->hasMany(Psicologo::class, 'idEnfoque');
     }
 }

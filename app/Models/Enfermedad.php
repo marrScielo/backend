@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Enfermedad extends Model
 {
     use HasFactory;
-
+    public $timestamps = false; 
+    
     public function citas()
     {
-        return $this->hasMany(Cita::class);
+        return $this->hasMany(Atencion::class, 'idEnfermedad');
     }
 }

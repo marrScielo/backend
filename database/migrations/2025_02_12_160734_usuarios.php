@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('fecha_nacimiento');
             $table->timestamp('fecha_creacion')->useCurrent();
             $table->string('imagen', 100);
+            $table->string('rol', 100);
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
