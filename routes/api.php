@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Contactos\ContactosController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Psicologos\PsicologoController;
+use App\Http\Controllers\Blog\BlogController;
+use App\Http\Controllers\Categorias\CategoriaController;
+use App\Http\Controllers\Especialidad\EspecialidadController;
 
 
 Route::controller(AuthController::class)->prefix('auth')->group(function(){
@@ -21,4 +25,9 @@ Route::controller(ContactosController::class)->prefix('contactos')->group(functi
         Route::get('/show', 'showAllContact');
     });
 });
+
+Route::apiResource('/psicologos', PsicologoController::class);
+Route::apiResource('/blogs', BlogController::class);
+Route::apiResource('/categorias', CategoriaController::class);
+Route::apiResource('/especialidades', EspecialidadController::class);
 

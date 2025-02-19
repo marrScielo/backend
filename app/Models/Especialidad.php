@@ -9,6 +9,7 @@ class Especialidad extends Model
     use HasFactory;
     public $timestamps = false; 
     protected $fillable = ['nombre'];
+    protected $table = 'especialidades'; 
     
     public function psicologos(): HasMany
     {

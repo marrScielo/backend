@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Psicologo extends Model
 {
     use HasFactory;
+    
     public $timestamps = false; 
     protected $fillable = [
         'idEspecialidad',
@@ -16,18 +17,21 @@ class Psicologo extends Model
         'idEnfoque',
     ];
 
-    public function especialidades()
+    
+    public function especialidad()
     {
-        return $this->belongsTo(Especialidad::class, 'idEspecialidad');
+        return $this->belongsTo(Especialidad::class, 'idEspecialidad', 'idEspecialidad');
     }
 
-    public function enfoques()
+    
+    public function enfoque()
     {
-        return $this->belongsTo(Enfoque::class, 'idEnfoque');
+        return $this->belongsTo(Enfoque::class, 'idEnfoque', 'idEnfoque');
     }
 
+    
     public function blogs()
     {
-        return $this->hasMany(Blog::class, 'idPsicologo');
+        return $this->hasMany(Blog::class, 'idPsicologo', 'idPsicologo');
     }
 }
