@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class etiqueta extends Model
+class Etiqueta extends Model
 {
     use HasFactory;
-
+    public $timestamps = false; 
+    
     public function citas()
     {
-        return $this->hasMany(Cita::class);
+        return $this->hasMany(Cita::class, 'idEtiqueta');
     }
 }

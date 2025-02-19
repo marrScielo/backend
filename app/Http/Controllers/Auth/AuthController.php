@@ -26,6 +26,9 @@ class AuthController extends Controller
             return HttpResponseHelper::make()
                 ->successfulResponse('Inicio de sesión exitoso.', [
                     'token' => $token,
+                    'nombre' => $user->name,
+                    'email' => $user->email,
+                    'rol' => $user->rol
                 ])
                 ->send();
         } catch (\Exception $e) {

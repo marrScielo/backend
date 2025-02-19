@@ -20,5 +20,7 @@ class DatabaseSeeder extends Seeder
             AssignPermissionsToRolesSeeder::class,
             UserSeeder::class,
         ]);
+
+        // Categorias::factory(10)->create();
     }
 }

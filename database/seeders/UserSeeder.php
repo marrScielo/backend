@@ -22,7 +22,8 @@ class UserSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => Hash::make('admin'),
             'fecha_nacimiento' => '2003-10-15',
-            'imagen' => 'http:algo',  
+            'imagen' => 'http:algo', 
+            'rol' => 'ADMIN', 
         ]);
 
         $user->assignRole('ADMIN');
