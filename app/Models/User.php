@@ -21,8 +21,14 @@ class User extends Authenticatable
          'email',
          'password',
          'fecha_nacimiento',
-         'imagen'
+         'imagen',
+         'rol'
      ];
  
      public $timestamps = false;
+
+     public function psicologos()
+     {
+         return $this->hasMany(Psicologo::class, 'user_id');
+     }
 }

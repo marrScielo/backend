@@ -14,7 +14,7 @@ class ContactosController extends Controller
     public function createContact(PostContactos $request)
     {
         try{
-            contactos::create($request->all());
+            Contactos::create($request->all());
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Contacto creado correctamente')
@@ -31,7 +31,7 @@ class ContactosController extends Controller
     public function showAllContact(Contactos $contactanos)
     {
         try {
-            $contacts = contactos::all();
+            $contacts = Contactos::all();
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Lista de contactos obtenida correctamente', $contacts)

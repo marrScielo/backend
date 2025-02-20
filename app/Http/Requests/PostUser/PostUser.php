@@ -26,7 +26,7 @@ class PostUser extends FormRequest
             'apellido' => 'required|string|max:100',
             'edad' => 'required|integer',
             'email' => 'required|email|unique:users,email|max:100',
-            'password' => 'required|string|min:8|max:255',
+            'password' => 'required|string|min:8|max:100',
             'fecha_nacimiento' => 'required|date',
             'fecha_creacion' => 'date',
             'imagen' => 'required|string|max:100',
