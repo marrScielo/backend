@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Psicologos;
 
 use Illuminate\Http\Request;
 use App\Models\Psicologo;

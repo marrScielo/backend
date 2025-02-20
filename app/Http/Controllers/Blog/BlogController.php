@@ -1,57 +1,73 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Blog;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use App\Http\Requests\PostBlogs\PostBlogs;
+use App\Traits\HttpResponseHelper;
 
 class BlogController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function createBlog(PostBlogs $request)
     {
-        return response()->json(Blog::with(['psicologo', 'categoria'])->get());
+        try {
+            Blog::create($request->all());
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Blog creado correctamente')
+                ->send();
+
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrió un problema al procesar la solicitud. ' . $e->getMessage())
+                ->send();
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function showAllBlogs()
     {
-        $blog = Blog::create($request->validated());
+        try {
+            $blogs = Blog::all();
 
-    return response()->json([
-        'message' => 'Blog creado exitosamente',
-        'blog' => $blog
-    ], 201);
+            return HttpResponseHelper::make()
+                ->successfulResponse('Lista de blogs obtenida correctamente', $blogs)
+                ->send();
+
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrió un problema al obtener los blogs: ' . $e->getMessage())
+                ->send();
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(PostBlogs $request, Blog $blog)
     {
-        return response()->json(Blog::with(['psicologo', 'categoria'])->findOrFail($id));
+        try {
+            $blog->update($request->all());
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Blog actualizado correctamente')
+                ->send();
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Error al actualizar el blog: ' . $e->getMessage())
+                ->send();
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Blog $blog)
     {
-        $blog = Blog::findOrFail($id);
-        $blog->update($request->all());
-        return response()->json($blog);
-    }
+        try {
+            $blog->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        Blog::destroy($id);
-        return response()->json(null, 204);
+            return HttpResponseHelper::make()
+                ->successfulResponse('Blog eliminado correctamente')
+                ->send();
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Error al eliminar el blog: ' . $e->getMessage())
+                ->send();
+        }
     }
 }

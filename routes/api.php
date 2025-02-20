@@ -26,8 +26,35 @@ Route::controller(ContactosController::class)->prefix('contactos')->group(functi
     });
 });
 
-Route::apiResource('/psicologos', PsicologoController::class);
-Route::apiResource('/blogs', BlogController::class);
-Route::apiResource('/categorias', CategoriaController::class);
-Route::apiResource('/especialidades', EspecialidadController::class);
+
+Route::controller(PsicologoController::class)->prefix('psicologos')->group(function () {
+    Route::post('/create', 'store');
+    Route::get('/show/{id}', 'show');
+    Route::put('/update/{id}', 'update');
+    Route::delete('/delete/{id}', 'destroy');
+});
+
+Route::controller(BlogController::class)->prefix('blogs')->group(function () {
+    Route::post('/create', 'store');
+    Route::get('/show/{id}', 'show');
+    Route::get('/all', 'index');
+    Route::put('/update/{id}', 'update');
+    Route::delete('/delete/{id}', 'destroy');
+});
+
+Route::controller(CategoriaController::class)->prefix('categorias')->group(function () {
+    Route::post('/create', 'store');
+    Route::get('/show/{id}', 'show');
+    Route::get('/all', 'index');
+    Route::put('/update/{id}', 'update');
+    Route::delete('/delete/{id}', 'destroy');
+});
+
+Route::controller(EspecialidadController::class)->prefix('especialidades')->group(function () {
+    Route::post('/create', 'store');
+    Route::get('/show/{id}', 'show');
+    Route::get('/all', 'index');
+    Route::put('/update/{id}', 'update');
+    Route::delete('/delete/{id}', 'destroy');
+});
 
