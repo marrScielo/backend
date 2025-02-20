@@ -35,8 +35,6 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
     });
 });
 
-Route::apiResource('/blogs', BlogController::class);
-
 Route::controller(CategoriaController::class)->prefix('categorias')->group(function () {
     Route::get('/show', 'showAllCategoria');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
@@ -46,5 +44,19 @@ Route::controller(CategoriaController::class)->prefix('categorias')->group(funct
     });
 });
 
-Route::apiResource('/especialidades', EspecialidadController::class);
+Route::controller(BlogController::class)->prefix('blogs')->group(function () {
+    Route::post('/create', 'store');
+    Route::get('/show/{id}', 'show');
+    Route::get('/all', 'index');
+    Route::put('/update/{id}', 'update');
+    Route::delete('/delete/{id}', 'destroy');
+});
+
+Route::controller(EspecialidadController::class)->prefix('especialidades')->group(function () {
+    Route::post('/create', 'store');
+    Route::get('/show/{id}', 'show');
+    Route::get('/all', 'index');
+    Route::put('/update/{id}', 'update');
+    Route::delete('/delete/{id}', 'destroy');
+});
 

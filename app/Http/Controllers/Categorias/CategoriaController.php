@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Categorias;
 
-use Illuminate\Http\Request;
-use App\Models\Categoria;
 use App\Http\Controllers\Controller;
+use App\Models\Categoria;
 use App\Http\Requests\PostCategorias\PostCategorias;
 use App\Traits\HttpResponseHelper;
 

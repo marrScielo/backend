@@ -2,53 +2,69 @@
 
 namespace App\Http\Controllers\Especialidad;
 
-use Illuminate\Http\Request;
-use App\Models\Especialidad;
 use App\Http\Controllers\Controller;
+use App\Models\Especialidad;
+use App\Traits\HttpResponseHelper;
 
 class EspecialidadController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function create()
     {
-        return response()->json(Especialidad::all());
+        try {
+            Especialidad::create(request()->all());
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Especialidad creada correctamente')
+                ->send();
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrió un problema al procesar la solicitud. ' . $e->getMessage())
+                ->send();
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function showAll()
     {
-        $especialidad = Especialidad::create($request->all());
-        return response()->json($especialidad, 201);
+        try {
+            $especialidades = Especialidad::all();
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Lista de especialidades obtenida correctamente', $especialidades)
+                ->send();
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrió un problema al obtener las especialidades: ' . $e->getMessage())
+                ->send();
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(Especialidad $especialidad)
     {
-        return response()->json(Especialidad::findOrFail($id));
+        try {
+            $especialidad->update(request()->all());
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Especialidad actualizada correctamente')
+                ->send();
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Error al actualizar la especialidad: ' . $e->getMessage())
+                ->send();
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Especialidad $especialidad)
     {
-        $especialidad = Especialidad::findOrFail($id);
-        $especialidad->update($request->all());
-        return response()->json($especialidad);
-    }
+        try {
+            $especialidad->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        Especialidad::destroy($id);
-        return response()->json(null, 204);
+            return HttpResponseHelper::make()
+                ->successfulResponse('Especialidad eliminada correctamente')
+                ->send();
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Error al eliminar la especialidad: ' . $e->getMessage())
+                ->send();
+        }
     }
 }
