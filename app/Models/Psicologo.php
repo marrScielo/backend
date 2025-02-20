@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Psicologo extends Model
 {
     use HasFactory;
+    
     public $timestamps = false; 
     protected $primaryKey = 'idPsicologo';
     protected $fillable = [
@@ -30,9 +31,10 @@ class Psicologo extends Model
         return $this->belongsToMany(Enfoque::class, 'enfoque_detalle', 'idPsicologo', 'idEnfoque');
     }
 
+    
     public function blogs()
     {
-        return $this->hasMany(Blog::class, 'idPsicologo');
+        return $this->hasMany(Blog::class, 'idPsicologo', 'idPsicologo');
     }
 
     public function users()

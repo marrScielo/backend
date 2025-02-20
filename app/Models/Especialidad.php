@@ -11,6 +11,7 @@ class Especialidad extends Model
     protected $primaryKey = 'idEspecialidad';
     protected $table = 'especialidades'; 
     protected $fillable = ['nombre'];
+    protected $table = 'especialidades'; 
     
     public function psicologos()
     {
