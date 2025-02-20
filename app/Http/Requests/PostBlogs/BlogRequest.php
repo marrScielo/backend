@@ -23,8 +23,8 @@ class BlogRequest extends FormRequest
     {
         return [
             'idCategoria'   => 'required|exists:categorias,idCategoria',
-            'contenido'     => 'required|string|min:10',
-            'imagen'        => 'nullable|string', // Ajusta según el tipo de dato de la imagen
+            'contenido'     => 'required|string|min:200',
+            'imagen'        => 'required|string', 
             'idPsicologo'   => 'required|exists:psicologos,idPsicologo'
         ];
     }

@@ -5,7 +5,6 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Contactos\ContactosController;
 use App\Http\Controllers\Psicologos\PsicologosController;
 use App\Http\Controllers\User\UserController;
-use App\Http\Controllers\Psicologos\PsicologoController;
 use App\Http\Controllers\Blog\BlogController;
 use App\Http\Controllers\Categorias\CategoriaController;
 use App\Http\Controllers\Especialidad\EspecialidadController;
