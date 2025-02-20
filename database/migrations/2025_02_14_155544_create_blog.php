@@ -20,6 +20,7 @@ return new class extends Migration
         Schema::create('blogs', function (Blueprint $table) {
             $table->increments('idBlog');
             $table->unsignedInteger('idCategoria');
+            $table->string('tema', 100);
             $table->text('contenido');
             $table->string('imagen', 200);
             $table->unsignedInteger('idPsicologo');

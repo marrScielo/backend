@@ -23,7 +23,7 @@ Route::controller(UserController::class)->prefix('users')->group(function(){
 
 Route::controller(ContactosController::class)->prefix('contactos')->group(function () {
     Route::post('/create', 'createContact');
-    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|USER']], function () {
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
         Route::get('/show', 'showAllContact');
     });
 });
@@ -35,8 +35,16 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
     });
 });
 
-
 Route::apiResource('/blogs', BlogController::class);
-Route::apiResource('/categorias', CategoriaController::class);
+
+Route::controller(CategoriaController::class)->prefix('categorias')->group(function () {
+    Route::get('/show', 'showAllCategoria');
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
+        Route::post('/create', 'createCategoria');
+        Route::put('/update/{id}', 'updateCategoria');
+        Route::delete('/delete/{id}', 'destroyCategoria');
+    });
+});
+
 Route::apiResource('/especialidades', EspecialidadController::class);
 

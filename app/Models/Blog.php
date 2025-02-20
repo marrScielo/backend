@@ -11,6 +11,7 @@ class Blog extends Model
 
     protected $fillable = [
         'idCategoria',
+        'tema',
         'contenido',
         'imagen',
         'idPsicologo',

@@ -5,50 +5,74 @@ namespace App\Http\Controllers\Categorias;
 use Illuminate\Http\Request;
 use App\Models\Categoria;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostCategorias\PostCategorias;
+use App\Traits\HttpResponseHelper;
 
 class CategoriaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    public function createCategoria(PostCategorias $request)
     {
-        return response()->json(Categoria::all());
+        try{
+            Categoria::create($request->all());
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Categoria creada correctamente')
+                ->send();
+
+        }catch(\Exception $e){
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrio un problema al procesar la solicitud.'.
+                 $e->getMessage())
+                ->send();
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function showAllCategoria()
     {
-        $categoria = Categoria::create($request->all());
-        return response()->json($categoria, 201);
+        try {
+            $categorias = Categoria::all();
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Lista de categorias obtenida correctamente', $categorias)
+                ->send();
+
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrió un problema al obtener los contactos: ' . $e->getMessage())
+                ->send();
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function updateCategoria(PostCategorias $request, int $id)
     {
-        return response()->json(Categoria::findOrFail($id));
+        try {
+            $categoria = Categoria::findOrFail($id);
+            $categoria->update($request->all());
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Categoría actualizada correctamente')
+                ->send();
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrió un problema al actualizar la categoría: ' . $e->getMessage())
+                ->send();
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroyCategoria(int $id)
     {
-        $categoria = Categoria::findOrFail($id);
-        $categoria->update($request->all());
-        return response()->json($categoria);
-    }
+        try {
+            $categoria = Categoria::findOrFail($id);
+            $categoria->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        Categoria::destroy($id);
-        return response()->json(null, 204);
+            return HttpResponseHelper::make()
+                ->successfulResponse('Categoría eliminada correctamente')
+                ->send();
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrió un problema al eliminar la categoría: ' . $e->getMessage())
+                ->send();
+        }
     }
 }
