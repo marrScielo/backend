@@ -17,4 +17,9 @@ class Especialidad extends Model
     {
         return $this->belongsToMany(Psicologo::class, 'especialidad_detalle', 'idEspecialidad', 'idPsicologo');
     }
+
+    public function blogs()
+    {
+        return $this->belongsToMany(Blog::class, 'idEspecialidad');
+    }
 }

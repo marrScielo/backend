@@ -11,7 +11,7 @@ class PostBlogs extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,7 @@ class PostBlogs extends FormRequest
     public function rules(): array
     {
         return [
-            'idCategoria'   => 'required|exists:categorias,idCategoria',
+            'idEspecialidad'   => 'required|exists:especialidades,idEspecialidad',
             'tema'     => 'required|string|min:20|max:200',
             'contenido'     => 'required|string|min:200',
             'imagen'        => 'required|string', 
