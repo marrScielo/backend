@@ -7,11 +7,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Especialidad extends Model
 {
     use HasFactory;
-    public $timestamps = false; 
+    public $timestamps = false;
+    protected $primaryKey = 'idEspecialidad';
+    protected $table = 'especialidades'; 
     protected $fillable = ['nombre'];
+
     
-    public function psicologos(): HasMany
+    public function psicologos()
     {
-        return $this->hasMany(Psicologo::class, 'idEspecialidad');
+        return $this->belongsToMany(Psicologo::class, 'especialidad_detalle', 'idEspecialidad', 'idPsicologo');
+    }
+
+    public function blogs()
+    {
+        return $this->belongsToMany(Blog::class, 'idEspecialidad');
     }
 }

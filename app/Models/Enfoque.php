@@ -9,11 +9,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Enfoque extends Model
 {
     use HasFactory;
-    public $timestamps = false; 
+    public $timestamps = false;
+    protected $primaryKey = 'idEnfoque';
+    protected $table = 'enfoques'; 
     protected $fillable = ['nombre'];
     
-    public function psicologos(): HasMany
+    public function psicologos()
     {
-        return $this->hasMany(Psicologo::class, 'idEnfoque');
+        return $this->belongsToMany(Psicologo::class, 'enfoque_detalle', 'idEnfoque', 'idPsicologo');
     }
 }

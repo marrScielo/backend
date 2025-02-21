@@ -10,7 +10,8 @@ class Blog extends Model
     public $timestamps = false; 
 
     protected $fillable = [
-        'idCategoria',
+        'idEspecialidad',
+        'tema',
         'contenido',
         'imagen',
         'idPsicologo',
@@ -20,9 +21,9 @@ class Blog extends Model
     {
         return $this->belongsTo(Psicologo::class, 'idPsicologo');
     }
-    public function categorias()
+    public function especialidades()
     {
-        return $this->belongsTo(Categoria::class, 'idCategoria');
+        return $this->belongsTo(Especialidad::class, 'idEspecialidad');
     }
 
     public function comentarios()
