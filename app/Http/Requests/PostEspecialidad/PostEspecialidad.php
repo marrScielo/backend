@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\PostCategorias;
+namespace App\Http\Requests\PostEspecialidad;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostCategorias extends FormRequest
+class PostEspecialidad extends FormRequest
 {
 /**
      * Determine if the user is authorized to make this request.

@@ -41,9 +41,10 @@ class BlogController extends Controller
         }
     }
 
-    public function update(PostBlogs $request, Blog $blog)
+    public function updateBlog(PostBlogs $request, int $id)
     {
         try {
+            $blog = Blog::findOrFail($id);
             $blog->update($request->all());
 
             return HttpResponseHelper::make()
@@ -56,9 +57,10 @@ class BlogController extends Controller
         }
     }
 
-    public function destroy(Blog $blog)
+    public function destroyBlog(int $id)
     {
         try {
+            $blog = Blog::findOrFail($id);
             $blog->delete();
 
             return HttpResponseHelper::make()

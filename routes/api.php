@@ -6,7 +6,6 @@ use App\Http\Controllers\Contactos\ContactosController;
 use App\Http\Controllers\Psicologos\PsicologosController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Blog\BlogController;
-use App\Http\Controllers\Categorias\CategoriaController;
 use App\Http\Controllers\Especialidad\EspecialidadController;
 
 
@@ -28,34 +27,25 @@ Route::post('/contactos/create', [ContactosController::class, 'createContact']);
 });*/
 
 Route::controller(PsicologosController::class)->prefix('psicologos')->group(function () {
-    Route::get('/show', 'showAllPsicologos');
+    Route::get('/showAll', 'showAllPsicologos');
+    Route::get('/show/{id}', 'showById');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
         Route::post('/create', 'createPsicologo');
     });
 });
 
-Route::controller(CategoriaController::class)->prefix('categorias')->group(function () {
-    Route::get('/show', 'showAllCategoria');
-    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
-        Route::post('/create', 'createCategoria');
-        Route::put('/update/{id}', 'updateCategoria');
-        Route::delete('/delete/{id}', 'destroyCategoria');
-    });
-});
-
 Route::controller(BlogController::class)->prefix('blogs')->group(function () {
-    Route::post('/create', 'store');
+    Route::post('/create', 'createBlog');
     Route::get('/show/{id}', 'show');
-    Route::get('/all', 'index');
-    Route::put('/update/{id}', 'update');
-    Route::delete('/delete/{id}', 'destroy');
+    Route::get('/all', 'showAllBlogs');
+    Route::put('/update/{id}', 'updateBlog');
+    Route::delete('/delete/{id}', 'destroyBlog');
 });
 
 Route::controller(EspecialidadController::class)->prefix('especialidades')->group(function () {
-    Route::post('/create', 'store');
-    Route::get('/show/{id}', 'show');
-    Route::get('/all', 'index');
-    Route::put('/update/{id}', 'update');
-    Route::delete('/delete/{id}', 'destroy');
+    Route::post('/create', 'createEspecialidad');
+    Route::get('/show', 'showAll');
+    Route::put('/update/{id}', 'updateEspecialidad');
+    Route::delete('/delete/{id}', 'destroyEspecialidad');
 });
 

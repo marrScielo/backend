@@ -16,16 +16,22 @@ class Psicologo extends Model
         'user_id',
         'pais',
         'genero',
-        'experiencia'
+        'experiencia',
+        'horario'
     ];
 
-    // Relación Muchos a Muchos con Especialidades
+
+    protected $casts = [
+        'horario' => 'array',
+    ];
+    
+    // Relación muchos a muchos con Especialidades
     public function especialidades()
     {
         return $this->belongsToMany(Especialidad::class, 'especialidad_detalle', 'idPsicologo', 'idEspecialidad');
     }
 
-    // Relación Muchos a Muchos con Enfoques
+    // Relación muchos a muchos con Enfoques
     public function enfoques()
     {
         return $this->belongsToMany(Enfoque::class, 'enfoque_detalle', 'idPsicologo', 'idEnfoque');

@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Especialidad;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostEspecialidad\PostEspecialidad;
 use App\Models\Especialidad;
 use App\Traits\HttpResponseHelper;
 
 class EspecialidadController extends Controller
 {
-    public function create()
+    public function createEspecialidad(PostEspecialidad $request)
     {
         try {
-            Especialidad::create(request()->all());
+            Especialidad::create($request->all());
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Especialidad creada correctamente')
@@ -38,10 +39,11 @@ class EspecialidadController extends Controller
         }
     }
 
-    public function update(Especialidad $especialidad)
+    public function updateEspecialidad(PostEspecialidad $request, int $id)
     {
         try {
-            $especialidad->update(request()->all());
+            $especialidad = Especialidad::findOrFail($id);
+            $especialidad->update($request->all());
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Especialidad actualizada correctamente')
@@ -53,7 +55,7 @@ class EspecialidadController extends Controller
         }
     }
 
-    public function destroy(Especialidad $especialidad)
+    public function destroyEspecialidad(Especialidad $especialidad, int $id)
     {
         try {
             $especialidad->delete();
