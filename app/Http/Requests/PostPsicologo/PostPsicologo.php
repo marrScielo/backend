@@ -28,6 +28,9 @@ class PostPsicologo extends FormRequest
             'experiencia' => 'required|integer',
             'especialidades' => 'required|array|min:1|max:3',
             'enfoques' => 'required|array|min:1|max:3',
+            'horario' => 'required|array',
+            'horario.*' => 'array',
+            'horario.*.*' => 'array|size:2',
         ];
     }
 }

@@ -25,6 +25,7 @@ class PsicologosController extends Controller
             // Asignar el user_id recién creado al psicologo
             $psicologoData = $requestPsicologo->all();
             $psicologoData['user_id'] = $usuario_id;
+            $psicologoData['horario'] = $requestPsicologo->input('horario');
             $psicologo = Psicologo::create($psicologoData);
 
             // Asociar las especialidades y enfoques al psicólogo
@@ -45,6 +46,38 @@ class PsicologosController extends Controller
         }
     }
 
+    public function showById(int $id)
+    {
+        try {
+            $psicologo = Psicologo::with(['especialidades', 'enfoques', 'users'])->find($id);
+
+            if (!$psicologo) {
+                return HttpResponseHelper::make()
+                    ->notFoundResponse('No se encontró un psicólogo con el ID proporcionado.')
+                    ->send();
+            }
+
+            $response = [
+                'idPsicologo' => $psicologo->idPsicologo,
+                'nombre' => $psicologo->users->name,
+                'apellido' => $psicologo->users->apellido,
+                'especialidades' => $psicologo->especialidades->pluck('nombre'),
+                'introduccion' => $psicologo->introduccion,
+                'enfoques' => $psicologo->enfoques->pluck('nombre'),
+                'horario' => $psicologo->horario,
+            ];
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Psicólogos obtenidos correctamente', $response)
+                ->send();
+
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrió un problema al obtener el psicólogo: ' . $e->getMessage())
+                ->send();
+        }
+    }
+
     public function showAllPsicologos(Psicologo $psicologo)
     {
         try {
@@ -58,7 +91,7 @@ class PsicologosController extends Controller
                     'genero' => $psicologo->genero,
                     'experiencia' => $psicologo->experiencia,
                     'especialidades' => $psicologo->especialidades->pluck('nombre'), 
-                    'enfoques' => $psicologo->enfoques->pluck('nombre')
+                    'enfoques' => $psicologo->enfoques->pluck('nombre'),
                 ];
             });
 

@@ -28,7 +28,8 @@ Route::controller(ContactosController::class)->prefix('contactos')->group(functi
 });
 
 Route::controller(PsicologosController::class)->prefix('psicologos')->group(function () {
-    Route::get('/show', 'showAllPsicologos');
+    Route::get('/showAll', 'showAllPsicologos');
+    Route::get('/show/{id}', 'showById');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
         Route::post('/create', 'createPsicologo');
     });

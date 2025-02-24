@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('pais', '50');
             $table->string('genero', '50');
             $table->integer('experiencia');
+            $table->json('horario');
             $table->unsignedInteger('user_id');
 
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
