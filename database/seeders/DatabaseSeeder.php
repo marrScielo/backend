@@ -13,14 +13,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Especialidad::factory(10)->create();
-        
         $this->call([
             RoleSeeder::class,
             PermissionSeeder::class,
             AssignPermissionsToRolesSeeder::class,
             UserSeeder::class,
             EnfoqueSeeder::class,
+            EspecialidadSeeder::class,
             PsicologoSeeder::class,
         ]);
 
