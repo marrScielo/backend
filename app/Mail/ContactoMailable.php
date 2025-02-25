@@ -40,7 +40,7 @@ class ContactoMailable extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.contacto', 
+            view: 'emails.contacto',
             with: ['datos' => $this->datos] // Pasamos los datos a la vista
         );
     }

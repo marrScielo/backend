@@ -21,10 +21,12 @@ Route::controller(UserController::class)->prefix('users')->group(function(){
 });
 
 
-Route::post('/contactos/create', [ContactosController::class, 'createContact']);
-/*Route::prefix('contactos')->group(function () {
-    Route::post('/create', [ContactosController::class, 'createContact']); // Asegurar que existe esta ruta
-});*/
+Route::controller(ContactosController::class)->prefix('contactos')->group(function () {
+    Route::post('/create', 'createContact');
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
+        Route::get('/show', 'showAllContact');
+    });
+});
 
 Route::controller(PsicologosController::class)->prefix('psicologos')->group(function () {
     Route::get('/showAll', 'showAllPsicologos');
