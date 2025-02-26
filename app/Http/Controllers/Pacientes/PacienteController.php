@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Http\Controllers\Pacientes;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\PostPaciente\PostPaciente;
+use App\Http\Requests\PostUser\PostUser;
+use App\Models\Paciente;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use App\Traits\HttpResponseHelper;
+
+class PacienteController extends Controller
+{
+    public function createPaciente(PostPaciente $requestPaciente, PostUser $requestUser)
+    {
+        try{
+            $usuarioData = $requestUser->all();
+            $usuarioData['rol'] = 'PACIENTE';
+            $usuarioData['password'] = Hash::make($requestUser['password']);
+            $usuario = User::create($usuarioData);
+            $usuario_id = $usuario->user_id;
+
+            // Asignar el user_id recién creado al paciente
+            $pacienteData = $requestPaciente->all();
+            $pacienteData['user_id'] = $usuario_id;
+            $paciente = Paciente::create($pacienteData);
+
+            $usuario->assignRole('PACIENTE');
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Paciente creado correctamente')
+                ->send();
+
+        }catch(\Exception $e){
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrio un problema al procesar la solicitud.'.
+                 $e->getMessage())
+                ->send();
+        }
+    }
+}

@@ -32,11 +32,11 @@ class PsicologoSeeder extends Seeder
             'pais' => 'MX',
             'experiencia' => 5,
             'genero' => 'masculino',
-            'horario' => json_encode([
+            'horario' => [
                 "Lunes" => [["09:00", "12:00"]],
                 "Martes" => [["10:00", "15:00"]],
                 "Miercoles" => [["12:00", "16:00"]],
-            ]),
+            ],
         ]);
 
         $psicologo->especialidades()->attach([1]);

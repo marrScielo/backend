@@ -13,17 +13,15 @@ return new class extends Migration
     {
         Schema::create('pacientes', function (Blueprint $table) {
             $table->increments('idPaciente'); 
-            $table->string('nombre', 100);
-            $table->string('apellido', 100);
             $table->string('genero', 20); 
-            $table->date('fecha_nacimiento');
             $table->string('ocupacion', 100);
             $table->string('estadoCivil', 100);
             $table->string('DNI', 8)->unique();
             $table->string('celular', 9); 
-            $table->integer('edad');
-            $table->string('email', 100)->unique();
-            $table->unsignedInteger('idDireccion'); 
+            $table->string('direccion',150); 
+            $table->unsignedInteger('user_id'); 
+
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
     }
 
