@@ -16,10 +16,9 @@ class ContactosController extends Controller
     public function createContact(PostContactos $request)
     {
         try {
-            // Crear el contacto en la base de datos
+            
             $contacto = Contactos::create($request->all());
     
-            // Datos del contacto para el correo
             $datos = [
                 'nombre' => $contacto->nombre,
                 'apellido' => $contacto->apellido,
@@ -28,7 +27,6 @@ class ContactosController extends Controller
                 'comentario' => $contacto->comentario
             ];
     
-            // Enviar correo al admin
             $adminEmail = config('mail.admin_address', 'contigovoyproject@gmail.com'); // Usa config en lugar de env()
             Mail::to($adminEmail)->send(new ContactoMailable($datos));
     
