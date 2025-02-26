@@ -20,6 +20,7 @@ Route::controller(UserController::class)->prefix('users')->group(function(){
     });
 });
 
+
 Route::controller(ContactosController::class)->prefix('contactos')->group(function () {
     Route::post('/create', 'createContact');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
