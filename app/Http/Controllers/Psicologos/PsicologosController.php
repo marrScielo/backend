@@ -80,7 +80,9 @@ class PsicologosController extends Controller
     public function showAllPsicologos(Psicologo $psicologo)
     {
         try {
-            $psicologos = Psicologo::with(['especialidades', 'enfoques','users'])->get()
+            $psicologos = Psicologo::with(['especialidades', 'enfoques','users'])
+            ->where('estado', 'A') // Mostrar solo psicólogos activos
+            ->get()
             ->map(function ($psicologo) {
                 return [
                     'idPsicologo' => $psicologo->idPsicologo,
@@ -129,6 +131,32 @@ class PsicologosController extends Controller
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Ocurrio un problema al procesar la solicitud.'.
                  $e->getMessage())
+                ->send();
+        }
+    }
+
+    public function desactivatePsicologo(int $id)
+    {
+        try {
+            $psicologo = Psicologo::find($id);
+
+            if (!$psicologo) {
+                return HttpResponseHelper::make()
+                    ->notFoundResponse('No se encontró un psicólogo con el ID proporcionado.')
+                    ->send();
+            }
+
+            // Cambiar el estado a desactivado 
+            $psicologo->estado = 'I';
+            $psicologo->save();
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Psicólogo desactivado correctamente')
+                ->send();
+
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrió un problema al desactivar el psicólogo: ' . $e->getMessage())
                 ->send();
         }
     }

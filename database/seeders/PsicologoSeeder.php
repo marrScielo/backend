@@ -37,6 +37,7 @@ class PsicologoSeeder extends Seeder
                 "Martes" => [["10:00", "15:00"]],
                 "Miercoles" => [["12:00", "16:00"]],
             ],
+            'estado' => 'A'
         ]);
 
         $psicologo->especialidades()->attach([1]);

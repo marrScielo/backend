@@ -24,10 +24,11 @@ return new class extends Migration
         Schema::create('psicologos', function (Blueprint $table) {
             $table->increments('idPsicologo');
             $table->text('introduccion');
-            $table->string('pais', '50');
-            $table->string('genero', '50');
+            $table->string('pais', 50);
+            $table->string('genero', 50);
             $table->integer('experiencia');
             $table->json('horario');
+            $table->char('estado', 1);
             $table->unsignedInteger('user_id');
 
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
