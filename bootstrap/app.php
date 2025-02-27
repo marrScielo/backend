@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Middleware\HandleCors;
 use App\Http\Middleware\HandleUnauthorizedException;
 
 return Application::configure(basePath: dirname(__DIR__))

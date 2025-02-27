@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Canal extends Model
 {
     use HasFactory;
+    protected $table = 'canales';
     public $timestamps = false; 
     protected $fillable = ['nombre'];
 

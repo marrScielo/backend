@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Especialidad;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -21,6 +20,7 @@ class DatabaseSeeder extends Seeder
             EnfoqueSeeder::class,
             EspecialidadSeeder::class,
             PsicologoSeeder::class,
+            CanalSeeder::class,
         ]);
 
     }
