@@ -20,8 +20,10 @@ Route::controller(UserController::class)->prefix('users')->group(function(){
     });
 });
 
+
 Route::controller(ContactosController::class)->prefix('contactos')->group(function () {
-    Route::post('/create', 'createContact');
+    Route::post('/create', 'createContact')->middleware('throttle:100,1'); 
+    
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
         Route::get('/show', 'showAllContact');
     });
@@ -32,6 +34,7 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
     Route::get('/show/{id}', 'showById');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
         Route::post('/create', 'createPsicologo');
+        Route::post('/update/{id}', 'updatePsicologo');
     });
 });
 

@@ -7,23 +7,36 @@ use App\Http\Controllers\Controller;
 use App\Models\contactos;
 use App\Http\Requests\PostContactos\PostContactos;
 use App\Traits\HttpResponseHelper;
+use App\Mail\ContactoMailable;
+use Illuminate\Support\Facades\Mail;
 
 class ContactosController extends Controller
 {
 
     public function createContact(PostContactos $request)
     {
-        try{
-            Contactos::create($request->all());
-
+        try {
+            
+            $contacto = Contactos::create($request->all());
+    
+            $datos = [
+                'nombre' => $contacto->nombre,
+                'apellido' => $contacto->apellido,
+                'celular' => $contacto->celular,
+                'email' => $contacto->email,
+                'comentario' => $contacto->comentario
+            ];
+    
+            $adminEmail = config('mail.admin_address', 'contigovoyproject@gmail.com'); // Usa config en lugar de env()
+            Mail::to($adminEmail)->send(new ContactoMailable($datos));
+    
             return HttpResponseHelper::make()
-                ->successfulResponse('Contacto creado correctamente')
+                ->successfulResponse('Contacto creado correctamente y correo enviado.')
                 ->send();
-
-        }catch(\Exception $e){
+    
+        } catch (\Exception $e) {
             return HttpResponseHelper::make()
-                ->internalErrorResponse('Ocurrio un problema al procesar la solicitud.'.
-                 $e->getMessage())
+                ->internalErrorResponse('Ocurrió un problema al procesar la solicitud. ' . $e->getMessage())
                 ->send();
         }
     }
@@ -54,4 +67,6 @@ class ContactosController extends Controller
     {
         
     }
+
+    
 }

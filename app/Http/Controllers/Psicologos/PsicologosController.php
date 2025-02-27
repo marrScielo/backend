@@ -25,7 +25,6 @@ class PsicologosController extends Controller
             // Asignar el user_id recién creado al psicologo
             $psicologoData = $requestPsicologo->all();
             $psicologoData['user_id'] = $usuario_id;
-            $psicologoData['horario'] = $requestPsicologo->input('horario');
             $psicologo = Psicologo::create($psicologoData);
 
             // Asociar las especialidades y enfoques al psicólogo
@@ -102,6 +101,34 @@ class PsicologosController extends Controller
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Ocurrió un problema al obtener los contactos: ' . $e->getMessage())
+                ->send();
+        }
+    }
+
+    public function updatePsicologo(PostPsicologo $requestPsicologo, PostUser $requestUser, int $id)
+    {
+        try{
+            $psicologo = Psicologo::findOrFail($id);
+            $psicologoData = $requestPsicologo->all();
+            $psicologo->update($psicologoData);
+            
+            $usuario= User::findOrFail($psicologo->user_id);
+            $usuarioData = $requestUser->all();
+            $usuarioData['password'] = Hash::make($requestUser['password']);
+            $usuario->update($usuarioData);
+
+            // Asociar las nuevas especialidades y enfoques al psicólogo
+            $psicologo->especialidades()->sync($requestPsicologo->input('especialidades'));
+            $psicologo->enfoques()->sync($requestPsicologo->input('enfoques'));
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Psicologo actualizado correctamente')
+                ->send();
+
+        }catch(\Exception $e){
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrio un problema al procesar la solicitud.'.
+                 $e->getMessage())
                 ->send();
         }
     }
