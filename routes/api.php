@@ -33,6 +33,7 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
     Route::get('/show/{id}', 'showById');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
         Route::post('/create', 'createPsicologo');
+        Route::post('/update/{id}', 'updatePsicologo');
     });
 });
 

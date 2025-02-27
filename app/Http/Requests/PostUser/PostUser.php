@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\PostUser;
 
+use App\Models\Psicologo;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 
 class PostUser extends FormRequest
 {
@@ -12,6 +15,14 @@ class PostUser extends FormRequest
     public function authorize(): bool
     {
         return true;
+    }
+
+
+    public function prepareForValidation()
+    {
+        if ($psicologo = Psicologo::find($this->route('id'))) {
+            $this->merge(['user_id' => $psicologo->user_id]);
+        }
     }
 
     /**
@@ -25,7 +36,12 @@ class PostUser extends FormRequest
             'name' => 'required|string|max:100',
             'apellido' => 'required|string|max:100',
             'edad' => 'required|integer',
-            'email' => 'required|email|unique:users,email|max:100',
+            'email' => [
+                'required',
+                'email',
+                'max:100',
+                Rule::unique('users', 'email')->ignore($this->input('user_id'), 'user_id'),
+            ],
             'password' => 'required|string|min:8|max:100',
             'fecha_nacimiento' => 'required|date',
             'fecha_creacion' => 'date',
