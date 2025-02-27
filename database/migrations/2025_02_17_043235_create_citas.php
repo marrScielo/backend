@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('nombre',100);
         });
 
-        Schema::create('tipocitas', function (Blueprint $table) {
+        Schema::create('tipo_citas', function (Blueprint $table) {
             $table->increments('idTipoCita')->unique(); 
             $table->string('nombre',100); 
         });
@@ -40,7 +40,7 @@ return new class extends Migration
             $table->time('hora_cita');
 
             $table->foreign('idPaciente')->references('idPaciente')->on('pacientes');
-            $table->foreign('idTipoCita')->references('idTipoCita')->on('tipoCitas');
+            $table->foreign('idTipoCita')->references('idTipoCita')->on('tipo_citas');
             $table->foreign('idCanal')->references('idCanal')->on('canales');
             $table->foreign('idEtiqueta')->references('idEtiqueta')->on('etiquetas');
 

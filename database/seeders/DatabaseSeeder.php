@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             EspecialidadSeeder::class,
             PsicologoSeeder::class,
             CanalSeeder::class,
+            TipoCitaSeeder::class,
+            EtiquetaSeeder::class,
         ]);
 
     }
