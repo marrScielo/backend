@@ -40,4 +40,31 @@ class PacienteController extends Controller
                 ->send();
         }
     }
+
+    public function updatePaciente(PostPaciente $requestPaciente, PostUser $requestUser, int $id)
+    {
+        try{
+            $paciente = Paciente::findOrFail($id);
+            $pacienteData = $requestPaciente->all();
+            $paciente->update($pacienteData);
+            
+            $usuario= User::findOrFail($paciente->user_id);
+            $usuarioData = $requestUser->all();
+            $usuarioData['password'] = Hash::make($requestUser['password']);
+            $usuario->update($usuarioData);
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Paciente actualizado correctamente')
+                ->send();
+
+        }catch(\Exception $e){
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrio un problema al procesar la solicitud.'.
+                 $e->getMessage())
+                ->send();
+        }
+    }
+
+    
+
 }

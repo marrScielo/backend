@@ -43,9 +43,9 @@ class PostUser extends FormRequest
                 Rule::unique('users', 'email')->ignore($this->input('user_id'), 'user_id'),
             ],
             'password' => 'required|string|min:8|max:100',
-            'fecha_nacimiento' => 'required|date',
+            'fecha_nacimiento' => 'required',
             'fecha_creacion' => 'date',
-            'imagen' => 'required|string|max:100',
+            'imagen' => 'nullable|string|regex:/^([A-Za-z0-9+\/=]+)$/',
         ];
     }
 }
