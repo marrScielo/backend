@@ -17,9 +17,14 @@ class Psicologo extends Model
         'pais',
         'genero',
         'experiencia',
-        'horario'
+        'horario',
+        'estado'
     ];
 
+
+    protected $attributes = [
+        'estado' => 'A', 
+    ];
 
     protected $casts = [
         'horario' => 'array',

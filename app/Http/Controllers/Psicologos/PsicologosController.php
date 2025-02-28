@@ -9,38 +9,41 @@ use App\Models\Psicologo;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\HttpResponseHelper;
+use Carbon\Carbon;
 
 class PsicologosController extends Controller
 {
     
     public function createPsicologo(PostPsicologo $requestPsicologo, PostUser $requestUser)
     {
-        try{
+        try {
             $usuarioData = $requestUser->all();
             $usuarioData['rol'] = 'PSICOLOGO';
+            $usuarioData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $usuarioData['fecha_nacimiento'])
+                ->format('Y-m-d');
             $usuarioData['password'] = Hash::make($requestUser['password']);
+
             $usuario = User::create($usuarioData);
             $usuario_id = $usuario->user_id;
-
-            // Asignar el user_id recién creado al psicologo
+    
+            // Asignar el user_id recién creado al psicólogo
             $psicologoData = $requestPsicologo->all();
             $psicologoData['user_id'] = $usuario_id;
             $psicologo = Psicologo::create($psicologoData);
-
+    
             // Asociar las especialidades y enfoques al psicólogo
             $psicologo->especialidades()->attach($requestPsicologo->input('especialidades'));
             $psicologo->enfoques()->attach($requestPsicologo->input('enfoques'));
-
+    
             $usuario->assignRole('PSICOLOGO');
-
+    
             return HttpResponseHelper::make()
-                ->successfulResponse('Psicologo creado correctamente')
+                ->successfulResponse('Psicólogo creado correctamente')
                 ->send();
-
-        }catch(\Exception $e){
+    
+        } catch (\Exception $e) {
             return HttpResponseHelper::make()
-                ->internalErrorResponse('Ocurrio un problema al procesar la solicitud.'.
-                 $e->getMessage())
+                ->internalErrorResponse('Ocurrió un problema al procesar la solicitud. ' . $e->getMessage())
                 ->send();
         }
     }
@@ -117,6 +120,9 @@ class PsicologosController extends Controller
             $usuario= User::findOrFail($psicologo->user_id);
             $usuarioData = $requestUser->all();
             $usuarioData['password'] = Hash::make($requestUser['password']);
+            $userData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $usuarioData['fecha_nacimiento'])->format('Y-m-d');
+            $image = $requestPsicologo->file('imagen');
+            $userData['imagen'] = base64_encode(file_get_contents($image->getRealPath()));
             $usuario->update($usuarioData);
 
             // Asociar las nuevas especialidades y enfoques al psicólogo

@@ -54,7 +54,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('citas');
         Schema::dropIfExists('etiquetas');
-        Schema::dropIfExists('tipocitas');
+        Schema::dropIfExists('tipo_citas');
         Schema::dropIfExists('canales');
     }
 };
