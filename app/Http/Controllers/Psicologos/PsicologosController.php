@@ -33,7 +33,6 @@ class PsicologosController extends Controller
     
             // Asociar las especialidades y enfoques al psicólogo
             $psicologo->especialidades()->attach($requestPsicologo->input('especialidades'));
-            $psicologo->enfoques()->attach($requestPsicologo->input('enfoques'));
     
             $usuario->assignRole('PSICOLOGO');
     
@@ -51,7 +50,7 @@ class PsicologosController extends Controller
     public function showById(int $id)
     {
         try {
-            $psicologo = Psicologo::with(['especialidades', 'enfoques', 'users'])->find($id);
+            $psicologo = Psicologo::with(['especialidades', 'users'])->find($id);
 
             if (!$psicologo) {
                 return HttpResponseHelper::make()
@@ -65,7 +64,6 @@ class PsicologosController extends Controller
                 'apellido' => $psicologo->users->apellido,
                 'especialidades' => $psicologo->especialidades->pluck('nombre'),
                 'introduccion' => $psicologo->introduccion,
-                'enfoques' => $psicologo->enfoques->pluck('nombre'),
                 'horario' => $psicologo->horario,
             ];
 
@@ -83,8 +81,8 @@ class PsicologosController extends Controller
     public function showAllPsicologos(Psicologo $psicologo)
     {
         try {
-            $psicologos = Psicologo::with(['especialidades', 'enfoques','users'])
-            ->where('estado', 'A') // Mostrar solo psicólogos activos
+            $psicologos = Psicologo::with(['especialidades','users'])
+            ->where('estado', 'A')
             ->get()
             ->map(function ($psicologo) {
                 return [
@@ -95,7 +93,6 @@ class PsicologosController extends Controller
                     'genero' => $psicologo->genero,
                     'experiencia' => $psicologo->experiencia,
                     'especialidades' => $psicologo->especialidades->pluck('nombre'), 
-                    'enfoques' => $psicologo->enfoques->pluck('nombre'),
                 ];
             });
 
@@ -120,14 +117,12 @@ class PsicologosController extends Controller
             $usuario= User::findOrFail($psicologo->user_id);
             $usuarioData = $requestUser->all();
             $usuarioData['password'] = Hash::make($requestUser['password']);
-            $userData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $usuarioData['fecha_nacimiento'])->format('Y-m-d');
-            $image = $requestPsicologo->file('imagen');
-            $userData['imagen'] = base64_encode(file_get_contents($image->getRealPath()));
+            $usuarioData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $usuarioData['fecha_nacimiento'])->format('Y-m-d');
+
             $usuario->update($usuarioData);
 
             // Asociar las nuevas especialidades y enfoques al psicólogo
             $psicologo->especialidades()->sync($requestPsicologo->input('especialidades'));
-            $psicologo->enfoques()->sync($requestPsicologo->input('enfoques'));
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Psicologo actualizado correctamente')

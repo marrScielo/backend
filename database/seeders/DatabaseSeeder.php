@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             AssignPermissionsToRolesSeeder::class,
             UserSeeder::class,
-            EnfoqueSeeder::class,
             EspecialidadSeeder::class,
             PsicologoSeeder::class,
             CanalSeeder::class,
