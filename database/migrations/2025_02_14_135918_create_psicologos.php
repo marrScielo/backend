@@ -11,11 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('enfoques', function (Blueprint $table) {
-            $table->increments('idEnfoque');
-            $table->string('nombre');
-        });
-
         Schema::create('especialidades', function (Blueprint $table) {
             $table->increments('idEspecialidad');
             $table->string('nombre',100);
@@ -24,7 +19,7 @@ return new class extends Migration
         Schema::create('psicologos', function (Blueprint $table) {
             $table->increments('idPsicologo');
             $table->text('introduccion');
-            $table->string('pais', 50);
+            $table->string('pais', 4);
             $table->string('genero', 50);
             $table->integer('experiencia');
             $table->json('horario');
@@ -42,15 +37,6 @@ return new class extends Migration
             $table->foreign('idPsicologo')->references('idPsicologo')->on('psicologos')->onDelete('cascade');
             $table->foreign('idEspecialidad')->references('idEspecialidad')->on('especialidades')->onDelete('cascade');
         });
-
-        // Tabla intermedia entre psicólogos y enfoques (Muchos a Muchos)
-        Schema::create('enfoque_detalle', function (Blueprint $table) {
-            $table->unsignedInteger('idPsicologo');
-            $table->unsignedInteger('idEnfoque');
-
-            $table->foreign('idPsicologo')->references('idPsicologo')->on('psicologos')->onDelete('cascade');
-            $table->foreign('idEnfoque')->references('idEnfoque')->on('enfoques')->onDelete('cascade');
-        });
     }
 
     /**
@@ -59,9 +45,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('especialidad_detalle');
-        Schema::dropIfExists('enfoque_detalle');
         Schema::dropIfExists('psicologos');
         Schema::dropIfExists('especialidades');
-        Schema::dropIfExists('enfoques');
     }
 };

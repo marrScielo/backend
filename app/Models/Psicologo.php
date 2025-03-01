@@ -35,13 +35,6 @@ class Psicologo extends Model
     {
         return $this->belongsToMany(Especialidad::class, 'especialidad_detalle', 'idPsicologo', 'idEspecialidad');
     }
-
-    // Relación muchos a muchos con Enfoques
-    public function enfoques()
-    {
-        return $this->belongsToMany(Enfoque::class, 'enfoque_detalle', 'idPsicologo', 'idEnfoque');
-    }
-
     
     public function blogs()
     {

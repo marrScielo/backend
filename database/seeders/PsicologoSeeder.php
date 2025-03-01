@@ -41,7 +41,6 @@ class PsicologoSeeder extends Seeder
         ]);
 
         $psicologo->especialidades()->attach([1]);
-        $psicologo->enfoques()->attach([1, 2]);
 
         $usuario->assignRole('PSICOLOGO');
     }

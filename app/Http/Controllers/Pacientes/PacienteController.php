@@ -10,6 +10,7 @@ use App\Models\Paciente;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\HttpResponseHelper;
+use Carbon\Carbon;
 
 class PacienteController extends Controller
 {
@@ -19,6 +20,7 @@ class PacienteController extends Controller
             $usuarioData = $requestUser->all();
             $usuarioData['rol'] = 'PACIENTE';
             $usuarioData['password'] = Hash::make($requestUser['password']);
+            $usuarioData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $usuarioData['fecha_nacimiento'])->format('Y-m-d');
             $usuario = User::create($usuarioData);
             $usuario_id = $usuario->user_id;
 
@@ -51,6 +53,7 @@ class PacienteController extends Controller
             $usuario= User::findOrFail($paciente->user_id);
             $usuarioData = $requestUser->all();
             $usuarioData['password'] = Hash::make($requestUser['password']);
+            $usuarioData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $usuarioData['fecha_nacimiento'])->format('Y-m-d');
             $usuario->update($usuarioData);
 
             return HttpResponseHelper::make()
