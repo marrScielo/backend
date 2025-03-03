@@ -45,7 +45,7 @@ class PostUser extends FormRequest
             'password' => 'required|string|min:8|max:100',
             'fecha_nacimiento' => 'required',
             'fecha_creacion' => 'date',
-            'imagen' => 'nullable|string|regex:/^([A-Za-z0-9+\/=]+)$/',
+            'imagen' => 'nullable|string',
         ];
     }
 }

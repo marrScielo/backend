@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Especialidad;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,6 +18,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             AssignPermissionsToRolesSeeder::class,
             UserSeeder::class,
+            CategoriaSeeder::class,
             EspecialidadSeeder::class,
             PsicologoSeeder::class,
             CanalSeeder::class,

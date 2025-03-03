@@ -102,7 +102,7 @@ class PsicologosController extends Controller
 
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
-                ->internalErrorResponse('Ocurrió un problema al obtener los contactos: ' . $e->getMessage())
+                ->internalErrorResponse('Ocurrió un problema al obtener los psicologos: ' . $e->getMessage())
                 ->send();
         }
     }

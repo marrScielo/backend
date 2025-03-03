@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('categorias', function (Blueprint $table) {
+            $table->increments('idCategoria');
+            $table->string('nombre',100);
+        });
+
         Schema::create('blogs', function (Blueprint $table) {
             $table->increments('idBlog');
-            $table->unsignedInteger('idEspecialidad');
+            $table->unsignedInteger('idCategoria');
             $table->string('tema', 100);
             $table->text('contenido');
             $table->string('imagen', 200);
@@ -21,7 +26,7 @@ return new class extends Migration
             $table->timestamp('fecha_publicado')->useCurrent();
 
             $table->foreign('idPsicologo')->references('idPsicologo')->on('psicologos')->onDelete('cascade');
-            $table->foreign('idEspecialidad')->references('idEspecialidad')->on('especialidades')->onDelete('cascade');
+            $table->foreign('idCategoria')->references('idCategoria')->on('categorias')->onDelete('cascade');
         });
     }
 

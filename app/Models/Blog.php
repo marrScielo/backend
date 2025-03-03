@@ -21,9 +21,10 @@ class Blog extends Model
     {
         return $this->belongsTo(Psicologo::class, 'idPsicologo');
     }
-    public function especialidades()
+
+    public function categorias()
     {
-        return $this->belongsTo(Especialidad::class, 'idEspecialidad');
+        return $this->belongsTo(Categoria::class, 'idCategoria');
     }
 
     public function comentarios()

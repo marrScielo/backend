@@ -29,6 +29,7 @@ return new class extends Migration
         Schema::create('citas', function (Blueprint $table) {
             $table->increments('idCita')->unique(); 
             $table->unsignedInteger('idPaciente'); 
+            $table->unsignedInteger('idPsicologo'); 
             $table->unsignedInteger('idTipoCita'); 
             $table->unsignedInteger('idCanal'); 
             $table->unsignedInteger('idEtiqueta'); 
@@ -43,7 +44,7 @@ return new class extends Migration
             $table->foreign('idTipoCita')->references('idTipoCita')->on('tipo_citas');
             $table->foreign('idCanal')->references('idCanal')->on('canales');
             $table->foreign('idEtiqueta')->references('idEtiqueta')->on('etiquetas');
-
+            $table->foreign('idPsicologo')->references('idPsicologo')->on('psicologos');
         });
     }
 
