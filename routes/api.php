@@ -55,9 +55,10 @@ Route::controller(BlogController::class)->prefix('blogs')->group(function () {
 });
 
 Route::controller(EspecialidadController::class)->prefix('especialidades')->group(function () {
+    Route::get('/show', 'showAll');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
     Route::post('/create', 'createEspecialidad');
-    Route::get('/show', 'showAll');
+    
     Route::put('/update/{id}', 'updateEspecialidad');
     Route::delete('/delete/{id}', 'destroyEspecialidad');
     });
