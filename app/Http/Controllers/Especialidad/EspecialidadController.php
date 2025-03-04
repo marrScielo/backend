@@ -12,10 +12,13 @@ class EspecialidadController extends Controller
     public function createEspecialidad(PostEspecialidad $request)
     {
         try {
-            Especialidad::create($request->all());
+            $especialidad = Especialidad::create($request->all());
 
             return HttpResponseHelper::make()
-                ->successfulResponse('Especialidad creada correctamente')
+                ->successfulResponse('Especialidad creada correctamente',[
+                    'idEspecialidad' => $especialidad->idEspecialidad, 
+                    'nombre' => $especialidad->nombre
+                ])
                 ->send();
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
@@ -46,7 +49,7 @@ class EspecialidadController extends Controller
             $especialidad->update($request->all());
 
             return HttpResponseHelper::make()
-                ->successfulResponse('Especialidad actualizada correctamente')
+                ->successfulResponse('Especialidad actualizada correctamente'   )
                 ->send();
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
