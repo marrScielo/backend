@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Blog;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PostBlogs\PostBlogs;
+use App\Models\Psicologo;
 use App\Traits\HttpResponseHelper;
 
 class BlogController extends Controller
@@ -12,7 +14,13 @@ class BlogController extends Controller
     public function createBlog(PostBlogs $request)
     {
         try {
-            Blog::create($request->all());
+            $userId = Auth::id();
+            $psicologo = Psicologo::where('user_id', $userId)->first();
+
+            $data = $request->all();
+            $data['idPsicologo'] = $psicologo->idPsicologo;
+
+            Blog::create($data);
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Blog creado correctamente')

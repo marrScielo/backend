@@ -29,6 +29,6 @@ class User extends Authenticatable
 
      public function psicologos()
      {
-         return $this->hasMany(Psicologo::class, 'user_id');
+         return $this->hasOne(Psicologo::class, 'user_id', 'user_id');
      }
 }

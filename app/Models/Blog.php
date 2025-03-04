@@ -10,7 +10,7 @@ class Blog extends Model
     public $timestamps = false; 
 
     protected $fillable = [
-        'idEspecialidad',
+        'idCategoria',
         'tema',
         'contenido',
         'imagen',

@@ -22,11 +22,10 @@ class PostBlogs extends FormRequest
     public function rules(): array
     {
         return [
-            'idEspecialidad'   => 'required|exists:especialidades,idEspecialidad',
             'tema'     => 'required|string|min:20|max:200',
             'contenido'     => 'required|string|min:200',
             'imagen'        => 'required|string', 
-            'idPsicologo'   => 'required|exists:psicologos,idPsicologo'
+            'idCategoria'   => 'required|exists:categorias,idCategoria',
         ];
     }
 

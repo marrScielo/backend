@@ -9,6 +9,7 @@ class Comentario extends Model
 {
     use HasFactory;
     public $timestamps = false; 
+    protected $primaryKey = 'idComentario'; 
 
     protected $fillable = [
         'nombre',
