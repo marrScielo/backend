@@ -4,18 +4,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Especialidad extends Model
+class Categoria extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $primaryKey = 'idEspecialidad';
-    protected $table = 'especialidades'; 
+    protected $primaryKey = 'idCategoria';
+    protected $table = 'categorias'; 
     protected $fillable = ['nombre'];
 
-    
-    public function psicologos()
+    public function blogs()
     {
-        return $this->belongsToMany(Psicologo::class, 'especialidad_detalle', 'idEspecialidad', 'idPsicologo');
+        return $this->hasMany(Blog::class, 'idCategoria');
     }
-
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Contactos\ContactosController;
 use App\Http\Controllers\Psicologos\PsicologosController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Blog\BlogController;
+use App\Http\Controllers\Citas\CitaController;
 use App\Http\Controllers\Especialidad\EspecialidadController;
 
 
@@ -20,13 +21,17 @@ Route::controller(UserController::class)->prefix('users')->group(function(){
     });
 });
 
-
 Route::controller(ContactosController::class)->prefix('contactos')->group(function () {
     Route::post('/create', 'createContact')->middleware('throttle:100,1'); 
     
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
         Route::get('/show', 'showAllContact');
     });
+});
+
+Route::controller(CitaController::class)->prefix('citas')->group(function () {
+    Route::get('/showCitas', 'showById'); 
+    
 });
 
 Route::controller(PsicologosController::class)->prefix('psicologos')->group(function () {
@@ -39,17 +44,22 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
 });
 
 Route::controller(BlogController::class)->prefix('blogs')->group(function () {
-    Route::post('/create', 'createBlog');
     Route::get('/show/{id}', 'show');
     Route::get('/all', 'showAllBlogs');
+
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
+    Route::post('/create', 'createBlog');
     Route::put('/update/{id}', 'updateBlog');
     Route::delete('/delete/{id}', 'destroyBlog');
+    });
 });
 
 Route::controller(EspecialidadController::class)->prefix('especialidades')->group(function () {
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
     Route::post('/create', 'createEspecialidad');
     Route::get('/show', 'showAll');
     Route::put('/update/{id}', 'updateEspecialidad');
     Route::delete('/delete/{id}', 'destroyEspecialidad');
+    });
 });
 
