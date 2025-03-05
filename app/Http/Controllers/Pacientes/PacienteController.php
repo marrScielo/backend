@@ -81,7 +81,7 @@ class PacienteController extends Controller
         }
     }
 
-    public function showPacientesById()
+    public function showPacientesByPsicologo()
     {
         try {
             $userId = Auth::id();
@@ -91,7 +91,7 @@ class PacienteController extends Controller
             $psicologos = Paciente::where('idPsicologo', $idPsicologo)->get();
 
             return HttpResponseHelper::make()
-                ->successfulResponse('Comentarios obtenidos correctamente', $psicologos)
+                ->successfulResponse('Pacientes obtenidos correctamente', $psicologos)
                 ->send();
 
         } catch (\Exception $e) {
@@ -101,6 +101,19 @@ class PacienteController extends Controller
         }
     }
 
-    
+    public function destroyPaciente(int $id)
+    {
+        try {
+            $paciente = Paciente::findOrFail($id);
+            $paciente->delete();
 
+            return HttpResponseHelper::make()
+                ->successfulResponse('Paciente eliminado correctamente')
+                ->send();
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Error al eliminar el blog: ' . $e->getMessage())
+                ->send();
+        }
+    }
 }

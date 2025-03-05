@@ -21,7 +21,7 @@ class Blog extends Model
 
     public function psicologo()
     {
-        return $this->belongsTo(Psicologo::class, 'idPsicologo');
+        return $this->belongsTo(Psicologo::class, 'idPsicologo', 'idPsicologo');
     }
 
     public function categoria()

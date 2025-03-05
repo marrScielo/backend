@@ -4,23 +4,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Contactos\ContactosController;
 use App\Http\Controllers\Psicologos\PsicologosController;
-use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Blog\BlogController;
 use App\Http\Controllers\Citas\CitaController;
 use App\Http\Controllers\Comentarios\ComentarioController;
 use App\Http\Controllers\Especialidad\EspecialidadController;
 use App\Http\Controllers\Categoria\CategoriaController;
-
+use App\Http\Controllers\Pacientes\PacienteController;
 
 Route::controller(AuthController::class)->prefix('auth')->group(function(){
     Route::post('/login', 'login');
     Route::post('/logout', 'logout')->middleware('auth:sanctum');
-});
-
-Route::controller(UserController::class)->prefix('users')->group(function(){
-    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
-    Route::post('/register', 'register');
-    });
 });
 
 Route::controller(ContactosController::class)->prefix('contactos')->group(function () {
@@ -36,18 +29,29 @@ Route::controller(CitaController::class)->prefix('citas')->group(function () {
     
 });
 
+Route::controller(PacienteController::class)->prefix('pacientes')->group(function () {
+    Route::group(['middleware' => ['auth:sanctum', 'role:PSICOLOGO']], function () {
+    Route::post('/create', 'createPaciente'); 
+    Route::get('/showAll', 'showPacientesByPsicologo'); 
+    Route::put('/update/{id}', 'updatePaciente');
+    Route::delete('/delete/{id}', 'destroyPaciente');
+    });
+});
+
+
 Route::controller(PsicologosController::class)->prefix('psicologos')->group(function () {
     Route::get('/showAll', 'showAllPsicologos');
     Route::get('/show/{id}', 'showById');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
         Route::post('/create', 'createPsicologo');
-        Route::post('/update/{id}', 'updatePsicologo');
+        Route::put('/update/{id}', 'updatePsicologo');
+        Route::post('/delete/{id}', 'desactivatePsicologo');
     });
 });
 
 Route::controller(BlogController::class)->prefix('blogs')->group(function () {
     Route::get('/show/{id}', 'show');
-    Route::get('/all', 'showAllBlogs');
+    Route::get('/showAll', 'showAllBlogs');
 
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::post('/create', 'createBlog');
@@ -68,7 +72,6 @@ Route::controller(EspecialidadController::class)->prefix('especialidades')->grou
     Route::get('/show', 'showAll');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
     Route::post('/create', 'createEspecialidad');
-    
     Route::put('/update/{id}', 'updateEspecialidad');
     Route::delete('/delete/{id}', 'destroyEspecialidad');
     });
