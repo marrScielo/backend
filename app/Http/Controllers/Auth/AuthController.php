@@ -29,7 +29,7 @@ class AuthController extends Controller
                     'nombre' => $user->name,
                     'apellido'=>$user->apellido,
                     'email' => $user->email,
-                    
+                    'id'=>$user->user_id,
                     'rol' => $user->rol
                 ])
                 ->send();

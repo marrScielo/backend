@@ -8,6 +8,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Blog\BlogController;
 use App\Http\Controllers\Citas\CitaController;
 use App\Http\Controllers\Especialidad\EspecialidadController;
+use App\Http\Controllers\Categoria\CategoriaController;
 
 
 Route::controller(AuthController::class)->prefix('auth')->group(function(){
@@ -64,3 +65,7 @@ Route::controller(EspecialidadController::class)->prefix('especialidades')->grou
     });
 });
 
+Route::controller(CategoriaController::class)->prefix('categorias')->group(function () {
+    Route::get('/show', 'showAll');
+
+});
