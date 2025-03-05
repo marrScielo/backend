@@ -27,7 +27,7 @@ class ComentarioController extends Controller
         }
     }
 
-    public function showComentariosByBlog(Request $request, int $idBlog)
+    public function showComentariosByBlog(int $idBlog)
     {
         try {
             $comentarios = Comentario::where('idBlog', $idBlog)->get();

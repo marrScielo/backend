@@ -41,6 +41,11 @@ class Psicologo extends Model
         return $this->hasMany(Blog::class, 'idPsicologo', 'idPsicologo');
     }
 
+    public function pacientes()
+    {
+        return $this->hasMany(Paciente::class, 'idPaciente', 'idPaciente');
+    }
+
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id');

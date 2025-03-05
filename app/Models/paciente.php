@@ -16,11 +16,18 @@ class Paciente extends Model
         'genero',
         'DNI',
         'celular',
-        'direccion'
+        'direccion',
+        'idPsicologo'
     ];
 
     public function citas()
     {
         return $this->hasMany(Cita::class, 'idPaciente');
     }
+    
+    public function psicologo()
+    {
+        return $this->belongsTo(Psicologo::class, 'idPsicologo');
+    }
+
 }
