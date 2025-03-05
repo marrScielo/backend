@@ -25,7 +25,7 @@ class CategoriaController extends Controller
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Categoria creada correctamente', [
-                    'idCategoria' => $categoria->id,
+                    'idCategoria' => $categoria->idCategoria,
                     'nombre' => $categoria->nombre
                 ])
                 ->send();
@@ -42,7 +42,7 @@ class CategoriaController extends Controller
         try {
             $categorias = Categoria::all();
             return HttpResponseHelper::make()
-                ->successfulResponse('Categorias obtenidas', [$categorias])->send();
+                ->successfulResponse('Categorias obtenidas', $categorias)->send();
         } catch (\Throwable $th) {
             //throw $th;
             return HttpResponseHelper::make()

@@ -9,10 +9,10 @@ class Blog extends Model
 
     protected $table = 'blogs';
     protected $primaryKey = 'idBlog';
-    public $timestamps = false; // ✅ Mantenerlo si no usas `created_at` y `updated_at`
+    public $timestamps = false; 
 
     protected $fillable = [
-        'idCategoria', // ✅ Ahora coincide con la migración
+        'idCategoria', 
         'tema',
         'contenido',
         'imagen',
