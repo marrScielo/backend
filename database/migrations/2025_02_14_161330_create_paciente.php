@@ -19,9 +19,12 @@ return new class extends Migration
             $table->string('DNI', 8)->unique();
             $table->string('celular', 9); 
             $table->string('direccion',150); 
-            $table->unsignedInteger('user_id'); 
 
+            
+            $table->unsignedInteger('user_id')->nullable();
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
+            
+
         });
     }
 

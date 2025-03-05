@@ -7,6 +7,7 @@ use App\Http\Controllers\Psicologos\PsicologosController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Blog\BlogController;
 use App\Http\Controllers\Especialidad\EspecialidadController;
+use App\Http\Controllers\Citas\CitaController;
 
 
 Route::controller(AuthController::class)->prefix('auth')->group(function(){
@@ -51,5 +52,13 @@ Route::controller(EspecialidadController::class)->prefix('especialidades')->grou
     Route::get('/show', 'showAll');
     Route::put('/update/{id}', 'updateEspecialidad');
     Route::delete('/delete/{id}', 'destroyEspecialidad');
+});
+
+
+Route::prefix('citas')->middleware('auth:sanctum')->group(function () {
+    Route::post('/create', [CitaController::class, 'store']);
+    Route::get('/{id}', [CitaController::class, 'show']);
+    Route::put('/{id}', [CitaController::class, 'update']);
+    Route::delete('/{id}', [CitaController::class, 'destroy']);
 });
 

@@ -9,7 +9,9 @@ class Canal extends Model
 {
     use HasFactory;
     protected $table = 'canales';
-    public $timestamps = false; 
+    protected $primaryKey = 'idCanal'; 
+    public $timestamps = false;
+
     protected $fillable = ['nombre'];
 
     public function citas()

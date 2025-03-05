@@ -13,38 +13,39 @@ return new class extends Migration
     {
         Schema::create('etiquetas', function (Blueprint $table) {
             $table->increments('idEtiqueta');
-            $table->string('nombre',100);
+            $table->string('nombre', 100);
         });
 
         Schema::create('canales', function (Blueprint $table) {
-            $table->increments('idCanal')->unique(); 
-            $table->string('nombre',100);
+            $table->increments('idCanal'); 
+            $table->string('nombre', 100);
         });
 
         Schema::create('tipo_citas', function (Blueprint $table) {
-            $table->increments('idTipoCita')->unique(); 
-            $table->string('nombre',100); 
+            $table->increments('idTipoCita'); 
+            $table->string('nombre', 100); 
         });
 
         Schema::create('citas', function (Blueprint $table) {
-            $table->increments('idCita')->unique(); 
+            $table->unsignedBigInteger('idCita')->autoIncrement();
             $table->unsignedInteger('idPaciente'); 
             $table->unsignedInteger('idTipoCita'); 
             $table->unsignedInteger('idCanal'); 
             $table->unsignedInteger('idEtiqueta'); 
-            $table->text('motivo_Consulta'); 
-            $table->string('estado_Cita', 100); 
-            $table->string('colores',100);
-            $table->integer('duracion'); 
-            $table->date('fecha_cita');
-            $table->time('hora_cita');
+            $table->text('motivo_Consulta')->nullable(); 
+            $table->string('estado_Cita', 100)->nullable();
+            $table->string('colores', 100)->nullable();
+            $table->integer('duracion')->nullable(); 
+            $table->date('fecha_cita')->nullable();
+            $table->time('hora_cita')->nullable();
 
-            $table->foreign('idPaciente')->references('idPaciente')->on('pacientes');
-            $table->foreign('idTipoCita')->references('idTipoCita')->on('tipo_citas');
-            $table->foreign('idCanal')->references('idCanal')->on('canales');
-            $table->foreign('idEtiqueta')->references('idEtiqueta')->on('etiquetas');
-
+            $table->foreign('idPaciente')->references('idPaciente')->on('pacientes')->cascadeOnDelete();
+            $table->foreign('idTipoCita')->references('idTipoCita')->on('tipo_citas')->cascadeOnDelete();
+            $table->foreign('idCanal')->references('idCanal')->on('canales')->cascadeOnDelete();
+            $table->foreign('idEtiqueta')->references('idEtiqueta')->on('etiquetas')->cascadeOnDelete();
         });
+
+        
     }
 
     /**
