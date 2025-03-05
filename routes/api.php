@@ -46,7 +46,7 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
 });
 
 Route::controller(BlogController::class)->prefix('blogs')->group(function () {
-    Route::get('/show/{id}', 'show');
+    Route::get('/show/{id}', 'showby');
     Route::get('/all', 'showAllBlogs');
 
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
@@ -76,7 +76,7 @@ Route::controller(EspecialidadController::class)->prefix('especialidades')->grou
 
 Route::controller(CategoriaController::class)->prefix('categorias')->group(function () {
     Route::get('/show', 'showAll');
-    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::post('/create','createCategoria');
 
     });

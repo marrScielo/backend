@@ -48,6 +48,23 @@ class BlogController extends Controller
                 ->send();
         }
     }
+    public function showby($id){
+        try {
+            $blog = Blog::find($id);
+    
+            if (!$blog) {
+                return HttpResponseHelper::make()
+                    ->notFoundResponse('El blog no fue encontrado')->send();
+            }
+    
+            return HttpResponseHelper::make()
+                ->successfulResponse('Blog obtenido correctamente', $blog->toArray())->send();
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrió un problema al obtener el blog: ' . $e->getMessage())->send();
+        }
+    }
+    
 
     public function updateBlog(PostBlogs $request, int $id)
     {
