@@ -12,10 +12,23 @@ class EspecialidadController extends Controller
     public function createEspecialidad(PostEspecialidad $request)
     {
         try {
-            Especialidad::create($request->all());
-
+            // Verificar si ya existe una especialidad con el mismo nombre
+            $exists = Especialidad::where('nombre', $request->nombre)->exists();
+    
+            if ($exists) {
+                return HttpResponseHelper::make()
+                    ->internalErrorResponse('La especialidad ya está registrada.') // Respuesta con error 409
+                    ->send();
+            }
+    
+            // Crear la especialidad si no existe
+            $especialidad = Especialidad::create($request->all());
+    
             return HttpResponseHelper::make()
-                ->successfulResponse('Especialidad creada correctamente')
+                ->successfulResponse('Especialidad creada correctamente', [
+                    'idEspecialidad' => $especialidad->idEspecialidad,
+                    'nombre' => $especialidad->nombre
+                ])
                 ->send();
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
@@ -46,7 +59,7 @@ class EspecialidadController extends Controller
             $especialidad->update($request->all());
 
             return HttpResponseHelper::make()
-                ->successfulResponse('Especialidad actualizada correctamente')
+                ->successfulResponse('Especialidad actualizada correctamente'   )
                 ->send();
         } catch (\Exception $e) {
             return HttpResponseHelper::make()

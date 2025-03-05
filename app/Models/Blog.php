@@ -2,27 +2,29 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class Blog extends Model
 {
     use HasFactory;
+
     protected $table = 'blogs';
     protected $primaryKey = 'idBlog';
     public $timestamps = false; 
 
     protected $fillable = [
-        'idCategoria',
+        'idCategoria', 
         'tema',
         'contenido',
         'imagen',
         'idPsicologo',
     ];
 
-    public function psicologos()
+    public function psicologo()
     {
         return $this->belongsTo(Psicologo::class, 'idPsicologo');
     }
 
-    public function categorias()
+    public function categoria()
     {
         return $this->belongsTo(Categoria::class, 'idCategoria');
     }

@@ -27,7 +27,9 @@ class AuthController extends Controller
                 ->successfulResponse('Inicio de sesión exitoso.', [
                     'token' => $token,
                     'nombre' => $user->name,
+                    'apellido'=>$user->apellido,
                     'email' => $user->email,
+                    'id'=>$user->user_id,
                     'rol' => $user->rol
                 ])
                 ->send();

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('especialidades', function (Blueprint $table) {
             $table->increments('idEspecialidad');
-            $table->string('nombre',100);
+            $table->string('nombre',100)->unique();
         });
 
         Schema::create('psicologos', function (Blueprint $table) {
@@ -25,7 +25,6 @@ return new class extends Migration
             $table->json('horario');
             $table->char('estado', 1);
             $table->unsignedInteger('user_id');
-
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
 
