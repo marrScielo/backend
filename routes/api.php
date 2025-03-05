@@ -7,6 +7,7 @@ use App\Http\Controllers\Psicologos\PsicologosController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Blog\BlogController;
 use App\Http\Controllers\Citas\CitaController;
+use App\Http\Controllers\Comentarios\ComentarioController;
 use App\Http\Controllers\Especialidad\EspecialidadController;
 use App\Http\Controllers\Categoria\CategoriaController;
 
@@ -48,10 +49,18 @@ Route::controller(BlogController::class)->prefix('blogs')->group(function () {
     Route::get('/show/{id}', 'show');
     Route::get('/all', 'showAllBlogs');
 
-    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::post('/create', 'createBlog');
     Route::put('/update/{id}', 'updateBlog');
     Route::delete('/delete/{id}', 'destroyBlog');
+    });
+});
+
+Route::controller(ComentarioController::class)->prefix('comentarios')->group(function () {
+    Route::post('/create', 'createComentario');
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
+    Route::get('/show/{id}', 'showComentariosByBlog'); 
+    Route::delete('/delete/{id}', 'destroyComentario');
     });
 });
 

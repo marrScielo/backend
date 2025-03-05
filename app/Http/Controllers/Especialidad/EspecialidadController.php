@@ -68,11 +68,12 @@ class EspecialidadController extends Controller
         }
     }
 
-    public function destroyEspecialidad(Especialidad $especialidad, int $id)
+    public function destroyEspecialidad(int $id)
     {
         try {
+            $especialidad = Especialidad::findOrFail($id);
             $especialidad->delete();
-
+    
             return HttpResponseHelper::make()
                 ->successfulResponse('Especialidad eliminada correctamente')
                 ->send();

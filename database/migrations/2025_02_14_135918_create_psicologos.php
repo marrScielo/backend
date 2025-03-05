@@ -24,8 +24,11 @@ return new class extends Migration
             $table->integer('experiencia');
             $table->json('horario');
             $table->char('estado', 1);
+            $table->unsignedInteger('idPsicologo');
             $table->unsignedInteger('user_id');
+
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
+            $table->foreign('idPsicologo')->references('idPsicologo')->on('psicologos')->onDelete('cascade');
         });
 
         // Tabla intermedia entre psicólogos y especialidades (Muchos a Muchos)

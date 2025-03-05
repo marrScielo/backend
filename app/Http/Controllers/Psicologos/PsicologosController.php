@@ -121,7 +121,7 @@ class PsicologosController extends Controller
 
             $usuario->update($usuarioData);
 
-            // Asociar las nuevas especialidades y enfoques al psicólogo
+            // Asociar las nuevas especialidades al psicólogo
             $psicologo->especialidades()->sync($requestPsicologo->input('especialidades'));
 
             return HttpResponseHelper::make()

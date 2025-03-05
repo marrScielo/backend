@@ -7,10 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostPaciente\PostPaciente;
 use App\Http\Requests\PostUser\PostUser;
 use App\Models\Paciente;
+use App\Models\Psicologo;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\HttpResponseHelper;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class PacienteController extends Controller
 {
@@ -24,10 +26,21 @@ class PacienteController extends Controller
             $usuario = User::create($usuarioData);
             $usuario_id = $usuario->user_id;
 
-            // Asignar el user_id recién creado al paciente
+            $userId = Auth::id();
+            $psicologo = Psicologo::where('user_id', $userId)->first();
+
+            if (!$psicologo) {
+                return HttpResponseHelper::make()
+                    ->unauthorizedResponse('Solo los psicólogos pueden crear pacientes')
+                    ->send();
+            }
+            
             $pacienteData = $requestPaciente->all();
+            $pacienteData['idPsicologo'] = $psicologo->idPsicologo;
+            
+            // Asignar el user_id recién creado al paciente
             $pacienteData['user_id'] = $usuario_id;
-            $paciente = Paciente::create($pacienteData);
+            Paciente::create($pacienteData);
 
             $usuario->assignRole('PACIENTE');
 
@@ -64,6 +77,26 @@ class PacienteController extends Controller
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Ocurrio un problema al procesar la solicitud.'.
                  $e->getMessage())
+                ->send();
+        }
+    }
+
+    public function showPacientesById()
+    {
+        try {
+            $userId = Auth::id();
+            $psicologo = Psicologo::where('user_id', $userId)->first();
+            $idPsicologo = $psicologo->idPsicologo;
+
+            $psicologos = Paciente::where('idPsicologo', $idPsicologo)->get();
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Comentarios obtenidos correctamente', $psicologos)
+                ->send();
+
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrió un problema al procesar la solicitud. ' . $e->getMessage())
                 ->send();
         }
     }
