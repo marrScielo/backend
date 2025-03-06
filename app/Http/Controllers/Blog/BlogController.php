@@ -7,6 +7,7 @@ use App\Models\Blog;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PostBlogs\PostBlogs;
 use App\Models\Psicologo;
+use Illuminate\Support\Str;
 use App\Traits\HttpResponseHelper;
 
 class BlogController extends Controller
@@ -36,12 +37,22 @@ class BlogController extends Controller
     public function showAllBlogs()
     {
         try {
-            $blogs = Blog::all();
-
+            $blogs = Blog::with('categoria', 'psicologo.users')->get()->map(function ($blog) {
+                return [
+                    'id' => $blog->idBlog,
+                    'tema' => $blog->tema,
+                    'contenido' => Str::limit($blog->contenido, 150),
+                    'imagen' => $blog->imagen,
+                    'nombrePsicologo' => $blog->psicologo->users->name . ' ' . $blog->psicologo->users->apellido,
+                    'categoria' =>  $blog->categoria->nombre,
+                    'fecha_publicado' => $blog->fecha_publicado,
+                ];
+            });
+    
             return HttpResponseHelper::make()
                 ->successfulResponse('Lista de blogs obtenida correctamente', $blogs)
                 ->send();
-
+    
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Ocurrió un problema al obtener los blogs: ' . $e->getMessage())

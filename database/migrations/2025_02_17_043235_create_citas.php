@@ -13,21 +13,21 @@ return new class extends Migration
     {
         Schema::create('etiquetas', function (Blueprint $table) {
             $table->increments('idEtiqueta');
-            $table->string('nombre',100);
+            $table->string('nombre', 100);
         });
 
         Schema::create('canales', function (Blueprint $table) {
-            $table->increments('idCanal')->unique(); 
-            $table->string('nombre',100);
+            $table->increments('idCanal'); 
+            $table->string('nombre', 100);
         });
 
         Schema::create('tipo_citas', function (Blueprint $table) {
-            $table->increments('idTipoCita')->unique(); 
-            $table->string('nombre',100); 
+            $table->increments('idTipoCita'); 
+            $table->string('nombre', 100); 
         });
 
         Schema::create('citas', function (Blueprint $table) {
-            $table->increments('idCita')->unique(); 
+            $table->unsignedBigInteger('idCita')->autoIncrement();
             $table->unsignedInteger('idPaciente'); 
             $table->unsignedInteger('idPsicologo'); 
             $table->unsignedInteger('idTipoCita'); 
@@ -46,6 +46,8 @@ return new class extends Migration
             $table->foreign('idEtiqueta')->references('idEtiqueta')->on('etiquetas');
             $table->foreign('idPsicologo')->references('idPsicologo')->on('psicologos');
         });
+
+        
     }
 
     /**
