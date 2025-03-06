@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Etiqueta extends Model
 {
     use HasFactory;
+    protected $table = 'etiquetas'; 
+    protected $primaryKey = 'idEtiqueta'; 
     public $timestamps = false; 
+
     protected $fillable = ['nombre'];
     
     public function citas()

@@ -7,8 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 class Cita extends Model
 {
     use HasFactory;
-    public $timestamps = false; 
+    protected $table = 'citas'; 
     protected $primaryKey = 'idCita'; 
+    public $timestamps = false; 
+
+    protected $fillable = [
+        'idPaciente',
+        'idTipoCita',
+        'idCanal',
+        'idEtiqueta',
+        'motivo_Consulta',
+        'estado_Cita',
+        'colores',
+        'duracion',
+        'fecha_cita',
+        'hora_cita',
+    ];
 
     public function etiqueta()
     {

@@ -10,6 +10,8 @@ use App\Http\Controllers\Comentarios\ComentarioController;
 use App\Http\Controllers\Especialidad\EspecialidadController;
 use App\Http\Controllers\Categoria\CategoriaController;
 use App\Http\Controllers\Pacientes\PacienteController;
+use App\Http\Controllers\Citas\CitaController;
+
 
 Route::controller(AuthController::class)->prefix('auth')->group(function(){
     Route::post('/login', 'login');
@@ -84,3 +86,11 @@ Route::controller(CategoriaController::class)->prefix('categorias')->group(funct
 
     });
 });
+
+Route::prefix('citas')->middleware('auth:sanctum')->group(function () {
+    Route::post('/create', [CitaController::class, 'store']);
+    Route::get('/{id}', [CitaController::class, 'show']);
+    Route::put('/{id}', [CitaController::class, 'update']);
+    Route::delete('/{id}', [CitaController::class, 'destroy']);
+});
+
