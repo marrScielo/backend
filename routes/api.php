@@ -86,6 +86,6 @@ Route::controller(CitaController::class)->prefix('citas')->middleware('auth:sanc
     Route::post('/create', 'createCita');
     Route::get('show/{id}', 'showCita');
     Route::put('update/{id}', 'updateCita');
-    Route::delete('delete/{id}', 'deleteCita');
+    Route::delete('delete/{id}', 'destroyCita');
 });
 
