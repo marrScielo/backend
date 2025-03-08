@@ -7,9 +7,6 @@ use App\Models\Cita;
 use App\Traits\HttpResponseHelper;
 use Illuminate\Http\Request;
 use App\Http\Requests\CitaRequest;
-use App\Models\Cita;
-use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
 

@@ -25,7 +25,7 @@ Route::controller(ContactosController::class)->prefix('contactos')->group(functi
 });
 
 Route::controller(CitaController::class)->prefix('citas')->group(function () {
-    Route::get('/showCitas', 'showById'); 
+    Route::get('/show/{id}', 'showById'); 
     
 });
 
