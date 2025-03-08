@@ -25,11 +25,10 @@ return new class extends Migration
             $table->json('horario');
             $table->char('estado', 1);
             $table->unsignedInteger('user_id');
-
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
 
-        // Tabla intermedia entre psicólogos y especialidades (Muchos a Muchos)
+        // Tabla intermedia entre psicÃ³logos y especialidades (Muchos a Muchos)
         Schema::create('especialidad_detalle', function (Blueprint $table) {
             $table->unsignedInteger('idPsicologo');
             $table->unsignedInteger('idEspecialidad');

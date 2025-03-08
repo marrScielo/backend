@@ -24,11 +24,6 @@ Route::controller(ContactosController::class)->prefix('contactos')->group(functi
     });
 });
 
-Route::controller(CitaController::class)->prefix('citas')->group(function () {
-    Route::get('/show/{id}', 'showById'); 
-    
-});
-
 Route::controller(PacienteController::class)->prefix('pacientes')->group(function () {
     Route::group(['middleware' => ['auth:sanctum', 'role:PSICOLOGO']], function () {
     Route::post('/create', 'createPaciente'); 
@@ -50,9 +45,6 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
 });
 
 Route::controller(BlogController::class)->prefix('blogs')->group(function () {
-    Route::get('/show/{id}', 'show');
-    Route::get('/showAll', 'showAllBlogs');
-
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::post('/create', 'createBlog');
     Route::put('/update/{id}', 'updateBlog');
@@ -79,16 +71,18 @@ Route::controller(EspecialidadController::class)->prefix('especialidades')->grou
 
 Route::controller(CategoriaController::class)->prefix('categorias')->group(function () {
     Route::get('/show', 'showAll');
-    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::post('/create','createCategoria');
-
     });
 });
 
-Route::prefix('citas')->middleware('auth:sanctum')->group(function () {
-    Route::post('/create', [CitaController::class, 'store']);
-    Route::get('/{id}', [CitaController::class, 'show']);
-    Route::put('/{id}', [CitaController::class, 'update']);
-    Route::delete('/{id}', [CitaController::class, 'destroy']);
+Route::controller(CitaController::class)->prefix('citas')->middleware('auth:sanctum')->group(function () {
+    Route::get('/show/{id}', 'showById'); 
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
+    Route::post('/create', 'createCita');
+    Route::get('show/{id}', 'showCita');
+    Route::put('update/{id}', 'updateCita');
+    Route::delete('delete/{id}', 'destroyCita');
+    });
 });
 
