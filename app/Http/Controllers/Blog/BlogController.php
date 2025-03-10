@@ -17,6 +17,13 @@ class BlogController extends Controller
             $userId = Auth::id();
             $psicologo = Psicologo::where('user_id', $userId)->first();
 
+         
+            if (!$psicologo) {
+                return HttpResponseHelper::make()
+                    ->forbiddenResponse('No tienes permisos para crear un blog')
+                    ->send();
+            }
+
             $data = $request->all();
             $data['idPsicologo'] = $psicologo->idPsicologo;
 
@@ -25,7 +32,6 @@ class BlogController extends Controller
             return HttpResponseHelper::make()
                 ->successfulResponse('Blog creado correctamente')
                 ->send();
-
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Ocurrió un problema al procesar la solicitud. ' . $e->getMessage())
@@ -36,18 +42,32 @@ class BlogController extends Controller
     public function showAllBlogs()
     {
         try {
-            $blogs = Blog::all();
-
+            // Obtener blogs con la relación de categoría
+            $blogs = Blog::with('categoria:idCategoria,nombre')->get();
+    
+            // Transformar la respuesta para incluir el nombre de la categoría en lugar del ID
+            $blogs = $blogs->map(function ($blog) {
+                return [
+                    'idBlog' => $blog->idBlog,
+                    'tema' => $blog->tema,
+                    'contenido' => $blog->contenido,
+                    'imagen' => $blog->imagen,
+                    'idPsicologo' => $blog->idPsicologo,
+                    'categoria' => $blog->categoria ? $blog->categoria->nombre : null, // Obtener solo el nombre
+                ];
+            });
+    
             return HttpResponseHelper::make()
                 ->successfulResponse('Lista de blogs obtenida correctamente', $blogs)
                 ->send();
-
+    
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Ocurrió un problema al obtener los blogs: ' . $e->getMessage())
                 ->send();
         }
     }
+    
     public function showby($id){
         try {
             $blog = Blog::find($id);
