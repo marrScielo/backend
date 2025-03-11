@@ -48,7 +48,7 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
 Route::controller(BlogController::class)->prefix('blogs')->group(function () {
     Route::get('/show/{id}', 'showby');
     Route::get('/all', 'showAllBlogs');
-
+    Route::get('/getAll','BlogAllPreviews');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::post('/create', 'createBlog');
     Route::put('/update/{id}', 'updateBlog');
