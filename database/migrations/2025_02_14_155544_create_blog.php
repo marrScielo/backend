@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedInteger('idCategoria');
             $table->string('tema', 100);
             $table->text('contenido');
-            $table->string('imagen', 400);
+            $table->text('imagen');
             $table->unsignedInteger('idPsicologo');
             $table->timestamp('fecha_publicado')->useCurrent();
 
