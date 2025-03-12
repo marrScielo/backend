@@ -46,7 +46,7 @@ class ComentarioController extends Controller
     public function destroyComentario(int $id)
     {
         try {
-            $comentario = Comentario::findOrFail($id);
+            $comentario = Comentario::where('idComentario', $id)->firstOrFail();
             $comentario->delete();
     
             return HttpResponseHelper::make()

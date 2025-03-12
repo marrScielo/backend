@@ -11,8 +11,10 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-     use HasApiTokens, HasFactory, Notifiable, HasRoles;
-     protected $primaryKey = 'user_id';
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    protected $primaryKey = 'user_id';
+    protected $keyType = 'int'; 
+    public $incrementing = true; 
  
      protected $fillable = [
          'name',
@@ -30,5 +32,10 @@ class User extends Authenticatable
      public function psicologos()
      {
          return $this->hasOne(Psicologo::class, 'user_id', 'user_id');
+     }
+
+     public function getAuthIdentifierName()
+     {
+         return 'user_id'; // Laravel usará esto para autenticación
      }
 }

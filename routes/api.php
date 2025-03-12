@@ -10,6 +10,7 @@ use App\Http\Controllers\Comentarios\ComentarioController;
 use App\Http\Controllers\Especialidad\EspecialidadController;
 use App\Http\Controllers\Categoria\CategoriaController;
 use App\Http\Controllers\Pacientes\PacienteController;
+use App\Http\Controllers\RespuestasBlog\RespuestaComentarioController;
 
 Route::controller(AuthController::class)->prefix('auth')->group(function(){
     Route::post('/login', 'login');
@@ -87,4 +88,12 @@ Route::controller(CitaController::class)->prefix('citas')->middleware('auth:sanc
     Route::delete('delete/{id}', 'destroyCita');
     });
 });
+
+Route::controller(RespuestaComentarioController::class)->prefix('respuestas')->group(function () {
+        Route::get('/show/{id}', 'showRespuesta'); 
+        Route::post('/create', 'createRespuesta');
+        Route::get('/all', 'showAllRespuestas');
+        Route::put('/update/{id}', 'updateRespuesta');
+        Route::delete('/delete/{id}', 'destroyRespuesta');
+    });
 
