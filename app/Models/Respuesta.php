@@ -13,11 +13,17 @@ class Respuesta extends Model
     protected $fillable = [
         'nombre',
         'respuesta',
+        'usuario_id',
         'idComentario',
     ];
 
     public function comentarios()
     {
         return $this->belongsTo(Comentario::class, 'idComentario');
+    }
+
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'usuario_id');
     }
 }

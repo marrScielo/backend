@@ -16,17 +16,6 @@ class PacienteSeeder extends Seeder
     public function run(): void
     {
 
-        $psicologo = Psicologo::first() ?? Psicologo::create([
-            'introduccion' => 'Psicólogo de prueba',
-            'pais' => 'PE',
-            'genero' => 'masculino',
-            'experiencia' => 5,
-            'horario' => json_encode(["Lunes" => ["09:00", "12:00"]]),
-            'estado' => 'A',
-            'user_id' => 1,
-        ]);
-
-
         $pacientes = [
             [
                 'ocupacion' => 'Ingeniero',
@@ -35,7 +24,8 @@ class PacienteSeeder extends Seeder
                 'DNI' => '12345678',
                 'celular' => '987654321',
                 'direccion' => 'Av. Siempre Viva 742',
-                'idPsicologo' => $psicologo->id,
+                'idPsicologo' => 1,
+                'user_id' => 1, 
             ],
             [
                 'ocupacion' => 'Doctora',
@@ -44,9 +34,11 @@ class PacienteSeeder extends Seeder
                 'DNI' => '87654321',
                 'celular' => '912345678',
                 'direccion' => 'Calle Falsa 123',
-                'idPsicologo' => $psicologo->id,
+                'idPsicologo' => 1,
+                'user_id' => 1, 
             ],
         ];
+
 
         foreach ($pacientes as $paciente) {
             Paciente::create($paciente);

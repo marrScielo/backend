@@ -39,7 +39,7 @@ class BlogController extends Controller
         try {
             $blogs = Blog::with('categoria', 'psicologo.users')->get()->map(function ($blog) {
                 return [
-                    'idBlog' => $blog->idBlog,
+                    'id' => $blog->idBlog,
                     'tema' => $blog->tema,
                     'contenido' => Str::limit($blog->contenido, 150),
                     'imagen' => $blog->imagen,
@@ -59,7 +59,7 @@ class BlogController extends Controller
                 ->send();
         }
     }
-    public function showbyIdBlog($id){
+    public function showby($id){
         try {
             $blog = Blog::find($id);
     

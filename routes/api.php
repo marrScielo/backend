@@ -46,8 +46,6 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
 });
 
 Route::controller(BlogController::class)->prefix('blogs')->group(function () {
-    Route::get('/showAll', 'showAllBlogs');
-    Route::post('/show', 'showbyIdBlog');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::post('/create', 'createBlog');
     Route::put('/update/{id}', 'updateBlog');
@@ -90,10 +88,10 @@ Route::controller(CitaController::class)->prefix('citas')->middleware('auth:sanc
 });
 
 Route::controller(RespuestaComentarioController::class)->prefix('respuestas')->group(function () {
-        Route::get('/show/{id}', 'showRespuesta'); 
-        Route::post('/create', 'createRespuesta');
-        Route::get('/all', 'showAllRespuestas');
-        Route::put('/update/{id}', 'updateRespuesta');
-        Route::delete('/delete/{id}', 'destroyRespuesta');
+    Route::post('/create', 'createRespuesta');
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
+    Route::get('/show/{id}', 'showRespuestasByComentario');
+    Route::delete('/delete/{id}', 'destroyRespuesta');
     });
+});
 
