@@ -8,15 +8,13 @@ use App\Http\Requests\PostPaciente\PostPaciente;
 use App\Http\Requests\PostUser\PostUser;
 use App\Models\Paciente;
 use App\Models\Psicologo;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use App\Traits\HttpResponseHelper;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class PacienteController extends Controller
 {
-    public function createPaciente(PostPaciente $requestPaciente, PostUser $requestUser)
+    public function createPaciente(PostPaciente $requestPaciente)
     {
         try{
             $userId = Auth::id();

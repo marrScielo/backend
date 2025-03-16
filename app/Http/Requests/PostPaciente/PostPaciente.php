@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\PostPaciente;
 
+use App\Models\Paciente;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PostPaciente extends FormRequest
 {
@@ -14,6 +16,14 @@ class PostPaciente extends FormRequest
         return true;
     }
 
+
+    public function prepareForValidation()
+    {
+        if ($paciente = Paciente::find($this->route('id'))) {
+            $this->merge(['idPaciente' => $paciente->idPaciente]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,12 +32,22 @@ class PostPaciente extends FormRequest
     public function rules(): array
     {
         return [
+            'nombre' => 'required|string|max:100',
+            'apellido' => 'required|string|max:100',
+            'email' => [
+                'required',
+                'email',
+                'max:100',
+                Rule::unique('pacientes', 'email')->ignore($this->input('idPaciente'), 'idPaciente'),
+            ],
+            'fecha_nacimiento' => 'required',
             'ocupacion' => 'required|string|max:100',
             'estadoCivil' => 'required|string|max:100',
             'genero' => 'required|string|max:20',
             'DNI' => 'required|string',
             'celular' => 'required|string|min:9|max:9',
-            'direccion' => 'required|string|max:150'
+            'direccion' => 'required|string|max:150',
+            'imagen' => 'nullable|string',
         ];
     }
 }
