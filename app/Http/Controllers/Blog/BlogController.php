@@ -18,6 +18,13 @@ class BlogController extends Controller
             $userId = Auth::id();
             $psicologo = Psicologo::where('user_id', $userId)->first();
 
+         
+            if (!$psicologo) {
+                return HttpResponseHelper::make()
+                    ->forbiddenResponse('No tienes permisos para crear un blog')
+                    ->send();
+            }
+
             $data = $request->all();
             $data['idPsicologo'] = $psicologo->idPsicologo;
 
@@ -26,7 +33,6 @@ class BlogController extends Controller
             return HttpResponseHelper::make()
                 ->successfulResponse('Blog creado correctamente')
                 ->send();
-
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Ocurrió un problema al procesar la solicitud. ' . $e->getMessage())
