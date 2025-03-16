@@ -14,7 +14,7 @@ class PsicologoSeeder extends Seeder
         $psicologos = [
             [
                 'name' => 'Luis', 'apellido' => 'Gonzales', 'email' => 'luisgonzales@gmail.com',
-                'edad' => 32, 'fecha_nacimiento' => '2003-05-01', 'imagen' => 'https:algo',
+                'fecha_nacimiento' => '2003-05-01', 'imagen' => 'https:algo',
                 'password' => 'password123', 'pais' => 'MX', 'experiencia' => 5,
                 'genero' => 'masculino', 'introduccion' => 'Soy Luis, profesional en psicología...',
                 'horario' => [
@@ -26,7 +26,7 @@ class PsicologoSeeder extends Seeder
             ],
             [
                 'name' => 'Maria', 'apellido' => 'Fernandez', 'email' => 'mariafernandez@gmail.com',
-                'edad' => 28, 'fecha_nacimiento' => '1996-07-12', 'imagen' => 'https:algo',
+                'fecha_nacimiento' => '1996-07-12', 'imagen' => 'https:algo',
                 'password' => 'password123', 'pais' => 'AR', 'experiencia' => 7,
                 'genero' => 'femenino', 'introduccion' => 'Soy Maria, especialista en terapia cognitiva...',
                 'horario' => [
@@ -38,7 +38,7 @@ class PsicologoSeeder extends Seeder
             ],
             [
                 'name' => 'Carlos', 'apellido' => 'Ramirez', 'email' => 'carlosramirez@gmail.com',
-                'edad' => 40, 'fecha_nacimiento' => '1984-11-25', 'imagen' => 'https:algo',
+                'fecha_nacimiento' => '1984-11-25', 'imagen' => 'https:algo',
                 'password' => 'password123', 'pais' => 'CO', 'experiencia' => 10,
                 'genero' => 'masculino', 'introduccion' => 'Soy Carlos, con experiencia en psicología clínica...',
                 'horario' => [
@@ -50,7 +50,7 @@ class PsicologoSeeder extends Seeder
             ],
             [
                 'name' => 'Ana', 'apellido' => 'Lopez', 'email' => 'analopez@gmail.com',
-                'edad' => 35, 'fecha_nacimiento' => '1989-03-18', 'imagen' => 'https:algo',
+                'fecha_nacimiento' => '1989-03-18', 'imagen' => 'https:algo',
                 'password' => 'password123', 'pais' => 'PE', 'experiencia' => 8,
                 'genero' => 'femenino', 'introduccion' => 'Soy Ana, experta en salud mental y bienestar...',
                 'horario' => [
@@ -62,7 +62,7 @@ class PsicologoSeeder extends Seeder
             ],
             [
                 'name' => 'Javier', 'apellido' => 'Hernandez', 'email' => 'javierhernandez@gmail.com',
-                'edad' => 38, 'fecha_nacimiento' => '1986-09-21', 'imagen' => 'https:algo',
+                'fecha_nacimiento' => '1986-09-21', 'imagen' => 'https:algo',
                 'password' => 'password123', 'pais' => 'CL', 'experiencia' => 9,
                 'genero' => 'masculino', 'introduccion' => 'Soy Javier, psicólogo con enfoque en terapias familiares...',
                 'horario' => [
@@ -74,7 +74,7 @@ class PsicologoSeeder extends Seeder
             ],
             [
                 'name' => 'Elena', 'apellido' => 'Castro', 'email' => 'elenacastro@gmail.com',
-                'edad' => 29, 'fecha_nacimiento' => '1995-06-30', 'imagen' => 'https:algo',
+                'fecha_nacimiento' => '1995-06-30', 'imagen' => 'https:algo',
                 'password' => 'password123', 'pais' => 'EC', 'experiencia' => 6,
                 'genero' => 'femenino', 'introduccion' => 'Soy Elena, especialista en psicología infantil...',
                 'horario' => [
@@ -92,7 +92,6 @@ class PsicologoSeeder extends Seeder
                 'name' => $data['name'],
                 'apellido' => $data['apellido'],
                 'email' => $data['email'],
-                'edad' => $data['edad'],
                 'fecha_nacimiento' => $data['fecha_nacimiento'],
                 'imagen' => $data['imagen'],
                 'password' => Hash::make($data['password']),

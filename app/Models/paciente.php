@@ -18,7 +18,6 @@ class Paciente extends Model
         'celular',
         'direccion',
         'idPsicologo',
-        'user_id'
     ];
 
     public function citas()
