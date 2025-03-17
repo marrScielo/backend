@@ -25,7 +25,8 @@ class DatabaseSeeder extends Seeder
             CanalSeeder::class,
             TipoCitaSeeder::class,
             EtiquetaSeeder::class,
-            ComentarioSeeder::class,  
+            ComentarioSeeder::class, 
+            PacienteSeeder::class 
         ]);
 
     }
