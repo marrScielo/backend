@@ -78,7 +78,7 @@ class PsicologosController extends Controller
         }
     }
 
-    public function showAllPsicologos(Psicologo $psicologo)
+    public function showAllPsicologos()
     {
         try {
             $psicologos = Psicologo::with(['especialidades','users'])

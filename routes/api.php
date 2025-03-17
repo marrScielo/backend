@@ -39,6 +39,7 @@ Route::controller(CitaController::class)->prefix('citas')->group(function () {
 Route::controller(PsicologosController::class)->prefix('psicologos')->group(function () {
     Route::get('/showAll', 'showAllPsicologos');
     Route::get('/show/{id}', 'showById');
+    
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
         Route::post('/create', 'createPsicologo');
         Route::post('/update/{id}', 'updatePsicologo');
@@ -49,6 +50,7 @@ Route::controller(BlogController::class)->prefix('blogs')->group(function () {
     Route::get('/show/{id}', 'showby');
     Route::get('/all', 'showAllBlogs');
     Route::get('/getAll','BlogAllPreviews');
+    Route::get('/authors','showAllAuthors');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::post('/create', 'createBlog');
     Route::put('/update/{id}', 'updateBlog');
