@@ -11,8 +11,10 @@ use Illuminate\Support\Carbon;
 
 class User extends Authenticatable
 {
-     use HasApiTokens, HasFactory, Notifiable, HasRoles;
-     protected $primaryKey = 'user_id';
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    protected $primaryKey = 'user_id';
+    protected $keyType = 'int'; 
+    public $incrementing = true; 
  
      protected $casts = [
         'fecha_nacimiento' => 'date',

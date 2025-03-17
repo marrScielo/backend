@@ -13,7 +13,7 @@ return new class extends Migration
     {
         //
         Schema::create('users', function (Blueprint $table) {
-            $table->increments('user_id'); 
+            $table->unsignedInteger('user_id')->autoIncrement(); 
             $table->string('name', 100); 
             $table->string('apellido', 100); 
             $table->string('email', 100)->unique(); 
@@ -32,7 +32,8 @@ return new class extends Migration
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index(); 
+            $table->unsignedInteger('user_id')->nullable()->index();
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');

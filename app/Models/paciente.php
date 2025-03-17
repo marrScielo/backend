@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Paciente extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'idPaciente';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $table = 'pacientes';
     protected $primaryKey = 'idPaciente';
     public $timestamps = false; 

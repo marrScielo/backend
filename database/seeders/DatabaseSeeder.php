@@ -21,9 +21,11 @@ class DatabaseSeeder extends Seeder
             CategoriaSeeder::class,
             EspecialidadSeeder::class,
             PsicologoSeeder::class,
+            BlogSeeder::class, 
             CanalSeeder::class,
             TipoCitaSeeder::class,
             EtiquetaSeeder::class,
+            ComentarioSeeder::class,  
         ]);
 
     }

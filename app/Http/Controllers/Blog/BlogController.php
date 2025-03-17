@@ -46,12 +46,10 @@ class BlogController extends Controller
             $blogs = Blog::with('categoria', 'psicologo.users')->get()->map(function ($blog) {
                 return [
                     'idBlog' => $blog->idBlog,
+                    'id' => $blog->idBlog,
                     'tema' => $blog->tema,
                     'contenido' => Str::limit($blog->contenido, 150),
                     'imagen' => $blog->imagen,
-                    'nombrePsicologo' => $blog->psicologo->users->name . ' ' . $blog->psicologo->users->apellido,
-                    'categoria' =>  $blog->categoria->nombre,
-                    'fecha_publicado' => $blog->fecha_publicado,
                 ];
             });
     
@@ -65,7 +63,7 @@ class BlogController extends Controller
                 ->send();
         }
     }
-    public function showbyIdBlog($id){
+    public function showby($id){
         try {
             $blog = Blog::find($id);
     

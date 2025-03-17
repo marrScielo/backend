@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Comentario extends Model
 {
     use HasFactory;
+    protected $table = 'comentarios';
     public $timestamps = false; 
     protected $primaryKey = 'idComentario'; 
 
