@@ -16,7 +16,6 @@ class RespuestaComentarioController extends Controller
     {
         try {
             $data = $request->validated();
-            $data['usuario_id'] = Auth::id();// Asigna el usuario autenticado
             
             Respuesta::create($data);
 
@@ -24,7 +23,7 @@ class RespuestaComentarioController extends Controller
                 ->successfulResponse('Respuesta creada correctamente')
                 ->send();
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Ocurrió un problema al procesar la solicitud. ' . $e->getMessage())
                 ->send();
@@ -34,13 +33,13 @@ class RespuestaComentarioController extends Controller
     public function showRespuestasByComentario(int $idComentario)
     {
         try {
-            $respuestas = Respuesta::where('comentario_id', $idComentario)->get();
+            $respuestas = Respuesta::where('idComentario', $idComentario)->get();
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Respuestas obtenidas correctamente', $respuestas)
                 ->send();
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Ocurrió un problema al procesar la solicitud. ' . $e->getMessage())
                 ->send();
@@ -56,7 +55,7 @@ class RespuestaComentarioController extends Controller
             return HttpResponseHelper::make()
                 ->successfulResponse('Respuesta eliminada correctamente')
                 ->send();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Error al eliminar la respuesta: ' . $e->getMessage())
                 ->send();

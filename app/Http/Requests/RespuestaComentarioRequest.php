@@ -22,8 +22,9 @@ class RespuestaComentarioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'comentario_id' => 'required|exists:comentarios,idComentario',
-            'contenido' => 'required|string|max:1000',
+            'idComentario' => 'required|exists:comentarios,idComentario',
+            'respuesta' => 'required|string|max:1000',
+            'nombre' => 'nullable|string|max:255',
         ];
     }
 }

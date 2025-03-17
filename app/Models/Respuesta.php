@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Respuesta extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'idRespuesta';
     public $timestamps = false; 
 
     protected $fillable = [
         'nombre',
         'respuesta',
-        'usuario_id',
         'idComentario',
     ];
 
@@ -22,8 +22,5 @@ class Respuesta extends Model
         return $this->belongsTo(Comentario::class, 'idComentario');
     }
 
-    public function usuario()
-    {
-        return $this->belongsTo(User::class, 'usuario_id');
-    }
+    
 }
