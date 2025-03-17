@@ -10,6 +10,7 @@ use App\Http\Controllers\Comentarios\ComentarioController;
 use App\Http\Controllers\Especialidad\EspecialidadController;
 use App\Http\Controllers\Categoria\CategoriaController;
 use App\Http\Controllers\Pacientes\PacienteController;
+use App\Http\Controllers\RespuestasBlog\RespuestaComentarioController;
 
 Route::controller(AuthController::class)->prefix('auth')->group(function(){
     Route::post('/login', 'login');
@@ -86,6 +87,14 @@ Route::controller(CitaController::class)->prefix('citas')->middleware('auth:sanc
     Route::get('show/{id}', 'showCita');
     Route::put('update/{id}', 'updateCita');
     Route::delete('delete/{id}', 'destroyCita');
+    });
+});
+
+Route::controller(RespuestaComentarioController::class)->prefix('respuestas')->group(function () {
+    Route::post('/create', 'createRespuesta');
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
+    Route::get('/show/{id}', 'showRespuestasByComentario');
+    Route::delete('/delete/{id}', 'destroyRespuesta');
     });
 });
 

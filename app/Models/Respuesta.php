@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Respuesta extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'idRespuesta';
     public $timestamps = false; 
 
     protected $fillable = [
@@ -20,4 +21,6 @@ class Respuesta extends Model
     {
         return $this->belongsTo(Comentario::class, 'idComentario');
     }
+
+    
 }
