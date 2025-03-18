@@ -69,12 +69,54 @@ class PacienteController extends Controller
         try {
             $userId = Auth::id();
             $psicologo = Psicologo::where('user_id', $userId)->first();
-            $idPsicologo = $psicologo->idPsicologo;
 
-            $psicologos = Paciente::where('idPsicologo', $idPsicologo)->get();
+            if (!$psicologo) {
+                return HttpResponseHelper::make()
+                    ->notFoundResponse('No se tiene acceso como psicologo')
+                    ->send();
+            }
+
+            $pacientes = Paciente::where('idPsicologo', $psicologo->idPsicologo)->get();
+
+            $response = $pacientes->map(function ($paciente) {
+                return [
+                    'idPaciente' => $paciente->idPaciente,
+                    'DNI' => $paciente->DNI,
+                    'nombre' => $paciente->nombre . ' ' . $paciente->apellido,
+                    'correo' => $paciente->email,
+                    'celular' => $paciente->celular,
+                ];
+            });
 
             return HttpResponseHelper::make()
-                ->successfulResponse('Pacientes obtenidos correctamente', $psicologos)
+                ->successfulResponse('Pacientes obtenidos correctamente', $response)
+                ->send();
+
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrió un problema al procesar la solicitud. ' . $e->getMessage())
+                ->send();
+        }
+    }
+
+    public function showPacienteById($id)
+    {
+        try {
+            $userId = Auth::id();
+            $psicologo = Psicologo::where('user_id', $userId)->first();
+
+            if (!$psicologo) {
+                return HttpResponseHelper::make()
+                    ->notFoundResponse('No se tiene acceso como psicólogo.')
+                    ->send();
+            }
+
+            $paciente = Paciente::where('idPaciente', $id)
+                ->where('idPsicologo', $psicologo->idPsicologo)
+                ->first();
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Paciente obtenido correctamente', $paciente->toArray())
                 ->send();
 
         } catch (\Exception $e) {

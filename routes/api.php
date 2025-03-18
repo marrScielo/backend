@@ -28,6 +28,7 @@ Route::controller(ContactosController::class)->prefix('contactos')->group(functi
 Route::controller(PacienteController::class)->prefix('pacientes')->group(function () {
     Route::group(['middleware' => ['auth:sanctum', 'role:PSICOLOGO']], function () {
     Route::post('/create', 'createPaciente'); 
+    Route::get('/show/{id}', 'showPacienteById'); 
     Route::get('/showAll', 'showPacientesByPsicologo'); 
     Route::put('/update/{id}', 'updatePaciente');
     Route::delete('/delete/{id}', 'destroyPaciente');

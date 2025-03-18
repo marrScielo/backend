@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Carbon;
 
 class Paciente extends Model
 {
@@ -13,6 +14,10 @@ class Paciente extends Model
     protected $keyType = 'int';
     protected $table = 'pacientes';
     public $timestamps = false; 
+
+    protected $casts = [
+        'fecha_nacimiento' => 'date',
+     ];
 
     protected $fillable = [
         'nombre',
@@ -37,6 +42,11 @@ class Paciente extends Model
     public function psicologo()
     {
         return $this->belongsTo(Psicologo::class, 'idPsicologo');
+    }
+
+    public function getEdadAttribute()
+    {
+        return Carbon::parse($this->fecha_nacimiento)->age;
     }
 
 }

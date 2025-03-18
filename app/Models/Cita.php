@@ -11,11 +11,16 @@ class Cita extends Model
     protected $primaryKey = 'idCita'; 
     public $timestamps = false; 
 
+    protected $attributes = [
+        'colores' => '#FFA500', 
+    ];
+
     protected $fillable = [
         'idPaciente',
         'idTipoCita',
         'idCanal',
         'idEtiqueta',
+        'idPsicologo',
         'motivo_Consulta',
         'estado_Cita',
         'colores',
