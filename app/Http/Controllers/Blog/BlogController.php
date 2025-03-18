@@ -7,7 +7,7 @@ use App\Models\Blog;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PostBlogs\PostBlogs;
 use App\Models\Psicologo;
-
+use Illuminate\Support\Str;
 use App\Traits\HttpResponseHelper;
 
 class BlogController extends Controller
@@ -43,6 +43,8 @@ class BlogController extends Controller
     public function showAllBlogs()
     {
         try {
+            $blogs = Blog::with('categoria', 'psicologo.users')->get()->map(function ($blog) {
+
             // Obtener blogs con la relación de categoría
             $blogs = Blog::with('categoria:idCategoria,nombre')->get();
 
@@ -50,11 +52,10 @@ class BlogController extends Controller
             $blogs = $blogs->map(function ($blog) {
                 return [
                     'idBlog' => $blog->idBlog,
+                    'id' => $blog->idBlog,
                     'tema' => $blog->tema,
-                    'contenido' => $blog->contenido,
+                    'contenido' => Str::limit($blog->contenido, 150),
                     'imagen' => $blog->imagen,
-                    'idPsicologo' => $blog->idPsicologo,
-                    'categoria' => $blog->categoria ? $blog->categoria->nombre : null, // Obtener solo el nombre
                 ];
             });
 
@@ -67,6 +68,7 @@ class BlogController extends Controller
                 ->send();
         }
     }
+
 
     public function BlogAllPreviews()
     {

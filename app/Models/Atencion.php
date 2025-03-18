@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Atencion extends Model
 {
-    use HasFactory;
-    protected $primaryKey = 'idAtencion';
-    public $timestamps = false; 
+    protected $table = 'atenciones'; 
+    protected $primaryKey = 'idAtencion'; 
+    public $timestamps = false;
+
     protected $fillable = [
-        'IdCita',
+        'idCita',
         'MotivoConsulta',
         'FormaContacto',
         'Diagnostico',
@@ -23,6 +24,8 @@ class Atencion extends Model
         'Comentario',
         'DocumentosAdicionales',
         'FechaAtencion',
+        'descripcion',
+        'fecha_atencion'
     ];
     
     public function enfermedad()
@@ -30,7 +33,7 @@ class Atencion extends Model
         return $this->belongsTo(Enfermedad::class, 'idEnfermedad');
     }
 
-    public function citas()
+    public function cita()
     {
         return $this->belongsTo(Cita::class, 'idCita');
     }

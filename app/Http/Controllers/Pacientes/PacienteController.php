@@ -8,41 +8,29 @@ use App\Http\Requests\PostPaciente\PostPaciente;
 use App\Http\Requests\PostUser\PostUser;
 use App\Models\Paciente;
 use App\Models\Psicologo;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use App\Traits\HttpResponseHelper;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class PacienteController extends Controller
 {
-    public function createPaciente(PostPaciente $requestPaciente, PostUser $requestUser)
+    public function createPaciente(PostPaciente $requestPaciente)
     {
         try{
-            $usuarioData = $requestUser->all();
-            $usuarioData['rol'] = 'PACIENTE';
-            $usuarioData['password'] = Hash::make($requestUser['password']);
-            $usuarioData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $usuarioData['fecha_nacimiento'])->format('Y-m-d');
-            $usuario = User::create($usuarioData);
-            $usuario_id = $usuario->user_id;
-
             $userId = Auth::id();
             $psicologo = Psicologo::where('user_id', $userId)->first();
-
+            
             if (!$psicologo) {
                 return HttpResponseHelper::make()
-                    ->unauthorizedResponse('Solo los psicólogos pueden crear pacientes')
-                    ->send();
+                ->unauthorizedResponse('Solo los psicólogos pueden crear pacientes')
+                ->send();
             }
             
             $pacienteData = $requestPaciente->all();
+            $pacienteData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $pacienteData['fecha_nacimiento'])->format('Y-m-d');
             $pacienteData['idPsicologo'] = $psicologo->idPsicologo;
             
-            // Asignar el user_id recién creado al paciente
-            $pacienteData['user_id'] = $usuario_id;
             Paciente::create($pacienteData);
-
-            $usuario->assignRole('PACIENTE');
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Paciente creado correctamente')
@@ -56,18 +44,13 @@ class PacienteController extends Controller
         }
     }
 
-    public function updatePaciente(PostPaciente $requestPaciente, PostUser $requestUser, int $id)
+    public function updatePaciente(PostPaciente $requestPaciente, int $id)
     {
         try{
             $paciente = Paciente::findOrFail($id);
             $pacienteData = $requestPaciente->all();
+            $pacienteData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $pacienteData['fecha_nacimiento'])->format('Y-m-d');
             $paciente->update($pacienteData);
-            
-            $usuario= User::findOrFail($paciente->user_id);
-            $usuarioData = $requestUser->all();
-            $usuarioData['password'] = Hash::make($requestUser['password']);
-            $usuarioData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $usuarioData['fecha_nacimiento'])->format('Y-m-d');
-            $usuario->update($usuarioData);
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Paciente actualizado correctamente')
@@ -81,7 +64,7 @@ class PacienteController extends Controller
         }
     }
 
-    public function showPacientesById()
+    public function showPacientesByPsicologo()
     {
         try {
             $userId = Auth::id();
@@ -91,7 +74,7 @@ class PacienteController extends Controller
             $psicologos = Paciente::where('idPsicologo', $idPsicologo)->get();
 
             return HttpResponseHelper::make()
-                ->successfulResponse('Comentarios obtenidos correctamente', $psicologos)
+                ->successfulResponse('Pacientes obtenidos correctamente', $psicologos)
                 ->send();
 
         } catch (\Exception $e) {
@@ -101,6 +84,19 @@ class PacienteController extends Controller
         }
     }
 
-    
+    public function destroyPaciente(int $id)
+    {
+        try {
+            $paciente = Paciente::findOrFail($id);
+            $paciente->delete();
 
+            return HttpResponseHelper::make()
+                ->successfulResponse('Paciente eliminado correctamente')
+                ->send();
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Error al eliminar el blog: ' . $e->getMessage())
+                ->send();
+        }
+    }
 }

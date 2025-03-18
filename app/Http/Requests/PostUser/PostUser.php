@@ -35,7 +35,6 @@ class PostUser extends FormRequest
         return [
             'name' => 'required|string|max:100',
             'apellido' => 'required|string|max:100',
-            'edad' => 'required|integer',
             'email' => [
                 'required',
                 'email',

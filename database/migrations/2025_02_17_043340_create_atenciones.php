@@ -20,7 +20,7 @@ return new class extends Migration
 
         Schema::create('atenciones', function (Blueprint $table) {
             $table->id('IdAtencion'); 
-            $table->unsignedInteger('IdCita'); 
+            $table->unsignedBigInteger('idCita');
             $table->text('MotivoConsulta');
             $table->string('FormaContacto', 100);
             $table->text('Diagnostico');
@@ -31,8 +31,10 @@ return new class extends Migration
             $table->text('DocumentosAdicionales');
             $table->text('Comentario');
             $table->date('FechaAtencion');
+            $table->text('descripcion')->nullable();
+            $table->date('fecha_atencion')->nullable();
 
-            $table->foreign('IdCita')->references('IdCita')->on('citas')->onDelete('cascade');
+            $table->foreign('idCita')->references('idCita')->on('citas')->onDelete('cascade');
             $table->foreign('IdEnfermedad')->references('IdEnfermedad')->on('enfermedades')->onDelete('cascade');
         });
     }
