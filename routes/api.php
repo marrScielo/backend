@@ -28,6 +28,7 @@ Route::controller(ContactosController::class)->prefix('contactos')->group(functi
 Route::controller(PacienteController::class)->prefix('pacientes')->group(function () {
     Route::group(['middleware' => ['auth:sanctum', 'role:PSICOLOGO']], function () {
     Route::post('/create', 'createPaciente'); 
+    Route::get('/show/{id}', 'showPacienteById'); 
     Route::get('/showAll', 'showPacientesByPsicologo'); 
     Route::put('/update/{id}', 'updatePaciente');
     Route::delete('/delete/{id}', 'destroyPaciente');
@@ -83,7 +84,7 @@ Route::controller(CategoriaController::class)->prefix('categorias')->group(funct
 });
 
 Route::controller(CitaController::class)->prefix('citas')->middleware('auth:sanctum')->group(function () {
-    Route::get('/show/{id}', 'showById'); 
+    Route::get('/showAll', 'showAllCitas'); 
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::post('/create', 'createCita');
     Route::get('show/{id}', 'showCita');

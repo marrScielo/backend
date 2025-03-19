@@ -6,14 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Cita;
 use App\Traits\HttpResponseHelper;
 use Illuminate\Http\Request;
-use App\Http\Requests\CitaRequest;
+use App\Http\Requests\PostCita\PostCita;
 use Exception;
 
 
 class CitaController extends Controller
 {
     
-    public function createCita(CitaRequest $request)
+    public function createCita(PostCita $request)
     {
         try {
             $data = $request->validated();
@@ -64,7 +64,7 @@ class CitaController extends Controller
         }
     }
 
-    public function updateCita(CitaRequest $request, int $id)
+    public function updateCita(PostCita $request, int $id)
     {
         try {
             $cita = Cita::findOrFail($id);

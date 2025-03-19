@@ -7,12 +7,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Respuesta;
 use App\Traits\HttpResponseHelper;
-use App\Http\Requests\RespuestaComentarioRequest;
+use App\Http\Requests\PostRespuestaComentario\PostRespuestaComentario;
 use Exception;
 
 class RespuestaComentarioController extends Controller
 {
-    public function createRespuesta(RespuestaComentarioRequest $request)
+    public function createRespuesta(PostRespuestaComentario $request)
     {
         try {
             $data = $request->validated();

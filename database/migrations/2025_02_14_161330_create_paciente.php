@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('apellido', 100); 
             $table->string('email', 100)->unique(); 
             $table->date('fecha_nacimiento');
+            $table->mediumText('imagen')->nullable();
             $table->string('genero', 20); 
             $table->string('ocupacion', 100);
             $table->string('estadoCivil', 100);
