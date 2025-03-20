@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Psicologos;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostUser\PostUser;
 use App\Http\Requests\PostPsicologo\PostPsicologo;
+use App\Http\Requests\PutPsicologo\PutPsicologo;
+use App\Http\Requests\PutUser\PutUser;
+use App\Models\Especialidad;
 use App\Models\Psicologo;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -13,7 +16,7 @@ use Carbon\Carbon;
 
 class PsicologosController extends Controller
 {
-    
+
     public function createPsicologo(PostPsicologo $requestPsicologo, PostUser $requestUser)
     {
         try {
@@ -25,21 +28,20 @@ class PsicologosController extends Controller
 
             $usuario = User::create($usuarioData);
             $usuario_id = $usuario->user_id;
-    
+
             // Asignar el user_id recién creado al psicólogo
             $psicologoData = $requestPsicologo->all();
             $psicologoData['user_id'] = $usuario_id;
             $psicologo = Psicologo::create($psicologoData);
-    
+
             // Asociar las especialidades y enfoques al psicólogo
             $psicologo->especialidades()->attach($requestPsicologo->input('especialidades'));
-    
+
             $usuario->assignRole('PSICOLOGO');
-    
+
             return HttpResponseHelper::make()
                 ->successfulResponse('Psicólogo creado correctamente')
                 ->send();
-    
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Ocurrió un problema al procesar la solicitud. ' . $e->getMessage())
@@ -62,15 +64,20 @@ class PsicologosController extends Controller
                 'idPsicologo' => $psicologo->idPsicologo,
                 'nombre' => $psicologo->users->name,
                 'apellido' => $psicologo->users->apellido,
+                'pais' => $psicologo->pais,
+                'genero' => $psicologo->genero,
+                'correo' => $psicologo->users->email,
+                'contraseña'=> $psicologo->users->password,
+                'imagen'=> $psicologo->users->imagen,
+                'fecha_nacimiento' => $psicologo->users->fecha_nacimiento->format('d/m/Y'),
                 'especialidades' => $psicologo->especialidades->pluck('nombre'),
                 'introduccion' => $psicologo->introduccion,
-                'horario' => $psicologo->horario,
+                'experiencia' => $psicologo->experiencia,
             ];
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Psicólogos obtenidos correctamente', $response)
                 ->send();
-
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Ocurrió un problema al obtener el psicólogo: ' . $e->getMessage())
@@ -81,26 +88,27 @@ class PsicologosController extends Controller
     public function showAllPsicologos()
     {
         try {
-            $psicologos = Psicologo::with(['especialidades','users'])
-            ->where('estado', 'A')
-            ->get()
-            ->map(function ($psicologo) {
-                return [
-                    'idPsicologo' => $psicologo->idPsicologo,
-                    'nombre' => $psicologo->users->name,
-                    'apellido' => $psicologo->users->apellido,
-                    'pais' => $psicologo->pais,
-                    'edad' => $psicologo->users->edad,
-                    'genero' => $psicologo->genero,
-                    'experiencia' => $psicologo->experiencia,
-                    'especialidades' => $psicologo->especialidades->pluck('nombre'), 
-                ];
-            });
+            $psicologos = Psicologo::with(['especialidades', 'users'])
+                ->where('estado', 'A')
+                ->get()
+                ->map(function ($psicologo) {
+                    return [
+                        'idPsicologo' => $psicologo->idPsicologo,
+                        'nombre' => $psicologo->users->name,
+                        'apellido' => $psicologo->users->apellido,
+                        'pais' => $psicologo->pais,
+                        'genero' => $psicologo->genero,
+                        'experiencia' => $psicologo->experiencia,
+                        'introduccion' => $psicologo->introduccion,
+                        'correo' => $psicologo->users->email,
+                        'especialidades' => $psicologo->especialidades->pluck('nombre'),
+
+                    ];
+                });
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Lista de psicologos obtenida correctamente', $psicologos)
                 ->send();
-
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Ocurrió un problema al obtener los psicologos: ' . $e->getMessage())
@@ -108,34 +116,53 @@ class PsicologosController extends Controller
         }
     }
 
-    public function updatePsicologo(PostPsicologo $requestPsicologo, PostUser $requestUser, int $id)
+    public function updatePsicologo(PutPsicologo $requestPsicologo, PutUser $requestUser, int $id)
     {
-        try{
+        try {
             $psicologo = Psicologo::findOrFail($id);
-            $psicologoData = $requestPsicologo->all();
+            $usuario = User::findOrFail($psicologo->user_id);
+            $psicologoData = $requestPsicologo->only([
+                'introduccion', 'pais', 'genero', 'experiencia', 'horario'
+            ]);
             $psicologo->update($psicologoData);
-            
-            $usuario= User::findOrFail($psicologo->user_id);
-            $usuarioData = $requestUser->all();
-            $usuarioData['password'] = Hash::make($requestUser['password']);
-            $usuarioData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $usuarioData['fecha_nacimiento'])->format('Y-m-d');
 
+            $usuarioData = $requestUser->only(['name', 'apellido', 'email', 'password', 'fecha_nacimiento', 'imagen']);
+            if ($requestUser->filled('password')) {
+                $usuarioData['password'] = Hash::make($requestUser->password);
+            }
+            if ($requestUser->filled('fecha_nacimiento')) {
+                $usuarioData['fecha_nacimiento'] = Carbon::createFromFormat('d/m/Y', $requestUser->fecha_nacimiento)->format('Y-m-d');
+            }
             $usuario->update($usuarioData);
-
-            // Asociar las nuevas especialidades al psicólogo
-            $psicologo->especialidades()->sync($requestPsicologo->input('especialidades'));
-
+            if ($requestPsicologo->filled('especialidades')) {
+                $especialidadesNombres = $requestPsicologo->input('especialidades'); 
+                $especialidadesIds = [];
+                foreach ($especialidadesNombres as $nombre) {
+                    $nombre = trim($nombre);
+                    if (empty($nombre)) {
+                        continue; 
+                    }
+                    $especialidad = Especialidad::firstOrCreate(['nombre' => $nombre]);
+                    if (!$especialidad->idEspecialidad) {
+                        throw new \Exception("No se pudo crear o encontrar la especialidad: $nombre");
+                    }
+                    $especialidadesIds[] = $especialidad->idEspecialidad; 
+                }
+                if (!empty($especialidadesIds)) {
+                    $psicologo->especialidades()->sync($especialidadesIds);
+                }
+            }
+    
             return HttpResponseHelper::make()
-                ->successfulResponse('Psicologo actualizado correctamente')
+                ->successfulResponse('Psicólogo actualizado correctamente')
                 ->send();
-
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return HttpResponseHelper::make()
-                ->internalErrorResponse('Ocurrio un problema al procesar la solicitud.'.
-                 $e->getMessage())
+                ->internalErrorResponse('Ocurrió un problema: ' . $e->getMessage())
                 ->send();
         }
     }
+    
 
     public function desactivatePsicologo(int $id)
     {
@@ -155,10 +182,35 @@ class PsicologosController extends Controller
             return HttpResponseHelper::make()
                 ->successfulResponse('Psicólogo desactivado correctamente')
                 ->send();
-
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Ocurrió un problema al desactivar el psicólogo: ' . $e->getMessage())
+                ->send();
+        }
+    }
+
+    public function DeletePsicologo(int $id)
+    {
+        try {
+
+            $psicologo = Psicologo::find($id);
+            if (!$psicologo) {
+                return HttpResponseHelper::make()
+                    ->notFoundResponse('Psicólogo no encontrado')
+                    ->send();
+            }
+            $user_id = $psicologo->user_id;
+            $psicologo->delete();
+            if ($user_id) {
+                User::find($user_id)->delete();
+            }
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Psicólogo y usuario eliminados correctamente')
+                ->send();
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrió un problema al eliminar el psicólogo: ' . $e->getMessage())
                 ->send();
         }
     }

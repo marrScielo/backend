@@ -44,6 +44,7 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
         Route::post('/create', 'createPsicologo');
         Route::put('/update/{id}', 'updatePsicologo');
         Route::post('/delete/{id}', 'desactivatePsicologo');
+        Route::delete('/delete/{id}', 'DeletePsicologo');
     });
 });
 

@@ -43,30 +43,25 @@ class BlogController extends Controller
     public function showAllBlogs()
     {
         try {
-            $blogs = Blog::with('categoria', 'psicologo.users')->get()->map(function ($blog) {
-
-            // Obtener blogs con la relación de categoría
-            $blogs = Blog::with('categoria:idCategoria,nombre')->get();
-
-            // Transformar la respuesta para incluir el nombre de la categoría en lugar del ID
-            $blogs = $blogs->map(function ($blog) {
-                return [
-                    'idBlog' => $blog->idBlog,
-                    'id' => $blog->idBlog,
-                    'tema' => $blog->tema,
-                    'contenido' => Str::limit($blog->contenido, 150),
-                    'imagen' => $blog->imagen,
-                ];
-            });
-
-            return HttpResponseHelper::make()
-                ->successfulResponse('Lista de blogs obtenida correctamente', $blogs)
-                ->send();
-        } catch (\Exception $e) {
+                $blogs = Blog::with('categoria', 'psicologo.users')->get()->map(function ($blog) {
+                    return [
+                        'idBlog' => $blog->idBlog,
+                        'id' => $blog->idBlog,
+                        'tema' => $blog->tema,
+                        'contenido' => Str::limit($blog->contenido, 150),
+                        'imagen' => $blog->imagen,
+                    ];
+                });
+    
+                return HttpResponseHelper::make()
+                    ->successfulResponse('Lista de blogs obtenida correctamente', $blogs)
+                    ->send();
+            } catch (\Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Ocurrió un problema al obtener los blogs: ' . $e->getMessage())
                 ->send();
         }
+    
     }
 
 
