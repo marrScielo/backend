@@ -90,10 +90,11 @@ class PsicologosController extends Controller
                     'nombre' => $psicologo->users->name,
                     'apellido' => $psicologo->users->apellido,
                     'pais' => $psicologo->pais,
-                    'edad' => $psicologo->users->edad,
                     'genero' => $psicologo->genero,
                     'experiencia' => $psicologo->experiencia,
                     'especialidades' => $psicologo->especialidades->pluck('nombre'), 
+                    'introduccion' => $psicologo->introduccion,
+
                 ];
             });
 
