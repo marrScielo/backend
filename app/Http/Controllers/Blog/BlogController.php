@@ -18,7 +18,6 @@ class BlogController extends Controller
             $userId = Auth::id();
             $psicologo = Psicologo::where('user_id', $userId)->first();
 
-
             if (!$psicologo) {
                 return HttpResponseHelper::make()
                     ->forbiddenResponse('No tienes permisos para crear un blog')
@@ -44,18 +43,15 @@ class BlogController extends Controller
     {
         try {
             $blogs = Blog::with('categoria', 'psicologo.users')->get()->map(function ($blog) {
-
-            // Obtener blogs con la relación de categoría
-            $blogs = Blog::with('categoria:idCategoria,nombre')->get();
-
-            // Transformar la respuesta para incluir el nombre de la categoría en lugar del ID
-            $blogs = $blogs->map(function ($blog) {
                 return [
-                    'idBlog' => $blog->idBlog,
                     'id' => $blog->idBlog,
                     'tema' => $blog->tema,
                     'contenido' => Str::limit($blog->contenido, 150),
                     'imagen' => $blog->imagen,
+                    'nombrePsicologo' => $blog->psicologo->users->name . ' ' . $blog->psicologo->users->apellido,
+                    'psicologoImagenId' => $blog->psicologo->users->imagen,
+                    'categoria' =>  $blog->categoria->nombre,
+                    'fecha_publicado' => $blog->fecha_publicado,
                 ];
             });
 
@@ -72,14 +68,11 @@ class BlogController extends Controller
 
     public function BlogAllPreviews()
     {
-
         try {
             $blogs = Blog::with([
                 'categoria:idCategoria,nombre',
                 'psicologo:idPsicologo,user_id',
                 'psicologo.users:user_id,name,apellido,imagen',
-
-
             ])->get();
 
             $blogs = $blogs->map(fn($blog) => [
@@ -103,7 +96,6 @@ class BlogController extends Controller
                 ->send();
         }
     }
-
 
     public function showby($id)
     {
@@ -148,9 +140,6 @@ class BlogController extends Controller
             return response()->json(['error' => 'Error al obtener autores: ' . $th->getMessage()], 500);
         }
     }
-
-
-
 
     public function updateBlog(PostBlogs $request, int $id)
     {

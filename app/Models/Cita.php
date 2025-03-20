@@ -46,7 +46,7 @@ class Cita extends Model
 
     public function paciente()
     {
-        return $this->belongsTo(canal::class, foreignKey: 'idPaciente');
+        return $this->belongsTo(Paciente::class, foreignKey: 'idPaciente');
     }
 
     public function atenciones()

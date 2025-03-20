@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Contactos\ContactosController;
@@ -34,7 +33,6 @@ Route::controller(PacienteController::class)->prefix('pacientes')->group(functio
     Route::delete('/delete/{id}', 'destroyPaciente');
     });
 });
-
 
 Route::controller(PsicologosController::class)->prefix('psicologos')->group(function () {
     Route::get('/showAll', 'showAllPsicologos');
@@ -83,11 +81,11 @@ Route::controller(CategoriaController::class)->prefix('categorias')->group(funct
     });
 });
 
-Route::controller(CitaController::class)->prefix('citas')->middleware('auth:sanctum')->group(function () {
-    Route::get('/showAll', 'showAllCitas'); 
+Route::controller(CitaController::class)->prefix('citas')->group(function () {
+    Route::get('/showAll', 'showAllCitasByPsicologo'); 
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::post('/create', 'createCita');
-    Route::get('show/{id}', 'showCita');
+    Route::get('show/{id}', 'showCitaById');
     Route::put('update/{id}', 'updateCita');
     Route::delete('delete/{id}', 'destroyCita');
     });
