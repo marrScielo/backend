@@ -35,7 +35,7 @@ class HttpResponseHelper
             'description' => $this->description,
             'result' => $this->data ?? [],
             'errorBag' => $this->errors ?? [],
-        ], $this->status_code);
+        ], $this->status_code, [], JSON_UNESCAPED_UNICODE);
     }
 
     /**

@@ -26,7 +26,8 @@ class DatabaseSeeder extends Seeder
             TipoCitaSeeder::class,
             EtiquetaSeeder::class,
             ComentarioSeeder::class, 
-            PacienteSeeder::class 
+            PacienteSeeder::class, 
+            CitaSeeder::class,
         ]);
 
     }

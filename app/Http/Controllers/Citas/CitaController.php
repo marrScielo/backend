@@ -7,8 +7,9 @@ use App\Models\Cita;
 use App\Traits\HttpResponseHelper;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostCita\PostCita;
+use App\Models\Psicologo;
 use Exception;
-
+use Illuminate\Support\Facades\Auth;
 
 class CitaController extends Controller
 {
@@ -32,7 +33,11 @@ class CitaController extends Controller
     public function showAllCitasByPsicologo()
     {
         try {
+            $userId = Auth::id();
+            $psicologo = Psicologo::where('user_id', $userId)->first();
+
             $citas = Cita::with(['paciente'])
+            ->where('idPsicologo', $psicologo->idPsicologo)
             ->get()
             ->map(function ($cita) {
                 return [
@@ -63,31 +68,42 @@ class CitaController extends Controller
             ->map(function ($cita) {
                 return [
                     'idCita' => $cita->idCita,
-                    'paciente' => $cita->paciente->nombre . ' ' . $cita->paciente->apellido,
-                    'motivo' => $cita->motivo_Consulta,
-                    'estado' => $cita->estado_Cita,
-                    'color' => $cita->color,
                     'fecha' => $cita->fecha_cita,
                     'hora' => $cita->hora_cita,
-                    'tipo_cita' => $cita->tipoCita->nombre,
                     'duracion' => $cita->duracion . 'min.',
-                    'canal' => $cita->canal->nombre,
-                    'etiqueta' => $cita->etiqueta->nombre,
                 ];
             });
 
-            if (!$cita) {
-                return HttpResponseHelper::make()
-                    ->notFoundResponse('Cita no encontrada')
-                    ->send();
-            }
-
             return HttpResponseHelper::make()
-            ->successfulResponse('Cita obtenida correctamente', $cita->toArray())
+            ->successfulResponse('Citas obtenida correctamente', $cita->toArray())
             ->send();
         } catch (Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Error al obtener la cita: ' . $e->getMessage())
+                ->send();
+        }
+    }
+
+    public function showCitasPendientes(int $id)
+    {
+        try {
+            $citas = Cita::where('estado_Cita', 'Pendiente')
+            ->where('idPsicologo', $id)
+            ->get()
+            ->map(function ($cita) {
+                return [
+                    'fecha' => $cita->fecha_cita,
+                    'hora'  => $cita->hora_cita,
+                    'duracion' => $cita->duracion . ' min.',
+                ];
+            });
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Lista de citas obtenida correctamente', $citas)
+                ->send();
+        } catch (Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Error al obtener las citas: ' . $e->getMessage())
                 ->send();
         }
     }

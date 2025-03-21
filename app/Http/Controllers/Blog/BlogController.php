@@ -97,7 +97,7 @@ class BlogController extends Controller
         }
     }
 
-    public function showby($id)
+    public function showbyIdBlog($id)
     {
         try {
             $blog = Blog::find($id);

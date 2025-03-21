@@ -82,8 +82,9 @@ Route::controller(CategoriaController::class)->prefix('categorias')->group(funct
 });
 
 Route::controller(CitaController::class)->prefix('citas')->group(function () {
-    Route::get('/showAll', 'showAllCitasByPsicologo'); 
+    Route::get('/showPendientes/{id}', 'showCitasPendientes'); 
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
+    Route::get('/showAll', 'showAllCitasByPsicologo'); 
     Route::post('/create', 'createCita');
     Route::get('show/{id}', 'showCitaById');
     Route::put('update/{id}', 'updateCita');
