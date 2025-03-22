@@ -32,10 +32,22 @@ class CitaController extends Controller
     public function showAllCitas()
     {
         try {
-            $citas = Cita::with(['etiqueta', 'tipoCita', 'canal', 'paciente', 'atenciones'])->get();
-            return HttpResponseHelper::make()
-                ->successfulResponse('Lista de citas obtenida correctamente', $citas)
-                ->send();
+            $citas = Cita::with(['paciente'])
+            ->get()
+            ->map(function ($cita) {
+                return [
+                    'paciente' => $cita->paciente->nombre . ' ' . $cita->paciente->apellido, 
+                    'codigo' => $cita->paciente->codigo, 
+                    'motivo' => $cita->motivo_Consulta,
+                    'estado' => $cita->estado_Cita,
+                    'fecha_inicio' => $cita->fecha_cita . ' ' . $cita->hora_cita,
+                    'duracion' => $cita->duracion . ' min.'
+                ];
+            });
+
+        return HttpResponseHelper::make()
+            ->successfulResponse('Lista de citas obtenida correctamente', $citas)
+            ->send();
         } catch (Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Error al obtener las citas: ' . $e->getMessage())
@@ -46,16 +58,21 @@ class CitaController extends Controller
     public function showCita(int $id)
     {
         try {
-            $cita = Cita::with(['etiqueta', 'tipoCita', 'canal', 'paciente', 'atenciones'])->find($id);
-
-            if (!$cita) {
-                return HttpResponseHelper::make()
-                    ->notFoundResponse('Cita no encontrada')
-                    ->send();
-            }
+            $citas = Cita::with(['paciente'])
+            ->get()
+            ->map(function ($cita) {
+                return [
+                    'paciente' => $cita->paciente->nombre . ' ' . $cita->paciente->apellido, 
+                    'codigo' => $cita->paciente->codigo, 
+                    'motivo' => $cita->motivo_Consulta,
+                    'estado' => $cita->estado_Cita,
+                    'fecha_inicio' => $cita->fecha_cita . ' ' . $cita->hora_cita,
+                    'duracion' => $cita->duracion . ' min.'
+                ];
+            });
 
             return HttpResponseHelper::make()
-            ->successfulResponse('Cita obtenida correctamente', $cita->toArray())
+            ->successfulResponse('Lista de citas obtenida correctamente', $citas)
             ->send();
         } catch (Exception $e) {
             return HttpResponseHelper::make()

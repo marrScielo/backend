@@ -26,10 +26,13 @@ class CitaRequest extends FormRequest
             'idTipoCita' => 'required|exists:tipo_citas,idTipoCita',
             'idCanal' => 'required|exists:canales,idCanal',
             'idPaciente' => 'required|exists:pacientes,idPaciente',
+            'idPsicologo' => 'required|exists:psicologos,idPsicologo',
             'fecha_cita' => 'required|date',
             'hora_cita' => 'required|date_format:H:i:s',
             'motivo_Consulta' => 'nullable|string',
-            'estado_Cita' => 'required|in:Pendiente,Confirmada,Cancelada'
+            'estado_Cita' => 'required|in:Pendiente,Confirmada,Cancelada',
+            'colores' => 'nullable|string',
+            'duracion' => 'nullable|integer|min:0'
         ];
     }
 }

@@ -9,7 +9,8 @@ class Psicologo extends Model
 {
     use HasFactory;
     
-    public $timestamps = false; 
+    public $timestamps = false;
+    protected $table = 'psicologos'; 
     protected $primaryKey = 'idPsicologo';
     protected $fillable = [
         'introduccion',

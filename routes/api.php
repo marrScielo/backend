@@ -11,6 +11,7 @@ use App\Http\Controllers\Especialidad\EspecialidadController;
 use App\Http\Controllers\Categoria\CategoriaController;
 use App\Http\Controllers\Pacientes\PacienteController;
 use App\Http\Controllers\RespuestasBlog\RespuestaComentarioController;
+use App\Http\Controllers\AtencionController;
 
 Route::controller(AuthController::class)->prefix('auth')->group(function(){
     Route::post('/login', 'login');
@@ -94,6 +95,15 @@ Route::controller(RespuestaComentarioController::class)->prefix('respuestas')->g
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::get('/show/{id}', 'showRespuestasByComentario');
     Route::delete('/delete/{id}', 'destroyRespuesta');
+    });
+});
+
+Route::controller(AtencionController::class)->prefix('atenciones')->group(function () {
+    Route::post('/create', 'createAtencion');
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
+    Route::get('/show/{id}', 'showAtencion');
+    Route::put('/update/{id}', 'updateAtencion');
+    Route::delete('/delete/{id}', 'destroyAtencion');
     });
 });
 

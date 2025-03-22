@@ -27,15 +27,14 @@ return new class extends Migration
             $table->text('Tratamiento');
             $table->text('Observacion');
             $table->text('UltimosObjetivos');
-            $table->unsignedInteger('IdEnfermedad'); 
+            $table->unsignedInteger('idEnfermedad'); 
             $table->text('DocumentosAdicionales');
             $table->text('Comentario');
             $table->date('FechaAtencion');
             $table->text('descripcion')->nullable();
-            $table->date('fecha_atencion')->nullable();
 
             $table->foreign('idCita')->references('idCita')->on('citas')->onDelete('cascade');
-            $table->foreign('IdEnfermedad')->references('IdEnfermedad')->on('enfermedades')->onDelete('cascade');
+            $table->foreign('idEnfermedad')->references('idEnfermedad')->on('enfermedades')->onDelete('cascade');
         });
     }
 

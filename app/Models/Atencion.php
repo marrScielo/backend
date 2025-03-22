@@ -20,7 +20,7 @@ class Atencion extends Model
         'Tratamiento',
         'Observacion',
         'UltimosObjetivos',
-        'IdEnfermedad',
+        'idEnfermedad',
         'Comentario',
         'DocumentosAdicionales',
         'FechaAtencion',
