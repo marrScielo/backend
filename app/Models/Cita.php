@@ -27,6 +27,7 @@ class Cita extends Model
         'duracion',
         'fecha_cita',
         'hora_cita',
+        'idPsicologo',
     ];
 
     public function etiqueta()
@@ -52,5 +53,10 @@ class Cita extends Model
     public function atenciones()
     {
         return $this->hasMany(Atencion::class, 'idCita');
+    }
+
+    public function psicologo()
+    {
+        return $this->belongsTo(psicologo::class, 'idPsicologo');
     }
 }
