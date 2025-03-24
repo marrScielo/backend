@@ -93,7 +93,9 @@ class PsicologosController extends Controller
                     'edad' => $psicologo->users->edad,
                     'genero' => $psicologo->genero,
                     'experiencia' => $psicologo->experiencia,
-                    'especialidades' => $psicologo->especialidades->pluck('nombre'), 
+                    'especialidades' => $psicologo->especialidades->pluck('nombre'),
+                    'introduccion' => $psicologo->introduccion, 
+                    'horario' => $psicologo->horario,
                 ];
             });
 
@@ -137,28 +139,26 @@ class PsicologosController extends Controller
         }
     }
 
-    public function desactivatePsicologo(int $id)
+    public function cambiarEstadoPsicologo(int $id)
     {
         try {
             $psicologo = Psicologo::find($id);
-
+    
             if (!$psicologo) {
                 return HttpResponseHelper::make()
                     ->notFoundResponse('No se encontró un psicólogo con el ID proporcionado.')
                     ->send();
             }
-
-            // Cambiar el estado a desactivado 
-            $psicologo->estado = 'I';
+    
+            $psicologo->estado = $psicologo->estado === 'I' ? 'A' : 'I';
             $psicologo->save();
-
+    
             return HttpResponseHelper::make()
-                ->successfulResponse('Psicólogo desactivado correctamente')
+                ->successfulResponse('Estado del psicólogo cambiado correctamente a ' . ($psicologo->estado === 'A' ? 'Activo' : 'Inactivo'))
                 ->send();
-
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
-                ->internalErrorResponse('Ocurrió un problema al desactivar el psicólogo: ' . $e->getMessage())
+                ->internalErrorResponse('Ocurrió un problema al cambiar el estado del psicólogo: ' . $e->getMessage())
                 ->send();
         }
     }

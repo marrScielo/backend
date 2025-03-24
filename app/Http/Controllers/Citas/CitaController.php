@@ -90,7 +90,7 @@ class CitaController extends Controller
                 return [
                     'fecha' => $cita->fecha_cita,
                     'hora'  => $cita->hora_cita,
-                    'duracion' => $cita->duracion . ' min.',
+                    'duracion' => $cita->duracion,
                 ];
             });
 
