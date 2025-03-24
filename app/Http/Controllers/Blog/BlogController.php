@@ -18,7 +18,6 @@ class BlogController extends Controller
             $userId = Auth::id();
             $psicologo = Psicologo::where('user_id', $userId)->first();
 
-
             if (!$psicologo) {
                 return HttpResponseHelper::make()
                     ->forbiddenResponse('No tienes permisos para crear un blog')
@@ -43,20 +42,23 @@ class BlogController extends Controller
     public function showAllBlogs()
     {
         try {
-                $blogs = Blog::with('categoria', 'psicologo.users')->get()->map(function ($blog) {
-                    return [
-                        'idBlog' => $blog->idBlog,
-                        'id' => $blog->idBlog,
-                        'tema' => $blog->tema,
-                        'contenido' => Str::limit($blog->contenido, 150),
-                        'imagen' => $blog->imagen,
-                    ];
-                });
-    
-                return HttpResponseHelper::make()
-                    ->successfulResponse('Lista de blogs obtenida correctamente', $blogs)
-                    ->send();
-            } catch (\Exception $e) {
+            $blogs = Blog::with('categoria', 'psicologo.users')->get()->map(function ($blog) {
+                return [
+                    'id' => $blog->idBlog,
+                    'tema' => $blog->tema,
+                    'contenido' => Str::limit($blog->contenido, 150),
+                    'imagen' => $blog->imagen,
+                    'nombrePsicologo' => $blog->psicologo->users->name . ' ' . $blog->psicologo->users->apellido,
+                    'psicologoImagenId' => $blog->psicologo->users->imagen,
+                    'categoria' =>  $blog->categoria->nombre,
+                    'fecha_publicado' => $blog->fecha_publicado,
+                ];
+            });
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Lista de blogs obtenida correctamente', $blogs)
+                ->send();
+        } catch (\Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Ocurrió un problema al obtener los blogs: ' . $e->getMessage())
                 ->send();
@@ -67,14 +69,11 @@ class BlogController extends Controller
 
     public function BlogAllPreviews()
     {
-
         try {
             $blogs = Blog::with([
                 'categoria:idCategoria,nombre',
                 'psicologo:idPsicologo,user_id',
                 'psicologo.users:user_id,name,apellido,imagen',
-
-
             ])->get();
 
             $blogs = $blogs->map(fn($blog) => [
@@ -99,8 +98,7 @@ class BlogController extends Controller
         }
     }
 
-
-    public function showby($id)
+    public function showbyIdBlog($id)
     {
         try {
             $blog = Blog::find($id);
@@ -143,9 +141,6 @@ class BlogController extends Controller
             return response()->json(['error' => 'Error al obtener autores: ' . $th->getMessage()], 500);
         }
     }
-
-
-
 
     public function updateBlog(PostBlogs $request, int $id)
     {

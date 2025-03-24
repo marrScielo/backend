@@ -31,7 +31,9 @@ class PostCita extends FormRequest
             'duracion' => 'required|integer',
             'hora_cita' => 'required|date_format:H:i:s',
             'motivo_Consulta' => 'nullable|string',
-            'estado_Cita' => 'required|in:Pendiente,Confirmada,Cancelada'
+            'estado_Cita' => 'required|in:Pendiente,Confirmada,Cancelada',
+            'colores' => 'nullable|string',
+            'duracion' => 'nullable|integer|min:0'
         ];
     }
 }
