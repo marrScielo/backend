@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('pais', 4);
             $table->string('genero', 50);
             $table->integer('experiencia');
-            $table->json('horario');
+            $table->json('horario')->nullable(); 
             $table->char('estado', 1);
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
