@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Carbon;
 
 class User extends Authenticatable
 {
@@ -16,10 +16,13 @@ class User extends Authenticatable
     protected $keyType = 'int'; 
     public $incrementing = true; 
  
+     protected $casts = [
+        'fecha_nacimiento' => 'date',
+     ];
+
      protected $fillable = [
          'name',
          'apellido',
-         'edad',
          'email',
          'password',
          'fecha_nacimiento',
@@ -34,8 +37,8 @@ class User extends Authenticatable
          return $this->hasOne(Psicologo::class, 'user_id', 'user_id');
      }
 
-     public function getAuthIdentifierName()
+     public function getEdadAttribute()
      {
-         return 'user_id'; // Laravel usará esto para autenticación
+         return Carbon::parse($this->fecha_nacimiento)->age;
      }
 }

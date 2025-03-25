@@ -8,41 +8,29 @@ use App\Http\Requests\PostPaciente\PostPaciente;
 use App\Http\Requests\PostUser\PostUser;
 use App\Models\Paciente;
 use App\Models\Psicologo;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use App\Traits\HttpResponseHelper;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class PacienteController extends Controller
 {
-    public function createPaciente(PostPaciente $requestPaciente, PostUser $requestUser)
+    public function createPaciente(PostPaciente $requestPaciente)
     {
         try{
-            $usuarioData = $requestUser->all();
-            $usuarioData['rol'] = 'PACIENTE';
-            $usuarioData['password'] = Hash::make($requestUser['password']);
-            $usuarioData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $usuarioData['fecha_nacimiento'])->format('Y-m-d');
-            $usuario = User::create($usuarioData);
-            $usuario_id = $usuario->user_id;
-
             $userId = Auth::id();
             $psicologo = Psicologo::where('user_id', $userId)->first();
-
+            
             if (!$psicologo) {
                 return HttpResponseHelper::make()
-                    ->unauthorizedResponse('Solo los psicólogos pueden crear pacientes')
-                    ->send();
+                ->unauthorizedResponse('Solo los psicólogos pueden crear pacientes')
+                ->send();
             }
             
             $pacienteData = $requestPaciente->all();
+            $pacienteData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $pacienteData['fecha_nacimiento'])->format('Y-m-d');
             $pacienteData['idPsicologo'] = $psicologo->idPsicologo;
             
-            // Asignar el user_id recién creado al paciente
-            $pacienteData['user_id'] = $usuario_id;
             Paciente::create($pacienteData);
-
-            $usuario->assignRole('PACIENTE');
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Paciente creado correctamente')
@@ -56,18 +44,13 @@ class PacienteController extends Controller
         }
     }
 
-    public function updatePaciente(PostPaciente $requestPaciente, PostUser $requestUser, int $id)
+    public function updatePaciente(PostPaciente $requestPaciente, int $id)
     {
         try{
             $paciente = Paciente::findOrFail($id);
             $pacienteData = $requestPaciente->all();
+            $pacienteData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $pacienteData['fecha_nacimiento'])->format('Y-m-d');
             $paciente->update($pacienteData);
-            
-            $usuario= User::findOrFail($paciente->user_id);
-            $usuarioData = $requestUser->all();
-            $usuarioData['password'] = Hash::make($requestUser['password']);
-            $usuarioData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $usuarioData['fecha_nacimiento'])->format('Y-m-d');
-            $usuario->update($usuarioData);
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Paciente actualizado correctamente')
@@ -86,12 +69,54 @@ class PacienteController extends Controller
         try {
             $userId = Auth::id();
             $psicologo = Psicologo::where('user_id', $userId)->first();
-            $idPsicologo = $psicologo->idPsicologo;
 
-            $psicologos = Paciente::where('idPsicologo', $idPsicologo)->get();
+            if (!$psicologo) {
+                return HttpResponseHelper::make()
+                    ->notFoundResponse('No se tiene acceso como psicologo')
+                    ->send();
+            }
+
+            $pacientes = Paciente::where('idPsicologo', $psicologo->idPsicologo)->get();
+
+            $response = $pacientes->map(function ($paciente) {
+                return [
+                    'idPaciente' => $paciente->idPaciente,
+                    'DNI' => $paciente->DNI,
+                    'nombre' => $paciente->nombre . ' ' . $paciente->apellido,
+                    'correo' => $paciente->email,
+                    'celular' => $paciente->celular,
+                ];
+            });
 
             return HttpResponseHelper::make()
-                ->successfulResponse('Pacientes obtenidos correctamente', $psicologos)
+                ->successfulResponse('Pacientes obtenidos correctamente', $response)
+                ->send();
+
+        } catch (\Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrió un problema al procesar la solicitud. ' . $e->getMessage())
+                ->send();
+        }
+    }
+
+    public function showPacienteById($id)
+    {
+        try {
+            $userId = Auth::id();
+            $psicologo = Psicologo::where('user_id', $userId)->first();
+
+            if (!$psicologo) {
+                return HttpResponseHelper::make()
+                    ->notFoundResponse('No se tiene acceso como psicólogo.')
+                    ->send();
+            }
+
+            $paciente = Paciente::where('idPaciente', $id)
+                ->where('idPsicologo', $psicologo->idPsicologo)
+                ->first();
+
+            return HttpResponseHelper::make()
+                ->successfulResponse('Paciente obtenido correctamente', $paciente->toArray())
                 ->send();
 
         } catch (\Exception $e) {

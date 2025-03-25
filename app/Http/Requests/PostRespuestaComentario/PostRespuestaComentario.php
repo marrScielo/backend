@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\PostRespuestaComentario;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RespuestaComentarioRequest extends FormRequest
+class PostRespuestaComentario extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
