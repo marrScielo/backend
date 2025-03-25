@@ -36,25 +36,25 @@ Route::controller(PacienteController::class)->prefix('pacientes')->group(functio
 });
 
 Route::controller(PsicologosController::class)->prefix('psicologos')->group(function () {
-    Route::get('/showAll', 'showAllPsicologos');
-    Route::get('/show/{id}', 'showById');
+    Route::get('/', 'showAllPsicologos');
+    Route::get('/{id}', 'showById');
     
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
-        Route::post('/create', 'createPsicologo');
-        Route::put('/update/{id}', 'updatePsicologo');
-        Route::post('/delete/{id}', 'desactivatePsicologo');
+        Route::post('/', 'createPsicologo');
+        Route::put('/{id}', 'updatePsicologo');
+        Route::post('/{id}', 'desactivatePsicologo');
     });
 });
 
 Route::controller(BlogController::class)->prefix('blogs')->group(function () {
-    Route::get('/show/{id}', 'showbyIdBlog');
+    Route::get('/{id}', 'showbyIdBlog');
     Route::get('/all', 'showAllBlogs');
-    Route::get('/getAll','BlogAllPreviews');
+    Route::get('/','BlogAllPreviews');
     Route::get('/authors','showAllAuthors');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
-    Route::post('/create', 'createBlog');
-    Route::put('/update/{id}', 'updateBlog');
-    Route::delete('/delete/{id}', 'destroyBlog');
+    Route::post('/', 'createBlog');
+    Route::put('/{id}', 'updateBlog');
+    Route::delete('/{id}', 'destroyBlog');
     });
 });
 
@@ -83,9 +83,9 @@ Route::controller(CategoriaController::class)->prefix('categorias')->group(funct
 });
 
 Route::controller(CitaController::class)->prefix('citas')->group(function () {
-    Route::get('/showPendientes/{id}', 'showCitasPendientes'); 
+    Route::get('/pendientes/{id}', 'showCitasPendientes'); 
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
-    Route::get('/showAll', 'showAllCitasByPsicologo'); 
+    Route::get('/', 'showAllCitasByPsicologo'); 
     Route::post('/', 'createCita');
     Route::get('/{id}', 'showCitaById');
     Route::put('/{id}', 'updateCita');

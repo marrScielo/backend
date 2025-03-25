@@ -60,7 +60,6 @@ class CitaController extends Controller
     {
         try {
             $cita = Cita::with(['etiqueta', 'tipoCita', 'canal', 'paciente'])->find($id)
-            ->get()
             ->map(function ($cita) {
                 return [
                     'idCita' => $cita->idCita,
@@ -89,7 +88,7 @@ class CitaController extends Controller
             ->map(function ($cita) {
                 return [
                     'fecha' => $cita->fecha_cita,
-                    'hora'  => $cita->hora_cita,
+                    'hora'  => substr($cita->hora_cita, 0, 5),
                     'duracion' => $cita->duracion,
                 ];
             });
