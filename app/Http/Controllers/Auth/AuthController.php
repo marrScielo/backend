@@ -14,30 +14,35 @@ class AuthController extends Controller
     {
         try {
             $user = User::where('email', $request->email)->first();
-
-            if (!$user || !Hash::check($request->password, $user->password)) {
+            if (!$user) {
                 return HttpResponseHelper::make()
-                    ->unauthorizedResponse('Credenciales incorrectas.')
-                    ->send();
+                    ->unauthorizedResponse('El correo electrónico no está registrado.');
+               
             }
-
+            if (!Hash::check($request->password, $user->password)) {
+                return HttpResponseHelper::make()
+                    ->unauthorizedResponse('La contraseña es incorrecta.');
+                   
+            }
             $token = $user->createToken('token')->plainTextToken;
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Inicio de sesión exitoso.', [
                     'token' => $token,
                     'nombre' => $user->name,
-                    'apellido'=>$user->apellido,
+                    'apellido' => $user->apellido,
                     'email' => $user->email,
-                    'id'=>$user->user_id,
+                    'id' => $user->user_id,
                     'rol' => $user->rol
                 ])
                 ->send();
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
-                ->internalErrorResponse('Hubo un problema al procesar la solicitud.', [
-                    'error' => $e->getMessage() // Para depuración
-                ])
+
+                ->internalErrorResponse(
+                    'Hubo un problema al procesar la solicitud.' .
+                        $e->getMessage()
+                )
                 ->send();
         }
     }
