@@ -24,7 +24,6 @@ class PostComentario extends FormRequest
         return [
             'nombre' => 'required|string|max:100',
             'comentario' => 'required|string|max:200',
-            'idBlog' => 'required'
         ];
     }
 }

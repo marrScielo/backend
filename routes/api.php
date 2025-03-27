@@ -11,6 +11,7 @@ use App\Http\Controllers\Categoria\CategoriaController;
 use App\Http\Controllers\Pacientes\PacienteController;
 use App\Http\Controllers\RespuestasBlog\RespuestaComentarioController;
 use App\Http\Controllers\AtencionController;
+use App\Http\Controllers\RegistroFamiliar\RegistroFamiliarController;
 
 Route::controller(AuthController::class)->prefix('auth')->group(function(){
     Route::post('/login', 'login');
@@ -59,7 +60,7 @@ Route::controller(BlogController::class)->prefix('blogs')->group(function () {
 });
 
 Route::controller(ComentarioController::class)->prefix('comentarios')->group(function () {
-    Route::post('/', 'createComentario');
+    Route::post('/{id}', 'createComentario');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::get('/{id}', 'showComentariosByBlog'); 
     Route::delete('/{id}', 'destroyComentario');
@@ -107,6 +108,15 @@ Route::controller(AtencionController::class)->prefix('atenciones')->group(functi
     Route::get('/{id}', 'showAtencion');
     Route::put('/{id}', 'updateAtencion');
     Route::delete('/{id}', 'destroyAtencion');
+    });
+});
+
+Route::controller(RegistroFamiliarController::class)->prefix('registros')->group(function () {
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
+    Route::post('/{id}', 'createRegistro');
+    Route::get('/{id}', 'showRegistro');
+    Route::put('/{id}', 'updateRegistro');
+    Route::delete('/{id}', 'destroyRegistro');
     });
 });
 

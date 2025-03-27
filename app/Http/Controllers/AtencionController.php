@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Atencion;
 use Illuminate\Http\Request;
-use App\Http\Requests\AtencionRequest;
+use App\Http\Requests\PostAtencion\PostAtencion;
 use App\Traits\HttpResponseHelper;
 use Exception;
 
@@ -13,7 +13,7 @@ class AtencionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function createAtencion(AtencionRequest $request)
+    public function createAtencion(PostAtencion $request)
     {
         try {
             $data = $request->validated();
@@ -68,7 +68,7 @@ class AtencionController extends Controller
     /**
      * Actualizar una atención existente.
      */
-    public function updateAtencion(AtencionRequest $request, int $id)
+    public function updateAtencion(PostAtencion $request, int $id)
     {
         try {
             $atencion = Atencion::findOrFail($id);

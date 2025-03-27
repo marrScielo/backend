@@ -44,6 +44,11 @@ class Paciente extends Model
         return $this->belongsTo(Psicologo::class, 'idPsicologo');
     }
 
+    public function registroFamiliar()
+    {
+        return $this->hasOne(RegistroFamiliar::class, 'idPaciente');
+    }
+
     public function getEdadAttribute()
     {
         return Carbon::parse($this->fecha_nacimiento)->age;

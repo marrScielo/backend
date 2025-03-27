@@ -10,10 +10,11 @@ use App\Traits\HttpResponseHelper;
 
 class ComentarioController extends Controller
 {
-    public function createComentario(PostComentario $request)
+    public function createComentario(PostComentario $request, int $id)
     {
         try {
             $data = $request->all();
+            $data['idBlog'] = $id;
             Comentario::create($data);
 
             return HttpResponseHelper::make()
@@ -27,10 +28,10 @@ class ComentarioController extends Controller
         }
     }
 
-    public function showComentariosByBlog(int $idBlog)
+    public function showComentariosByBlog(int $id)
     {
         try {
-            $comentarios = Comentario::where('idBlog', $idBlog)->get();
+            $comentarios = Comentario::where('idBlog', $id)->get();
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Comentarios obtenidos correctamente', $comentarios)
