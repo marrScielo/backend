@@ -63,7 +63,6 @@ class BlogController extends Controller
                 ->internalErrorResponse('Ocurrió un problema al obtener los blogs: ' . $e->getMessage())
                 ->send();
         }
-    
     }
 
 
@@ -84,7 +83,7 @@ class BlogController extends Controller
                 'psicologo' => $blog->psicologo?->users?->name,
                 'psicologApellido' => $blog->psicologo?->users?->apellido,
                 'psicologoImagenId' => $blog->psicologo?->users->imagen,
-                'categoria' => $blog->categoria?->nombre,
+                'categoria' =>  $blog->categoria->nombre,
                 'fecha' => $blog->fecha_publicado,
             ]);
 
@@ -101,18 +100,32 @@ class BlogController extends Controller
     public function showbyIdBlog($id)
     {
         try {
-            $blog = Blog::find($id);
+            $blog = Blog::with(['categoria', 'psicologo.users'])->find($id); // Eliminamos el `get()`
 
             if (!$blog) {
                 return HttpResponseHelper::make()
-                    ->notFoundResponse('El blog no fue encontrado')->send();
+                    ->notFoundResponse('El blog no fue encontrado')
+                    ->send();
             }
+            $responseData = [
+                'id' => $blog->idBlog,
+                'tema' => $blog->tema,
+                'contenido' => $blog->contenido,
+                'imagen' => $blog->imagen,
+                'psicologo' => $blog->psicologo?->users?->name,
+                'psicologApellido' => $blog->psicologo?->users?->apellido,
+                'psicologoImagenId' => $blog->psicologo?->users->imagen,
+                'categoria' =>  $blog->categoria->nombre,
+                'fecha' => $blog->fecha_publicado,
+            ];
 
             return HttpResponseHelper::make()
-                ->successfulResponse('Blog obtenido correctamente', $blog->toArray())->send();
+                ->successfulResponse('Blog obtenido correctamente', $responseData)
+                ->send();
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
-                ->internalErrorResponse('Ocurrió un problema al obtener el blog: ' . $e->getMessage())->send();
+                ->internalErrorResponse('Ocurrió un problema al obtener el blog: ' . $e->getMessage())
+                ->send();
         }
     }
 
@@ -134,7 +147,7 @@ class BlogController extends Controller
                 ->values();
 
 
-                return HttpResponseHelper::make()
+            return HttpResponseHelper::make()
                 ->successfulResponse('Autores Publicados blogs', $authors)
                 ->send();
         } catch (\Throwable $th) {
