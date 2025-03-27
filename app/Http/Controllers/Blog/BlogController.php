@@ -115,6 +115,7 @@ class BlogController extends Controller
                 'psicologo' => $blog->psicologo?->users?->name,
                 'psicologApellido' => $blog->psicologo?->users?->apellido,
                 'psicologoImagenId' => $blog->psicologo?->users->imagen,
+                 'idCategoria'=> $blog->categoria->idCategoria,
                 'categoria' =>  $blog->categoria->nombre,
                 'fecha' => $blog->fecha_publicado,
             ];
