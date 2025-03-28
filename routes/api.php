@@ -11,6 +11,7 @@ use App\Http\Controllers\Categoria\CategoriaController;
 use App\Http\Controllers\Pacientes\PacienteController;
 use App\Http\Controllers\RespuestasBlog\RespuestaComentarioController;
 use App\Http\Controllers\AtencionController;
+use App\Http\Controllers\PrePacienteController;
 
 Route::controller(AuthController::class)->prefix('auth')->group(function(){
     Route::post('/login', 'login');
@@ -108,6 +109,15 @@ Route::controller(AtencionController::class)->prefix('atenciones')->group(functi
     Route::get('/{id}', 'showAtencion');
     Route::put('/{id}', 'updateAtencion');
     Route::delete('/{id}', 'destroyAtencion');
+    });
+});
+
+Route::controller(PrePacienteController::class)->prefix('pre-pacientes')->group(function () {
+    Route::post('/', 'createPrePaciente');
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
+    Route::get('/{id}', 'showPrePaciente');
+    Route::put('/{id}', 'updatePrePaciente');
+    Route::delete('/{id}', 'destroyPrePaciente');
     });
 });
 
