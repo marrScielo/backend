@@ -89,7 +89,6 @@ class CitaController extends Controller
                 return [
                     'fecha' => $cita->fecha_cita,
                     'hora'  => substr($cita->hora_cita, 0, 5),
-                    'duracion' => $cita->duracion,
                 ];
             });
 
