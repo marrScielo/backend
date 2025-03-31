@@ -13,12 +13,14 @@ class PrePaciente extends Model
     protected $primaryKey = 'idPrePaciente';
     public $timestamps = true;
 
+    protected $attributes = [
+        'estado' => 'pendiente', 
+    ];
+
     protected $fillable = [
         'nombre',
-        'apellido',
+        'celular',
         'correo',
-        'estado',
-        'fechaRegistro',
     ];
 
     public function citas()

@@ -24,7 +24,6 @@ class Paciente extends Model
         'apellido',
         'email',
         'fecha_nacimiento',
-        'imagen',
         'ocupacion',
         'estadoCivil',
         'genero',

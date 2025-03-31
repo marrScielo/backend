@@ -42,7 +42,7 @@ return new class extends Migration
             $table->time('hora_cita');
 
             $table->foreign('idPaciente')->references('idPaciente')->on('pacientes')->nullOnDelete();
-    $table->foreign('idPrePaciente')->references('idPrePaciente')->on('pre_pacientes')->nullOnDelete();
+            $table->foreign('idPrePaciente')->references('idPrePaciente')->on('pre_pacientes')->nullOnDelete();
             $table->foreign('idTipoCita')->references('idTipoCita')->on('tipo_citas');
             $table->foreign('idCanal')->references('idCanal')->on('canales');
             $table->foreign('idEtiqueta')->references('idEtiqueta')->on('etiquetas');
