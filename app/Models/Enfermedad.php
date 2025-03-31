@@ -9,6 +9,7 @@ class Enfermedad extends Model
 {
     use HasFactory;
     public $timestamps = false; 
+    protected $table = 'enfermedades';
     protected $primaryKey = 'idEnfermedad'; 
     
     public function citas()

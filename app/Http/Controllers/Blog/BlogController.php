@@ -63,6 +63,7 @@ class BlogController extends Controller
                 ->internalErrorResponse('Ocurrió un problema al obtener los blogs: ' . $e->getMessage())
                 ->send();
         }
+    
     }
 
 

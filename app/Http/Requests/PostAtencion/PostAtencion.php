@@ -22,7 +22,6 @@ class PostAtencion extends FormRequest
     public function rules(): array
     {
         return [
-            'idCita' => 'required|exists:citas,idCita',
             'MotivoConsulta' => 'nullable|string|max:255',
             'FormaContacto' => 'nullable|string|max:100',
             'Diagnostico' => 'nullable|string',

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Atencion;
 
+use App\Http\Controllers\Controller;
 use App\Models\Atencion;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostAtencion\PostAtencion;
@@ -13,14 +14,17 @@ class AtencionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function createAtencion(PostAtencion $request)
+    public function createAtencion(PostAtencion $request, int $idCita)
+
     {
         try {
             $data = $request->validated();
+            $data['idCita'] = $idCita; 
+
             $atencion = Atencion::create($data);
 
             return HttpResponseHelper::make()
-                ->successfulResponse('Atención obtenida correctamente')
+                ->successfulResponse('Atención creada correctamente')
                 ->send();
         } catch (Exception $e) {
             return HttpResponseHelper::make()
