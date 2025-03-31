@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\Atencion\AtencionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Contactos\ContactosController;
@@ -9,10 +11,9 @@ use App\Http\Controllers\Comentarios\ComentarioController;
 use App\Http\Controllers\Especialidad\EspecialidadController;
 use App\Http\Controllers\Categoria\CategoriaController;
 use App\Http\Controllers\Pacientes\PacienteController;
+use App\Http\Controllers\Prepaciente\PrePacienteController;
 use App\Http\Controllers\RespuestasBlog\RespuestaComentarioController;
-use App\Http\Controllers\AtencionController;
 use App\Http\Controllers\RegistroFamiliar\RegistroFamiliarController;
-use App\Http\Controllers\PrePacienteController;
 
 Route::controller(AuthController::class)->prefix('auth')->group(function(){
     Route::post('/login', 'login');
