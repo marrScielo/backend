@@ -17,7 +17,12 @@ class CitaController extends Controller
     public function createCita(PostCita $request)
     {
         try {
+            $userId = Auth::id();
+            $psicologo = Psicologo::where('user_id', $userId)->first();
+            
             $data = $request->validated();
+            $data['idPsicologo'] = $psicologo->idPsicologo;
+
             $cita = Cita::create($data);
 
             return HttpResponseHelper::make()

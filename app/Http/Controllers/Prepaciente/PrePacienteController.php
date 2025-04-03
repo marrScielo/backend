@@ -3,19 +3,24 @@
 namespace App\Http\Controllers\Prepaciente;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostCita\PostCita;
 use Illuminate\Http\Request;
 use App\Models\PrePaciente;
 use App\Http\Requests\PrePacienteRequest;
+use App\Models\Cita;
 use App\Traits\HttpResponseHelper;
 use Exception;
 
 class PrePacienteController extends Controller
 {
-    public function createPrePaciente(PrePacienteRequest $request)
+    public function createPrePaciente(PrePacienteRequest $PacienteRequest, PostCita $CitaRequest)
     {
         try {
-            $data = $request->validated();
+            $data = $PacienteRequest->validated();
             $prePaciente = PrePaciente::create($data);
+
+            $data = $CitaRequest->validated();
+            $cita = Cita::create($data);
 
             return HttpResponseHelper::make()
                 ->successfulResponse('PrePaciente creado correctamente')
