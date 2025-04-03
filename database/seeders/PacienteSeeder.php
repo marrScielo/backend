@@ -76,7 +76,8 @@ class PacienteSeeder extends Seeder
         ];
 
 
-        foreach ($pacientes as $paciente) {
+        foreach ($pacientes as $index => $paciente) {
+            $paciente['codigo'] = 'PAC' . str_pad($index + 1, 4, '0', STR_PAD_LEFT);
             Paciente::create($paciente);
         }
     }

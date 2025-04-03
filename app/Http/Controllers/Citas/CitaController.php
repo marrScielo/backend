@@ -17,7 +17,12 @@ class CitaController extends Controller
     public function createCita(PostCita $request)
     {
         try {
+            $userId = Auth::id();
+            $psicologo = Psicologo::where('user_id', $userId)->first();
+            
             $data = $request->validated();
+            $data['idPsicologo'] = $psicologo->idPsicologo;
+
             $cita = Cita::create($data);
 
             return HttpResponseHelper::make()
@@ -37,8 +42,11 @@ class CitaController extends Controller
             ->get()
             ->map(function ($cita) {
                 return [
-                    'paciente' => $cita->paciente->nombre . ' ' . $cita->paciente->apellido, 
-                    'codigo' => $cita->paciente->codigo, 
+                    'idCita' => $cita->id,
+                    'idPaciente' => $cita->idPaciente,
+                    'idPsicologo' => $cita->idPsicologo,
+                    'paciente' => $cita->paciente ? $cita->paciente->nombre . ' ' . $cita->paciente->apellido : null,
+                    'codigo' => $cita->paciente ? $cita->paciente->codigo : null,
                     'motivo' => $cita->motivo_Consulta,
                     'estado' => $cita->estado_Cita,
                     'fecha_inicio' => $cita->fecha_cita . ' ' . $cita->hora_cita,
@@ -59,20 +67,26 @@ class CitaController extends Controller
     public function showCitaById(int $id)
     {
         try {
-            $cita = Cita::with(['etiqueta', 'tipoCita', 'canal', 'paciente'])->find($id)
-            ->get()
-            ->map(function ($cita) {
-                return [
-                    'idCita' => $cita->idCita,
-                    'fecha' => $cita->fecha_cita,
-                    'hora' => $cita->hora_cita,
-                    'duracion' => $cita->duracion . 'min.',
-                ];
-            });
-
+            $cita = Cita::with(['etiqueta', 'tipoCita', 'canal', 'paciente', 'psicologo'])->find($id);
+    
+            if (!$cita) {
+                return HttpResponseHelper::make()
+                    ->notFoundResponse('Cita no encontrada')
+                    ->send();
+            }
+    
+            $response = [
+                'idCita' => $cita->id,
+                'idPaciente' => $cita->idPaciente,
+                'idPsicologo' => $cita->idPsicologo,
+                'fecha' => $cita->fecha_cita,
+                'hora' => $cita->hora_cita,
+                'duracion' => $cita->duracion . ' min.'
+            ];
+    
             return HttpResponseHelper::make()
-            ->successfulResponse('Citas obtenida correctamente', $cita->toArray())
-            ->send();
+                ->successfulResponse('Cita obtenida correctamente', $response)
+                ->send();
         } catch (Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Error al obtener la cita: ' . $e->getMessage())
@@ -89,8 +103,7 @@ class CitaController extends Controller
             ->map(function ($cita) {
                 return [
                     'fecha' => $cita->fecha_cita,
-                    'hora'  => $cita->hora_cita,
-                    'duracion' => $cita->duracion,
+                    'hora'  => substr($cita->hora_cita, 0, 5),
                 ];
             });
 

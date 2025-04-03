@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Atencion;
 
-use App\Http\Requests\PostAtencion\PostAtencion;
+use App\Http\Controllers\Controller;
 use App\Models\Atencion;
 use Illuminate\Http\Request;
+use App\Http\Requests\PostAtencion\PostAtencion;
 use App\Traits\HttpResponseHelper;
 use Exception;
 

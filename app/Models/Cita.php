@@ -13,6 +13,10 @@ class Cita extends Model
 
     protected $attributes = [
         'colores' => '#FFA500', 
+        'estado_Cita' => 'Pendiente',
+        'idCanal' => '1',
+        'idEtiqueta' =>  '3',
+        'idTipoCita' => '2',
     ];
 
     protected $fillable = [
@@ -27,7 +31,6 @@ class Cita extends Model
         'duracion',
         'fecha_cita',
         'hora_cita',
-        'idPsicologo',
     ];
 
     public function etiqueta()

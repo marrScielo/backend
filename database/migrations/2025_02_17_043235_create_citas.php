@@ -28,7 +28,8 @@ return new class extends Migration
 
         Schema::create('citas', function (Blueprint $table) {
             $table->unsignedBigInteger('idCita')->autoIncrement();
-            $table->unsignedInteger('idPaciente'); 
+            $table->unsignedInteger('idPaciente')->nullable();
+            $table->unsignedInteger('idPrePaciente')->nullable(); 
             $table->unsignedInteger('idPsicologo'); 
             $table->unsignedInteger('idTipoCita'); 
             $table->unsignedInteger('idCanal'); 
@@ -40,7 +41,8 @@ return new class extends Migration
             $table->date('fecha_cita');
             $table->time('hora_cita');
 
-            $table->foreign('idPaciente')->references('idPaciente')->on('pacientes');
+            $table->foreign('idPaciente')->references('idPaciente')->on('pacientes')->nullOnDelete();
+            $table->foreign('idPrePaciente')->references('idPrePaciente')->on('pre_pacientes')->nullOnDelete();
             $table->foreign('idTipoCita')->references('idTipoCita')->on('tipo_citas');
             $table->foreign('idCanal')->references('idCanal')->on('canales');
             $table->foreign('idEtiqueta')->references('idEtiqueta')->on('etiquetas');

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\PostAtencion;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AtencionRequest extends FormRequest
+class PostAtencion extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,6 @@ class AtencionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'idCita' => 'required|exists:citas,idCita',
             'MotivoConsulta' => 'nullable|string|max:255',
             'FormaContacto' => 'nullable|string|max:100',
             'Diagnostico' => 'nullable|string',

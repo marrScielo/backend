@@ -29,6 +29,7 @@ class PacienteController extends Controller
             $pacienteData = $requestPaciente->all();
             $pacienteData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $pacienteData['fecha_nacimiento'])->format('Y-m-d');
             $pacienteData['idPsicologo'] = $psicologo->idPsicologo;
+            $pacienteData['codigo'] = Paciente::generatePacienteCode(); 
             
             Paciente::create($pacienteData);
 
