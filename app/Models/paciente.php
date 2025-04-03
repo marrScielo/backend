@@ -20,6 +20,7 @@ class Paciente extends Model
      ];
 
     protected $fillable = [
+        'codigo',
         'nombre',
         'apellido',
         'email',
@@ -30,7 +31,6 @@ class Paciente extends Model
         'DNI',
         'celular',
         'direccion',
-        'idPsicologo',
     ];
 
     public function citas()
@@ -53,4 +53,16 @@ class Paciente extends Model
         return Carbon::parse($this->fecha_nacimiento)->age;
     }
 
+    public static function generatePacienteCode()
+    {
+        $lastPaciente = self::latest('idPaciente')->first();
+
+        if ($lastPaciente && preg_match('/PA(\d+)/', $lastPaciente->codigo, $matches)) {
+            $newNumber = intval($matches[1]) + 1;
+        } else {
+            $newNumber = 1;
+        }
+
+        return 'PA' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+    }
 }
