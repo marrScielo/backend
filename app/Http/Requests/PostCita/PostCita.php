@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Requests\PostCita;
 
+use App\Models\Cita;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PostCita extends FormRequest
@@ -33,7 +34,20 @@ class PostCita extends FormRequest
             'motivo_Consulta' => 'nullable|string',
             'estado_Cita' => 'sometimes|in:Pendiente,Confirmada,Cancelada',
             'colores' => 'nullable|string',
-            'duracion' => 'nullable|integer|min:0'
+            'duracion' => 'nullable|integer|min:0',
+
+
+            'fecha_cita' => [
+                function ($attribute, $value, $fail) {
+                    $exists = Cita::where('fecha_cita', $value)
+                        ->where('hora_cita', request('hora_cita'))
+                        ->exists();
+    
+                    if ($exists) {
+                        $fail('Ya existe una cita programada en esta fecha y hora.');
+                    }
+                }
+            ],
         ];
     }
 }

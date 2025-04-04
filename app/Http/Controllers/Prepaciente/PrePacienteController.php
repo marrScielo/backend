@@ -18,9 +18,12 @@ class PrePacienteController extends Controller
         try {
             $data = $PacienteRequest->validated();
             $prePaciente = PrePaciente::create($data);
+            $id = $prePaciente->idPrePaciente;
 
-            $data = $CitaRequest->validated();
-            $cita = Cita::create($data);
+            $citaData = $CitaRequest->validated();
+            $citaData['motivo_Consulta'] = 'Primera cita gratis';
+            $citaData['idPrePaciente'] = $id;
+            $cita = Cita::create($citaData);
 
             return HttpResponseHelper::make()
                 ->successfulResponse('PrePaciente creado correctamente')
