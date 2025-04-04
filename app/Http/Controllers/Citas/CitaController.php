@@ -83,8 +83,15 @@ class CitaController extends Controller
     public function showCitaById(int $id)
     {
         try {
-            $cita = Cita::with(['etiqueta', 'tipoCita', 'canal', 'paciente', 'psicologo'])->find($id);
-    
+            $cita = Cita::with([
+                'etiqueta:idEtiqueta,nombre',
+                'tipoCita:idTipoCita,nombre',
+                'canal:idCanal,nombre',
+                'paciente:idPaciente,nombre,apellido',
+                'prepaciente:idPrePaciente,nombre,apellido',
+                'psicologo'
+            ])->find($id);
+            
             if (!$cita) {
                 return HttpResponseHelper::make()
                     ->notFoundResponse('Cita no encontrada')
@@ -92,12 +99,21 @@ class CitaController extends Controller
             }
     
             $response = [
-                'idCita' => $cita->id,
+                'idCita' => $cita->idCita,
                 'idPaciente' => $cita->idPaciente,
                 'idPsicologo' => $cita->idPsicologo,
+                'paciente' => $cita->paciente 
+                ? $cita->paciente->nombre . ' ' . $cita->paciente->apellido 
+                : ($cita->prepaciente ? $cita->prepaciente->nombre : null),
+                'motivo' => $cita->motivo_Consulta,
+                'estado' => $cita->estado_Cita,
                 'fecha' => $cita->fecha_cita,
                 'hora' => $cita->hora_cita,
-                'duracion' => $cita->duracion . ' min.'
+                'duracion' => $cita->duracion . ' min.',
+                'tipo' => optional($cita->tipoCita)->nombre,
+                'canal' => optional($cita->canal)->nombre,
+                'etiqueta' => optional($cita->etiqueta)->nombre,
+                'color' => $cita->colores,
             ];
     
             return HttpResponseHelper::make()
