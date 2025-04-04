@@ -42,7 +42,7 @@ class CitaController extends Controller
             ->get()
             ->map(function ($cita) {
                 return [
-                    'idCita' => $cita->id,
+                    'idCita' => $cita->idCita,
                     'idPaciente' => $cita->idPaciente,
                     'idPsicologo' => $cita->idPsicologo,
                     'paciente' => $cita->paciente ? $cita->paciente->nombre . ' ' . $cita->paciente->apellido : null,

@@ -17,6 +17,7 @@ class Cita extends Model
         'idCanal' => '1',
         'idEtiqueta' =>  '3',
         'idTipoCita' => '2',
+        'duracion' => '60'
     ];
 
     protected $fillable = [
