@@ -17,6 +17,7 @@ class Cita extends Model
         'idCanal' => '1',
         'idEtiqueta' =>  '3',
         'idTipoCita' => '2',
+        'duracion' => '60'
     ];
 
     protected $fillable = [
@@ -25,6 +26,7 @@ class Cita extends Model
         'idCanal',
         'idEtiqueta',
         'idPsicologo',
+        'idPrePaciente',
         'motivo_Consulta',
         'estado_Cita',
         'colores',
@@ -46,6 +48,11 @@ class Cita extends Model
     public function canal()
     {
         return $this->belongsTo(canal::class, foreignKey: 'idCanal');
+    }
+
+    public function prepaciente()
+    {
+        return $this->belongsTo(PrePaciente::class, foreignKey: 'idPrePaciente');
     }
 
     public function paciente()
