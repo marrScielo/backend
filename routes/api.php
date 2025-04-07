@@ -42,7 +42,7 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
     Route::get('/', 'showAllPsicologos');
     Route::get('/{id}', 'showById');
     
-    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
         Route::post('/', 'createPsicologo');
         Route::put('/{id}', 'updatePsicologo');
         Route::post('/{id}', 'desactivatePsicologo');
