@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('enfermedades', function (Blueprint $table) {
             $table->increments('idEnfermedad'); 
-            $table->string('nombreEnfermedad', 100)->unique(); 
-            $table->string('DSM5', 50)->unique(); 
-            $table->string('CEA10',50)->unique();
+            $table->string('nombreEnfermedad', 500); 
+            $table->string('DSM5', 50); 
+            $table->string('CEA10',50);
         });
 
         Schema::create('atenciones', function (Blueprint $table) {

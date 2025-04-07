@@ -27,7 +27,8 @@ class DatabaseSeeder extends Seeder
             EtiquetaSeeder::class,
             ComentarioSeeder::class,
             PrePacienteSeeder::class, 
-            PacienteSeeder::class, 
+            PacienteSeeder::class,
+            EnfermedadesSeeder::class, 
             CitaSeeder::class,
             
         ]);
