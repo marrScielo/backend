@@ -26,6 +26,7 @@ class PostCita extends FormRequest
             'idTipoCita' => 'sometimes|exists:tipo_citas,idTipoCita',
             'idCanal' => 'sometimes|exists:canales,idCanal',
             'idPaciente' => 'sometimes|exists:pacientes,idPaciente',
+            'idPrePaciente' => 'sometimes|exists:prepacientes,idPrePaciente',
             'idPsicologo' => 'sometimes|exists:psicologos,idPsicologo',
             'colores' => 'nullable|string',
             'fecha_cita' => 'required|date',
