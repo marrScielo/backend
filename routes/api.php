@@ -10,6 +10,7 @@ use App\Http\Controllers\Citas\CitaController;
 use App\Http\Controllers\Comentarios\ComentarioController;
 use App\Http\Controllers\Especialidad\EspecialidadController;
 use App\Http\Controllers\Categoria\CategoriaController;
+use App\Http\Controllers\Enfermedad\EnfermedadController;
 use App\Http\Controllers\Pacientes\PacienteController;
 use App\Http\Controllers\Prepaciente\PrePacienteController;
 use App\Http\Controllers\RespuestasBlog\RespuestaComentarioController;
@@ -120,6 +121,10 @@ Route::controller(RegistroFamiliarController::class)->prefix('registros')->group
     Route::put('/{id}', 'updateRegistro');
     Route::delete('/{id}', 'destroyRegistro');
     });
+});
+
+Route::controller(EnfermedadController::class)->prefix('enfermedades')->group(function () {
+    Route::get('/', 'showAll');
 });
 
 Route::controller(PrePacienteController::class)->prefix('pre-pacientes')->group(function () {
