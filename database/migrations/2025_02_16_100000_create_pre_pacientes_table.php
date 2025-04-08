@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('pre_pacientes', function (Blueprint $table) {
             $table->increments('idPrePaciente');
-            $table->string('nombre', 100);
-            $table->string('apellido', 100);
+            $table->string('nombre', 150);
             $table->string('correo')->unique();
+            $table->string('celular', 9);
             $table->string('estado')->default('pendiente'); 
-            $table->timestamp('fechaRegistro')->useCurrent();
             $table->timestamps();
         });
 

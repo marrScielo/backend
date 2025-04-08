@@ -16,29 +16,21 @@ class PrePacienteSeeder extends Seeder
     {
         $pre_pacientes = [
             [
-                'nombre' => 'Juan', 'apellido' => 'Pérez', 'correo' => 'juanperez@gmail.com',
-                'estado' => 'pendiente', 'fechaRegistro' => Carbon::now(),
+                'nombre' => 'Juan Pérez', 'correo' => 'juanperez@gmail.com',
+                'celular' => '978156123'
             ],
             [
-                'nombre' => 'Laura', 'apellido' => 'Gómez', 'correo' => 'lauragomez@gmail.com',
-                'estado' => 'pendiente', 'fechaRegistro' => Carbon::now(),
+                'nombre' => 'Laura Gómez', 'correo' => 'lauragomez@gmail.com',
+                'celular' => '908156123'
             ],
             [
-                'nombre' => 'Carlos', 'apellido' => 'Martínez', 'correo' => 'carlosmartinez@gmail.com',
-                'estado' => 'registrado', 'fechaRegistro' => Carbon::now(),
+                'nombre' => 'Carlos Martínez', 'correo' => 'carlosmartinez@gmail.com',
+                'celular' => '918156123'
             ],
             [
-                'nombre' => 'Sofía', 'apellido' => 'Ramírez', 'correo' => 'sofiaramirez@gmail.com',
-                'estado' => 'pendiente', 'fechaRegistro' => Carbon::now(),
-            ],
-            [
-                'nombre' => 'Ricardo', 'apellido' => 'Fernández', 'correo' => 'ricardofernandez@gmail.com',
-                'estado' => 'registrado', 'fechaRegistro' => Carbon::now(),
-            ],
-            [
-                'nombre' => 'Mariana', 'apellido' => 'López', 'correo' => 'marianalopez@gmail.com',
-                'estado' => 'pendiente', 'fechaRegistro' => Carbon::now(),
-            ],
+                'nombre' => 'Sofía Ramírez', 'correo' => 'sofiaramirez@gmail.com',
+                'celular' => '928156123'
+            ]
         ];
 
         foreach ($pre_pacientes as $paciente) {

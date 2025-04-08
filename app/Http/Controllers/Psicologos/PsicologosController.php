@@ -103,6 +103,8 @@ class PsicologosController extends Controller
                     'especialidades' => $psicologo->especialidades->pluck('nombre'),
                     'introduccion' => $psicologo->introduccion, 
                     'horario' => $psicologo->horario,
+                    'correo'=> $psicologo->users->email,
+                    'imagen'=> $psicologo->users->imagen,
                 ];
             });
 

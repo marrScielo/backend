@@ -22,11 +22,9 @@ class PrePacienteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre' => 'required|string|max:100',
-            'apellido' => 'required|string|max:100',
+            'nombre' => 'required|string|max:150',
+            'celular' => 'required|string|min:9|max:9',
             'correo' => 'required|email|unique:pre_pacientes,correo|max:150',
-            'estado' => 'required|string|in:pendiente,registrado',
-            'fecha_registro' => 'nullable|date',
         ];
     }
 }

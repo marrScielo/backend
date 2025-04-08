@@ -13,6 +13,11 @@ class Cita extends Model
 
     protected $attributes = [
         'colores' => '#FFA500', 
+        'estado_Cita' => 'Pendiente',
+        'idCanal' => '1',
+        'idEtiqueta' =>  '3',
+        'idTipoCita' => '2',
+        'duracion' => '60'
     ];
 
     protected $fillable = [
@@ -21,13 +26,13 @@ class Cita extends Model
         'idCanal',
         'idEtiqueta',
         'idPsicologo',
+        'idPrePaciente',
         'motivo_Consulta',
         'estado_Cita',
         'colores',
         'duracion',
         'fecha_cita',
         'hora_cita',
-        'idPsicologo',
     ];
 
     public function etiqueta()
@@ -43,6 +48,11 @@ class Cita extends Model
     public function canal()
     {
         return $this->belongsTo(canal::class, foreignKey: 'idCanal');
+    }
+
+    public function prepaciente()
+    {
+        return $this->belongsTo(PrePaciente::class, foreignKey: 'idPrePaciente');
     }
 
     public function paciente()

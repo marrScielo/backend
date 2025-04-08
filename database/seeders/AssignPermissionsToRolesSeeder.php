@@ -16,8 +16,8 @@ class AssignPermissionsToRolesSeeder extends Seeder
         $permissions = Permission::whereIn('name', ['VER', 'ACTUALIZAR', 'ELIMINAR', 'ENVIAR'])->get();
         $adminRole->givePermissionTo($permissions);
 
-        $userRole = Role::findByName('PACIENTE', 'web');
-        $userPermissions = Permission::whereIn('name', ['VER'])->get();
+        $userRole = Role::findByName('PSICOLOGO', 'web');
+        $userPermissions = Permission::whereIn('name', ['VER', 'ACTUALIZAR', 'ELIMINAR', 'ENVIAR'])->get();
         $userRole->givePermissionTo($userPermissions);
 
         $markRole = Role::findByName('MARKETING', 'web');

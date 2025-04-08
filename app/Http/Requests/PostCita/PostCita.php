@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Requests\PostCita;
 
+use App\Models\Cita;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PostCita extends FormRequest
@@ -21,19 +22,33 @@ class PostCita extends FormRequest
     public function rules(): array
     {
         return [
-            'idEtiqueta' => 'required|exists:etiquetas,idEtiqueta',
-            'idTipoCita' => 'required|exists:tipo_citas,idTipoCita',
-            'idCanal' => 'required|exists:canales,idCanal',
-            'idPaciente' => 'required|exists:pacientes,idPaciente',
-            'idPsicologo' => 'required|exists:psicologos,idPsicologo',
+            'idEtiqueta' => 'sometimes|exists:etiquetas,idEtiqueta',
+            'idTipoCita' => 'sometimes|exists:tipo_citas,idTipoCita',
+            'idCanal' => 'sometimes|exists:canales,idCanal',
+            'idPaciente' => 'sometimes|exists:pacientes,idPaciente',
+            'idPrePaciente' => 'sometimes|exists:prepacientes,idPrePaciente',
+            'idPsicologo' => 'sometimes|exists:psicologos,idPsicologo',
             'colores' => 'nullable|string',
             'fecha_cita' => 'required|date',
             'duracion' => 'required|integer',
             'hora_cita' => 'required|date_format:H:i:s',
             'motivo_Consulta' => 'nullable|string',
-            'estado_Cita' => 'required|in:Pendiente,Confirmada,Cancelada',
+            'estado_Cita' => 'sometimes|in:Pendiente,Confirmada,Cancelada',
             'colores' => 'nullable|string',
-            'duracion' => 'nullable|integer|min:0'
+            'duracion' => 'nullable|integer|min:0',
+
+
+            'fecha_cita' => [
+                function ($attribute, $value, $fail) {
+                    $exists = Cita::where('fecha_cita', $value)
+                        ->where('hora_cita', request('hora_cita'))
+                        ->exists();
+    
+                    if ($exists) {
+                        $fail('Ya existe una cita programada en esta fecha y hora.');
+                    }
+                }
+            ],
         ];
     }
 }

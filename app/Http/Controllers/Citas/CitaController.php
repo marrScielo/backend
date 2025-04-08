@@ -17,7 +17,12 @@ class CitaController extends Controller
     public function createCita(PostCita $request)
     {
         try {
+            $userId = Auth::id();
+            $psicologo = Psicologo::where('user_id', $userId)->first();
+            
             $data = $request->validated();
+            $data['idPsicologo'] = $psicologo->idPsicologo;
+
             $cita = Cita::create($data);
 
             return HttpResponseHelper::make()
@@ -33,21 +38,37 @@ class CitaController extends Controller
     public function showAllCitasByPsicologo()
     {
         try {
-            $citas = Cita::with(['paciente'])
-            ->get()
-            ->map(function ($cita) {
-                return [
-                    'idCita' => $cita->idCita,
-                    'idPaciente' => $cita->idPaciente,
-                    'idPsicologo' => $cita->idPsicologo,
-                    'paciente' => $cita->paciente ? $cita->paciente->nombre . ' ' . $cita->paciente->apellido : null,
-                    'codigo' => $cita->paciente ? $cita->paciente->codigo : null,
-                    'motivo' => $cita->motivo_Consulta,
-                    'estado' => $cita->estado_Cita,
-                    'fecha_inicio' => $cita->fecha_cita . ' ' . $cita->hora_cita,
-                    'duracion' => $cita->duracion . ' min.'
-                ];
-            });
+            $userId = Auth::id();
+            $psicologo = Psicologo::where('user_id', $userId)->first();
+
+            if (!$psicologo) {
+                return HttpResponseHelper::make()
+                    ->notFoundResponse('No se encontró un psicólogo asociado a este usuario.')
+                    ->send();
+            }
+    
+            $id = $psicologo->idPsicologo;
+            $citas = Cita::where('idPsicologo', $id)
+                ->with([
+                    'paciente:idPaciente,nombre,apellido,codigo',
+                    'prepaciente:idPrePaciente,nombre'
+                ])
+                ->get()
+                ->map(function ($cita) {
+                    return [
+                        'idCita' => $cita->idCita,
+                        'idPaciente' => $cita->idPaciente,
+                        'idPsicologo' => $cita->idPsicologo,
+                        'paciente' => $cita->paciente 
+                            ? $cita->paciente->nombre . ' ' . $cita->paciente->apellido 
+                            : ($cita->prepaciente ? $cita->prepaciente->nombre : null),
+                        'codigo' => optional($cita->paciente)->codigo,
+                        'motivo' => $cita->motivo_Consulta,
+                        'estado' => $cita->estado_Cita,
+                        'fecha_inicio' => "{$cita->fecha_cita} {$cita->hora_cita}",
+                        'duracion' => "{$cita->duracion} min."
+                    ];
+                });
 
         return HttpResponseHelper::make()
             ->successfulResponse('Lista de citas obtenida correctamente', $citas)
@@ -62,8 +83,15 @@ class CitaController extends Controller
     public function showCitaById(int $id)
     {
         try {
-            $cita = Cita::with(['etiqueta', 'tipoCita', 'canal', 'paciente', 'psicologo'])->find($id);
-    
+            $cita = Cita::with([
+                'etiqueta:idEtiqueta,nombre',
+                'tipoCita:idTipoCita,nombre',
+                'canal:idCanal,nombre',
+                'paciente:idPaciente,nombre,apellido',
+                'prepaciente:idPrePaciente,nombre,apellido',
+                'psicologo'
+            ])->find($id);
+            
             if (!$cita) {
                 return HttpResponseHelper::make()
                     ->notFoundResponse('Cita no encontrada')
@@ -74,9 +102,18 @@ class CitaController extends Controller
                 'idCita' => $cita->idCita,
                 'idPaciente' => $cita->idPaciente,
                 'idPsicologo' => $cita->idPsicologo,
+                'paciente' => $cita->paciente 
+                ? $cita->paciente->nombre . ' ' . $cita->paciente->apellido 
+                : ($cita->prepaciente ? $cita->prepaciente->nombre : null),
+                'motivo' => $cita->motivo_Consulta,
+                'estado' => $cita->estado_Cita,
                 'fecha' => $cita->fecha_cita,
                 'hora' => $cita->hora_cita,
-                'duracion' => $cita->duracion . ' min.'
+                'duracion' => $cita->duracion . ' min.',
+                'tipo' => optional($cita->tipoCita)->nombre,
+                'canal' => optional($cita->canal)->nombre,
+                'etiqueta' => optional($cita->etiqueta)->nombre,
+                'color' => $cita->colores,
             ];
     
             return HttpResponseHelper::make()
