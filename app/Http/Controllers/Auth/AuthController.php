@@ -33,7 +33,8 @@ class AuthController extends Controller
                 'apellido' => $user->apellido,
                 'email' => $user->email,
                 'id' => $user->user_id, 
-                'rol' => $user->rol
+                'rol' => $user->rol,
+                'imagen'=>$user->imagen
             ];
             
             if ($user->rol === 'PSICOLOGO') {
