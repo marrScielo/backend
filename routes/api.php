@@ -106,8 +106,9 @@ Route::controller(RespuestaComentarioController::class)->prefix('respuestas')->g
 });
 
 Route::controller(AtencionController::class)->prefix('atenciones')->group(function () {
-    Route::post('/{idCita}', 'createAtencion');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
+    Route::post('/{idCita}', 'createAtencion');
+    Route::get('/paciente/{id}', 'showAllAtencionesPaciente');
     Route::get('/{id}', 'showAtencion');
     Route::put('/{id}', 'updateAtencion');
     Route::delete('/{id}', 'destroyAtencion');
