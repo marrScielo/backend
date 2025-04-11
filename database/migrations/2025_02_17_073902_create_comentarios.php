@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre', 50);
             $table->text('comentario');
             $table->unsignedInteger('idBlog');
+            $table->timestamp('created_at')->useCurrent();
 
             $table->foreign('idBlog')->references('idBlog')->on('blogs')->onDelete('cascade');
         });
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->string('nombre', 50);
             $table->text('respuesta');
             $table->unsignedInteger('idComentario');
+            $table->timestamp('created_at')->useCurrent();
 
             $table->foreign('idComentario')->references('idComentario')->on('comentarios')->onDelete('cascade');
         });

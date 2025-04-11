@@ -64,8 +64,8 @@ Route::controller(BlogController::class)->prefix('blogs')->group(function () {
 
 Route::controller(ComentarioController::class)->prefix('comentarios')->group(function () {
     Route::post('/{id}', 'createComentario');
-    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::get('/{id}', 'showComentariosByBlog'); 
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::delete('/{id}', 'destroyComentario');
     });
 });
