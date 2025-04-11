@@ -94,6 +94,7 @@ class PsicologosController extends Controller
             ->map(function ($psicologo) {
                 return [
                     'idPsicologo' => $psicologo->idPsicologo,
+                    'titulo' => $psicologo->titulo,
                     'nombre' => $psicologo->users->name,
                     'apellido' => $psicologo->users->apellido,
                     'pais' => $psicologo->pais,
@@ -124,7 +125,7 @@ class PsicologosController extends Controller
             $psicologo = Psicologo::findOrFail($id);
             $usuario = User::findOrFail($psicologo->user_id);
             $psicologoData = $requestPsicologo->only([
-                'introduccion', 'pais', 'genero', 'experiencia', 'horario'
+                'titulo','introduccion', 'pais', 'genero', 'experiencia', 'horario'
             ]);
             $psicologo->update($psicologoData);
 
