@@ -18,7 +18,7 @@ return new class extends Migration
 
         Schema::create('psicologos', function (Blueprint $table) {
             $table->increments('idPsicologo');
-            $table->string('Titulo', 100);
+            $table->string('titulo', 100);
             $table->text('introduccion');
             $table->string('pais', 4);
             $table->string('genero', 50);

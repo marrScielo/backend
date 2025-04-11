@@ -62,13 +62,14 @@ class PsicologosController extends Controller
 
             $response = [
                 'idPsicologo' => $psicologo->idPsicologo,
+                'titulo' => $psicologo->titulo,
                 'nombre' => $psicologo->users->name,
                 'apellido' => $psicologo->users->apellido,
                 'pais' => $psicologo->pais,
                 'genero' => $psicologo->genero,
                 'correo' => $psicologo->users->email,
-                'contraseña'=> $psicologo->users->password,
-                'imagen'=> $psicologo->users->imagen,
+                'contraseña' => $psicologo->users->password,
+                'imagen' => $psicologo->users->imagen,
                 'fecha_nacimiento' => $psicologo->users->fecha_nacimiento->format('d/m/Y'),
                 'especialidades' => $psicologo->especialidades->pluck('nombre'),
                 'introduccion' => $psicologo->introduccion,
@@ -88,26 +89,26 @@ class PsicologosController extends Controller
     public function showAllPsicologos()
     {
         try {
-            $psicologos = Psicologo::with(['especialidades','users'])
-            ->where('estado', 'A')
-            ->get()
-            ->map(function ($psicologo) {
-                return [
-                    'idPsicologo' => $psicologo->idPsicologo,
-                    'titulo' => $psicologo->titulo,
-                    'nombre' => $psicologo->users->name,
-                    'apellido' => $psicologo->users->apellido,
-                    'pais' => $psicologo->pais,
-                    'edad' => $psicologo->users->edad,
-                    'genero' => $psicologo->genero,
-                    'experiencia' => $psicologo->experiencia,
-                    'especialidades' => $psicologo->especialidades->pluck('nombre'),
-                    'introduccion' => $psicologo->introduccion, 
-                    'horario' => $psicologo->horario,
-                    'correo'=> $psicologo->users->email,
-                    'imagen'=> $psicologo->users->imagen,
-                ];
-            });
+            $psicologos = Psicologo::with(['especialidades', 'users'])
+                ->where('estado', 'A')
+                ->get()
+                ->map(function ($psicologo) {
+                    return [
+                        'idPsicologo' => $psicologo->idPsicologo,
+                        'titulo' => $psicologo->Titulo,
+                        'nombre' => $psicologo->users->name,
+                        'apellido' => $psicologo->users->apellido,
+                        'pais' => $psicologo->pais,
+                        'edad' => $psicologo->users->edad,
+                        'genero' => $psicologo->genero,
+                        'experiencia' => $psicologo->experiencia,
+                        'especialidades' => $psicologo->especialidades->pluck('nombre'),
+                        'introduccion' => $psicologo->introduccion,
+                        'horario' => $psicologo->horario,
+                        'correo' => $psicologo->users->email,
+                        'imagen' => $psicologo->users->imagen,
+                    ];
+                });
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Lista de psicologos obtenida correctamente', $psicologos)
@@ -125,7 +126,12 @@ class PsicologosController extends Controller
             $psicologo = Psicologo::findOrFail($id);
             $usuario = User::findOrFail($psicologo->user_id);
             $psicologoData = $requestPsicologo->only([
-                'titulo','introduccion', 'pais', 'genero', 'experiencia', 'horario'
+                'titulo',
+                'introduccion',
+                'pais',
+                'genero',
+                'experiencia',
+                'horario'
             ]);
             $psicologo->update($psicologoData);
 
@@ -138,24 +144,24 @@ class PsicologosController extends Controller
             }
             $usuario->update($usuarioData);
             if ($requestPsicologo->filled('especialidades')) {
-                $especialidadesNombres = $requestPsicologo->input('especialidades'); 
+                $especialidadesNombres = $requestPsicologo->input('especialidades');
                 $especialidadesIds = [];
                 foreach ($especialidadesNombres as $nombre) {
                     $nombre = trim($nombre);
                     if (empty($nombre)) {
-                        continue; 
+                        continue;
                     }
                     $especialidad = Especialidad::firstOrCreate(['nombre' => $nombre]);
                     if (!$especialidad->idEspecialidad) {
                         throw new \Exception("No se pudo crear o encontrar la especialidad: $nombre");
                     }
-                    $especialidadesIds[] = $especialidad->idEspecialidad; 
+                    $especialidadesIds[] = $especialidad->idEspecialidad;
                 }
                 if (!empty($especialidadesIds)) {
                     $psicologo->especialidades()->sync($especialidadesIds);
                 }
             }
-    
+
             return HttpResponseHelper::make()
                 ->successfulResponse('Psicólogo actualizado correctamente')
                 ->send();
@@ -165,22 +171,22 @@ class PsicologosController extends Controller
                 ->send();
         }
     }
-    
+
 
     public function cambiarEstadoPsicologo(int $id)
     {
         try {
             $psicologo = Psicologo::find($id);
-    
+
             if (!$psicologo) {
                 return HttpResponseHelper::make()
                     ->notFoundResponse('No se encontró un psicólogo con el ID proporcionado.')
                     ->send();
             }
-    
+
             $psicologo->estado = $psicologo->estado === 'I' ? 'A' : 'I';
             $psicologo->save();
-    
+
             return HttpResponseHelper::make()
                 ->successfulResponse('Estado del psicólogo cambiado correctamente a ' . ($psicologo->estado === 'A' ? 'Activo' : 'Inactivo'))
                 ->send();
