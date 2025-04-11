@@ -49,7 +49,9 @@ class AtencionController extends Controller
                         'hora_inicio' => $atencion->cita->hora_cita,
                         'nombre_completo' => $atencion->cita->paciente->nombre . ' ' . $atencion->cita->paciente->apellido,
                         'diagnostico' => $atencion->Diagnostico,
-                        'idCita' => $atencion->cita->idCita
+                        'fecha' => $atencion->FechaAtencion,
+                        'idCita' => $atencion->cita->idCita,
+                        'idAtencion' => $atencion->IdAtencion
                     ];
                 });
     
