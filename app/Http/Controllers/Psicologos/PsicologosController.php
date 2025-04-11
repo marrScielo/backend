@@ -61,6 +61,7 @@ class PsicologosController extends Controller
             }
 
             $response = [
+                // se modifico 'Titulo' a 'titulo'
                 'idPsicologo' => $psicologo->idPsicologo,
                 'titulo' => $psicologo->titulo,
                 'nombre' => $psicologo->users->name,
@@ -94,8 +95,9 @@ class PsicologosController extends Controller
                 ->get()
                 ->map(function ($psicologo) {
                     return [
+                        // se modifico 'Titulo' a 'titulo'
                         'idPsicologo' => $psicologo->idPsicologo,
-                        'titulo' => $psicologo->Titulo,
+                        'titulo' => $psicologo->titulo,
                         'nombre' => $psicologo->users->name,
                         'apellido' => $psicologo->users->apellido,
                         'pais' => $psicologo->pais,
