@@ -22,6 +22,7 @@ class PostPsicologo extends FormRequest
     public function rules(): array
     {
         return [
+            'titulo' =>'required|string|max:100',
             'introduccion' => 'required|string|max:350',
             'pais' => 'required|string|max:100',
             'genero' => 'required|string|max:50',
