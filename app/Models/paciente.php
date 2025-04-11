@@ -31,6 +31,7 @@ class Paciente extends Model
         'DNI',
         'celular',
         'direccion',
+        'idPsicologo'
     ];
 
     public function citas()
