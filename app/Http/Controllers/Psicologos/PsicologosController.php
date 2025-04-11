@@ -62,7 +62,7 @@ class PsicologosController extends Controller
 
             $response = [
                 'idPsicologo' => $psicologo->idPsicologo,
-                'titulo' => $psicologo->titulo,
+                'titulo' => $psicologo->Titulo,
                 'nombre' => $psicologo->users->name,
                 'apellido' => $psicologo->users->apellido,
                 'pais' => $psicologo->pais,
