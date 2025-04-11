@@ -97,7 +97,7 @@ class PsicologosController extends Controller
                     return [
                         // se modifico 'Titulo' a 'titulo'
                         'idPsicologo' => $psicologo->idPsicologo,
-                        'titulo' => $psicologo->titulo,
+                        'titulo' => $psicologo->Titulo,
                         'nombre' => $psicologo->users->name,
                         'apellido' => $psicologo->users->apellido,
                         'pais' => $psicologo->pais,
