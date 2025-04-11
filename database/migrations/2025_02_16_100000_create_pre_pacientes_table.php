@@ -16,8 +16,11 @@ return new class extends Migration
             $table->string('nombre', 150);
             $table->string('correo')->unique();
             $table->string('celular', 9);
-            $table->string('estado')->default('pendiente'); 
+            $table->string('estado')->default('pendiente');
+            $table->unsignedInteger('idPsicologo');
             $table->timestamps();
+
+            $table->foreign('idPsicologo')->references('user_id')->on('users')->onDelete('cascade');
         });
 
     }
