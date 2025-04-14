@@ -14,6 +14,7 @@ use App\Http\Controllers\Pacientes\PacienteController;
 use App\Http\Controllers\Prepaciente\PrePacienteController;
 use App\Http\Controllers\RespuestasBlog\RespuestaComentarioController;
 use App\Http\Controllers\RegistroFamiliar\RegistroFamiliarController;
+use App\Http\Controllers\DashboardController;
 
 Route::controller(AuthController::class)->prefix('auth')->group(function(){
     Route::post('/login', 'login');
@@ -130,4 +131,10 @@ Route::controller(PrePacienteController::class)->prefix('pre-pacientes')->group(
     Route::delete('/{id}', 'destroyPrePaciente');
     });
 });
+
+Route::controller(DashboardController::class)->prefix('dashboard')
+->middleware(['auth:sanctum', 'role:PSICOLOGO'])
+    ->group(function () {
+        Route::get('/psicologo', 'psicologoDashboard');
+    });
 
