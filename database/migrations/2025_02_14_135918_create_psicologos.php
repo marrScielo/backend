@@ -16,8 +16,10 @@ return new class extends Migration
             $table->string('nombre',100)->unique();
         });
 
+        // se modifico 'Titulo' a 'titulo'
         Schema::create('psicologos', function (Blueprint $table) {
             $table->increments('idPsicologo');
+            $table->string('titulo', 100);
             $table->text('introduccion');
             $table->string('pais', 4);
             $table->string('genero', 50);

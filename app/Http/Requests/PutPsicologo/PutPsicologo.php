@@ -22,6 +22,7 @@ class PutPsicologo extends FormRequest
     public function rules(): array
     {
         return [
+            'titulo' => 'sometimes|string|max:100',
             'introduccion' => 'sometimes|string|max:350',
             'pais' => 'sometimes|string|max:100',
             'genero' => 'sometimes|string|max:50',

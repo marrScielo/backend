@@ -82,6 +82,7 @@ class PacienteController extends Controller
             $response = $pacientes->map(function ($paciente) {
                 return [
                     'idPaciente' => $paciente->idPaciente,
+                    'codigo' => $paciente->codigo,
                     'DNI' => $paciente->DNI,
                     'nombre' => $paciente->nombre . ' ' . $paciente->apellido,
                     'correo' => $paciente->email,

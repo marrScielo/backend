@@ -28,7 +28,7 @@ return new class extends Migration
             $table->text('Observacion');
             $table->text('UltimosObjetivos');
             $table->unsignedInteger('idEnfermedad'); 
-            $table->text('DocumentosAdicionales');
+            $table->text('DocumentosAdicionales')->nullable();
             $table->text('Comentario');
             $table->date('FechaAtencion');
             $table->text('descripcion')->nullable();

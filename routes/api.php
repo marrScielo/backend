@@ -10,6 +10,7 @@ use App\Http\Controllers\Citas\CitaController;
 use App\Http\Controllers\Comentarios\ComentarioController;
 use App\Http\Controllers\Especialidad\EspecialidadController;
 use App\Http\Controllers\Categoria\CategoriaController;
+use App\Http\Controllers\Enfermedad\EnfermedadController;
 use App\Http\Controllers\Pacientes\PacienteController;
 use App\Http\Controllers\Prepaciente\PrePacienteController;
 use App\Http\Controllers\RespuestasBlog\RespuestaComentarioController;
@@ -43,10 +44,10 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
     Route::get('/', 'showAllPsicologos');
     Route::get('/{id}', 'showById');
     
-    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
         Route::post('/', 'createPsicologo');
         Route::put('/{id}', 'updatePsicologo');
-        Route::post('/{id}', 'desactivatePsicologo');
+        Route::delete('/{id}', 'DeletePsicologo');
     });
 });
 
@@ -64,8 +65,8 @@ Route::controller(BlogController::class)->prefix('blogs')->group(function () {
 
 Route::controller(ComentarioController::class)->prefix('comentarios')->group(function () {
     Route::post('/{id}', 'createComentario');
-    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::get('/{id}', 'showComentariosByBlog'); 
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
     Route::delete('/{id}', 'destroyComentario');
     });
 });
@@ -106,8 +107,9 @@ Route::controller(RespuestaComentarioController::class)->prefix('respuestas')->g
 });
 
 Route::controller(AtencionController::class)->prefix('atenciones')->group(function () {
-    Route::post('/{idCita}', 'createAtencion');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
+    Route::post('/{idCita}', 'createAtencion');
+    Route::get('/paciente/{id}', 'showAllAtencionesPaciente');
     Route::get('/{id}', 'showAtencion');
     Route::put('/{id}', 'updateAtencion');
     Route::delete('/{id}', 'destroyAtencion');
@@ -121,6 +123,10 @@ Route::controller(RegistroFamiliarController::class)->prefix('registros')->group
     Route::put('/{id}', 'updateRegistro');
     Route::delete('/{id}', 'destroyRegistro');
     });
+});
+
+Route::controller(EnfermedadController::class)->prefix('enfermedades')->group(function () {
+    Route::get('/', 'showAll');
 });
 
 Route::controller(PrePacienteController::class)->prefix('pre-pacientes')->group(function () {
