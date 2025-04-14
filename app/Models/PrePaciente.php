@@ -21,10 +21,16 @@ class PrePaciente extends Model
         'nombre',
         'celular',
         'correo',
+        'idPsicologo',
     ];
 
     public function citas()
     {
         return $this->hasMany(Cita::class, 'idPrePaciente');
+    }
+
+    public function psicologo()
+    {
+        return $this->belongsTo(User::class, 'idPsicologo');
     }
 }

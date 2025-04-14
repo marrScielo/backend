@@ -25,6 +25,9 @@ class PrePacienteRequest extends FormRequest
             'nombre' => 'required|string|max:150',
             'celular' => 'required|string|min:9|max:9',
             'correo' => 'required|email|unique:pre_pacientes,correo|max:150',
+            'fecha' => 'required|date',         
+            'hora' => 'required|string',        
+            'idPsicologo' => 'required|integer' 
         ];
     }
 }

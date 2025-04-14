@@ -7,53 +7,53 @@ use App\Http\Requests\PostCita\PostCita;
 use Illuminate\Http\Request;
 use App\Models\PrePaciente;
 use App\Http\Requests\PrePacienteRequest;
+use App\Mail\PrePacienteCreado;
 use App\Models\Cita;
 use App\Traits\HttpResponseHelper;
+use Illuminate\Support\Facades\Mail;
 use Exception;
+use App\Models\User;
+
 
 class PrePacienteController extends Controller
 {
-    public function createPrePaciente(Request $request)
+    public function createPrePaciente(PrePacienteRequest  $request)
     {
         try {
-            // Validar manualmente lo del pre paciente
-            $prePacienteValidated = $request->validate([
-                'nombre' => 'required|string|max:150',
-                'celular' => 'required|string|min:9|max:9',
-                'correo' => 'required|email|unique:pre_pacientes,correo|max:150',
-            ]);
 
-            $prePaciente = PrePaciente::create($prePacienteValidated);
-            $id = $prePaciente->idPrePaciente;
+            $prePaciente = PrePaciente::create($request->all());
 
-            // Validar lo de la cita
-            $citaValidated = $request->validate([
-                'idPsicologo' => 'required|exists:psicologos,idPsicologo',
-                'fecha_cita' => 'required|date',
-                'hora_cita' => 'required|date_format:H:i',
-            ]);
+            // Cargamos la relación con el psicólogo
+            $prePaciente->load('psicologo');
 
-            // Set defaults de la cita
-            $citaData = array_merge($citaValidated, [
-                'motivo_Consulta' => 'Primera cita gratis',
-                'idPrePaciente' => $id,
-                'duracion' => 60,
-                'colores' => '#FFA500',
-                'estado_Cita' => 'Pendiente',
-                'idCanal' => 1,
-                'idEtiqueta' => 3,
-                'idTipoCita' => 2,
-            ]);
+            $datos = [
+                'nombre'  => $prePaciente->nombre,
+                'celular' => $prePaciente->celular,
+                'correo'  => $prePaciente->correo,
+                'estado'  => $prePaciente->estado
+            ];
 
-            Cita::create($citaData);
+            
+            $adminEmail = config('emails.admin_address', 'contigovoyproject@gmail.com');
+            
+            Mail::to($adminEmail)->send(new PrePacienteCreado($datos));
+
+            Mail::to($prePaciente->correo)->send(new \App\Mail\ConfirmacionPrePaciente([
+                'nombre' => $prePaciente->nombre,
+                'fecha'  => $request->input('fecha'),
+                'hora'   => $request->input('hora'),
+                'psicologo' => $prePaciente->psicologo
+                ? $prePaciente->psicologo->name . ' ' . $prePaciente->psicologo->apellido
+                : 'No disponible',
+ 
+            ]));
 
             return HttpResponseHelper::make()
-                ->successfulResponse('PrePaciente y cita creados correctamente')
+                ->successfulResponse('PrePaciente creado correctamente y correo enviado.')
                 ->send();
-
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
-                ->internalErrorResponse('Error al crear el pre paciente: ' . $e->getMessage())
+                ->internalErrorResponse('Ocurrió un problema al procesar la solicitud: ' . $e->getMessage())
                 ->send();
         }
     }
@@ -65,6 +65,8 @@ class PrePacienteController extends Controller
     {
         try {
             $prePacientes = PrePaciente::all();
+
+            return view('pre_pacientes', ['prePacientes' => $prePacientes]);
 
             return HttpResponseHelper::make()
                 ->successfulResponse('PrePacientes obtenidos correctamente', [$prePacientes]) 
