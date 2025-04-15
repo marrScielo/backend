@@ -47,7 +47,7 @@ class PrePacienteController extends Controller
             Cita::create($citaData);
 
             // Cargamos la relación con el psicólogo
-            $prePaciente->load('psicologo');
+            $prePaciente = PrePaciente::with('psicologo.users')->find($id);
 
             $datos = [
                 'nombre'  => $prePaciente->nombre,
@@ -64,10 +64,11 @@ class PrePacienteController extends Controller
                 'nombre' => $prePaciente->nombre,
                 'fecha'  => $request->input('fecha_cita'),
                 'hora'   => $request->input('hora_cita'),
-                'psicologo' => $prePaciente->psicologo
-                ? $prePaciente->psicologo->name . ' ' . $prePaciente->psicologo->apellido
-                : 'No disponible',
- 
+                'psicologo' => (
+                    $prePaciente->psicologo && $prePaciente->psicologo->users
+                        ? $prePaciente->psicologo->users->name . ' ' . $prePaciente->psicologo->users->apellido
+                        : 'No disponible'
+                ),
             ]));
 
             return HttpResponseHelper::make()
