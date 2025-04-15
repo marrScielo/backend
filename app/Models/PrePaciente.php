@@ -31,6 +31,6 @@ class PrePaciente extends Model
 
     public function psicologo()
     {
-        return $this->belongsTo(User::class, 'idPsicologo');
+        return $this->belongsTo(Psicologo::class, 'idPsicologo', 'idPsicologo');
     }
 }
