@@ -33,34 +33,44 @@ class AtencionController extends Controller
         }
     }
 
-    /**
-     * Obtener todas las atenciones con sus relaciones.
+        /**
+     * Obtener todas las atenciones 
      */
-    public function showAllAtencionesPaciente(int $id)
+    public function showAllAtenciones()
     {
         try {
-            $atenciones = Atencion::with(['cita.paciente']) // cargamos la relación hasta el paciente
-                ->whereHas('cita', function ($query) use ($id) {
-                    $query->where('idPaciente', $id);
-                })
+            $atenciones = Atencion::with(['cita.paciente', 'cita.prepaciente'])
                 ->get()
                 ->map(function ($atencion) {
+                    $cita = $atencion->cita;
+
+                    // Buscar nombre de paciente o prepaciente
+                    if ($cita->paciente) {
+                        $nombre = $cita->paciente->nombre . ' ' . $cita->paciente->apellido;
+                    } elseif ($cita->prepaciente) {
+                        $nombre = $cita->prepaciente->nombre . ' ' . $cita->prepaciente->apellido;
+                    } else {
+                        $nombre = 'Nombre no disponible';
+                    }
+
                     return [
-                        'hora_inicio' => $atencion->cita->hora_cita,
-                        'nombre_completo' => $atencion->cita->paciente->nombre . ' ' . $atencion->cita->paciente->apellido,
+                        'hora_inicio' => $cita->hora_cita,
+                        'nombre_completo' => $nombre,
                         'diagnostico' => $atencion->Diagnostico,
-                        'fecha' => $atencion->FechaAtencion,
-                        'idCita' => $atencion->cita->idCita,
-                        'idAtencion' => $atencion->IdAtencion
+                        'fecha_inicio' => $atencion->FechaAtencion,
+                        'idCita' => $cita->idCita,
+                        'idAtencion' => $atencion->IdAtencion,
+                        'idPaciente' => $atencion->cita->idPaciente,
                     ];
                 });
-    
+
             return HttpResponseHelper::make()
-                ->successfulResponse('Atenciones resumidas del paciente obtenidas correctamente', [$atenciones])
+                ->successfulResponse('Todas las atenciones obtenidas correctamente', [$atenciones])
                 ->send();
+
         } catch (Exception $e) {
             return HttpResponseHelper::make()
-                ->internalErrorResponse('Error al obtener las atenciones resumidas: ' . $e->getMessage())
+                ->internalErrorResponse('Error al obtener las atenciones: ' . $e->getMessage())
                 ->send();
         }
     }
@@ -68,33 +78,43 @@ class AtencionController extends Controller
     /**
      * Obtener una atención por su ID.
      */
-    public function showAtencion(int $id)
+    public function showAllAtencionesPaciente(int $id)
     {
         try {
-            $atencion = Atencion::with(['cita.paciente', 'enfermedad'])->findOrFail($id);
+            $atenciones = Atencion::with(['cita.paciente', 'cita.prepaciente']) // Cargamos ambas relaciones
+                ->whereHas('cita', function ($query) use ($id) {
+                    $query->where('idPaciente', $id); // Solo filtra por paciente
+                })
+                ->get()
+                ->map(function ($atencion) {
+                    $cita = $atencion->cita;
     
-            $data = [
-                'MotivoConsulta' => $atencion->MotivoConsulta,
-                'FormaContacto' => $atencion->FormaContacto,
-                'Diagnostico' => $atencion->Diagnostico,
-                'Tratamiento' => $atencion->Tratamiento,
-                'Observacion' => $atencion->Observacion,
-                'UltimosObjetivos' => $atencion->UltimosObjetivos,
-                'idEnfermedad' => $atencion->idEnfermedad,
-                'Comentario' => $atencion->Comentario,
-                'DocumentosAdicionales' => $atencion->DocumentosAdicionales,
-                'FechaAtencion' => $atencion->FechaAtencion,
-                'descripcion' => $atencion->descripcion,
-                'codigo_paciente' => $atencion->cita?->paciente?->codigo,
-                'paciente' => $atencion->cita?->paciente?->nombre . ' ' . $atencion->cita?->paciente?->apellido,
-            ];
+                    // Si existe paciente, lo usamos. Si no, buscamos el prepaciente.
+                    if ($cita->paciente) {
+                        $nombre = $cita->paciente->nombre . ' ' . $cita->paciente->apellido;
+                    } elseif ($cita->prepaciente) {
+                        $nombre = $cita->prepaciente->nombre . ' ' . $cita->prepaciente->apellido;
+                    } else {
+                        $nombre = 'Nombre no disponible';
+                    }
+    
+                    return [
+                        'hora_inicio' => $cita->hora_cita,
+                        'nombre_completo' => $nombre,
+                        'diagnostico' => $atencion->Diagnostico,
+                        'fecha_inicio' => $atencion->FechaAtencion,
+                        'idCita' => $cita->idCita,
+                        'idAtencion' => $atencion->IdAtencion
+                    ];
+                });
     
             return HttpResponseHelper::make()
-                ->successfulResponse('Atención obtenida correctamente', [$data])
+                ->successfulResponse('Atenciones resumidas del paciente obtenidas correctamente', [$atenciones])
                 ->send();
+    
         } catch (Exception $e) {
             return HttpResponseHelper::make()
-                ->internalErrorResponse('Error al obtener la atención: ' . $e->getMessage())
+                ->internalErrorResponse('Error al obtener las atenciones resumidas: ' . $e->getMessage())
                 ->send();
         }
     }

@@ -111,6 +111,7 @@ Route::controller(AtencionController::class)->prefix('atenciones')->group(functi
     Route::post('/{idCita}', 'createAtencion');
     Route::get('/paciente/{id}', 'showAllAtencionesPaciente');
     Route::get('/{id}', 'showAtencion');
+    Route::get('/', 'showAllAtenciones');
     Route::put('/{id}', 'updateAtencion');
     Route::delete('/{id}', 'destroyAtencion');
     });
