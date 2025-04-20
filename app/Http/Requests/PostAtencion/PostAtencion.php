@@ -22,16 +22,16 @@ class PostAtencion extends FormRequest
     public function rules(): array
     {
         return [
-            'MotivoConsulta' => 'nullable|string|max:255',
-            'FormaContacto' => 'nullable|string|max:100',
-            'Diagnostico' => 'nullable|string',
-            'Tratamiento' => 'nullable|string',
-            'Observacion' => 'nullable|string',
-            'UltimosObjetivos' => 'nullable|string',
-            'idEnfermedad' => 'nullable|exists:enfermedades,idEnfermedad',
-            'Comentario' => 'nullable|string',
-            'DocumentosAdicionales' => 'nullable|string',
-            'FechaAtencion' => 'required|date',
+            'motivoConsulta' => 'required|string|max:255',
+            'formaContacto' => 'required|string|max:100',
+            'diagnostico' => 'required|string',
+            'tratamiento' => 'required|string',
+            'observacion' => 'required|string',
+            'ultimosObjetivos' => 'required|string',
+            'idEnfermedad' => 'required|exists:enfermedades,idEnfermedad',
+            'comentario' => 'nullable|string',
+            'documentosAdicionales' => 'nullable|string',
+            'fechaAtencion' => 'required|date',
             'descripcion' => 'nullable|string',
         ];
     }
