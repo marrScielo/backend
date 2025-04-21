@@ -37,7 +37,7 @@ Route::controller(PacienteController::class)->prefix('pacientes')->group(functio
         Route::get('/', 'showPacientesByPsicologo');
         Route::put('/{id}', 'updatePaciente');
         Route::delete('/{id}', 'destroyPaciente');
-        Route::get('/{id}/citas/status-count', 'getCitasPaciente');
+        Route::get('/citas/{id}', 'getCitasPaciente');
     });
 });
 
