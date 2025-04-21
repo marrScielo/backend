@@ -19,18 +19,18 @@ return new class extends Migration
         });
 
         Schema::create('atenciones', function (Blueprint $table) {
-            $table->id('IdAtencion'); 
+            $table->id('idAtencion'); 
             $table->unsignedBigInteger('idCita');
-            $table->text('MotivoConsulta');
-            $table->string('FormaContacto', 100);
-            $table->text('Diagnostico');
-            $table->text('Tratamiento');
-            $table->text('Observacion');
-            $table->text('UltimosObjetivos');
+            $table->text('motivoConsulta');
+            $table->string('formaContacto', 100);
+            $table->text('diagnostico');
+            $table->text('tratamiento');
+            $table->text('observacion');
+            $table->text('ultimosObjetivos');
             $table->unsignedInteger('idEnfermedad'); 
-            $table->text('DocumentosAdicionales')->nullable();
-            $table->text('Comentario');
-            $table->date('FechaAtencion');
+            $table->text('documentosAdicionales')->nullable();
+            $table->text('comentario');
+            $table->date('fechaAtencion');
             $table->text('descripcion')->nullable();
 
             $table->foreign('idCita')->references('idCita')->on('citas')->onDelete('cascade');

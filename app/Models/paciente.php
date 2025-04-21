@@ -66,4 +66,5 @@ class Paciente extends Model
 
         return 'PA' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
     }
+    
 }
