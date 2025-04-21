@@ -14,18 +14,17 @@ class Atencion extends Model
 
     protected $fillable = [
         'idCita',
-        'MotivoConsulta',
-        'FormaContacto',
-        'Diagnostico',
-        'Tratamiento',
-        'Observacion',
-        'UltimosObjetivos',
+        'motivoConsulta',
+        'formaContacto',
+        'diagnostico',
+        'tratamiento',
+        'observacion',
+        'ultimosObjetivos',
         'idEnfermedad',
-        'Comentario',
-        'DocumentosAdicionales',
-        'FechaAtencion',
+        'comentario',
+        'documentosAdicionales',
+        'fechaAtencion',
         'descripcion',
-        'fecha_atencion'
     ];
     
     public function enfermedad()
