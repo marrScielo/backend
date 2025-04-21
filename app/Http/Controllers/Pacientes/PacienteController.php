@@ -70,15 +70,15 @@ class PacienteController extends Controller
 
             // Contar las citas del paciente por estado
             $citasPendientes = Cita::where('idPaciente', $idPaciente)
-                ->where('estado', 'pendiente')
+                ->where('estado_Cita', 'Pendiente')
                 ->count();
 
             $citasCanceladas = Cita::where('idPaciente', $idPaciente)
-                ->where('estado', 'cancelada')
+                ->where('estado_Cita', 'Cancelada')
                 ->count();
 
             $citasConfirmadas = Cita::where('idPaciente', $idPaciente)
-                ->where('estado', 'confirmada')
+                ->where('estado_Cita', 'Confirmada')
                 ->count();
 
             $response = [
