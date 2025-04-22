@@ -49,6 +49,7 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
         Route::post('/', 'createPsicologo');
         Route::put('/{id}', 'updatePsicologo');
         Route::delete('/{id}', 'DeletePsicologo');
+        Route::get('/dashboard', 'psicologoDashboard');
     });
 });
 
@@ -141,8 +142,4 @@ Route::controller(PrePacienteController::class)->prefix('pre-pacientes')->group(
     });
 });
 
-Route::controller(DashboardController::class)->prefix('dashboard')
-    ->middleware(['auth:sanctum', 'role:PSICOLOGO'])
-    ->group(function () {
-        Route::get('/psicologo', 'psicologoDashboard');
-    });
+
