@@ -32,7 +32,23 @@ class DashboardController extends Controller
 
         $totalMinutosReservados = Cita::where('idPsicologo', $idPsicologo)
         ->whereIn('estado_Cita', ['completada', 'pendiente'])  
-        ->sum('duracion');  
+        ->sum('duracion'); 
+        
+        // Total de pacientes únicos
+        $totalPacientes = Cita::where('idPsicologo', $idPsicologo)
+        ->whereNotNull('idPaciente')
+        ->distinct('idPaciente')
+        ->count('idPaciente');
+
+        // Nuevos pacientes en los últimos 30 días (por su primera cita)
+        $nuevosPacientes = Cita::select('idPaciente')
+        ->where('idPsicologo', $idPsicologo)
+        ->whereNotNull('idPaciente')
+        ->selectRaw('MIN(fecha_Cita) as primera_cita, idPaciente')
+        ->groupBy('idPaciente')
+        ->havingRaw('primera_cita >= ?', [now()->subDays(30)])
+        ->get()
+        ->count();
     
         return HttpResponseHelper::make()
             ->successfulResponse('Datos del dashboard cargados correctamente',[
@@ -40,7 +56,9 @@ class DashboardController extends Controller
             'citas_completadas' => $citasCompletadas,
             'citas_pendientes' => $citasPendientes,
             'citas_canceladas' => $citasCanceladas,
-            'total_minutos_reservados' => $totalMinutosReservados, 
+            'total_minutos_reservados' => $totalMinutosReservados,
+            'total_pacientes' => $totalPacientes,
+            'nuevos_pacientes' => $nuevosPacientes, 
             ])
             ->send();
     }
