@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Atencion\AtencionController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Contactos\ContactosController;
@@ -15,7 +16,7 @@ use App\Http\Controllers\Pacientes\PacienteController;
 use App\Http\Controllers\Prepaciente\PrePacienteController;
 use App\Http\Controllers\RespuestasBlog\RespuestaComentarioController;
 use App\Http\Controllers\RegistroFamiliar\RegistroFamiliarController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashboardController;   
 
 Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('/login', 'login');
@@ -48,7 +49,7 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
         Route::post('/', 'createPsicologo');
         Route::put('/{id}', 'updatePsicologo');
-        Route::delete('/{id}', 'DeletePsicologo');
+        Route::delete('/{id}', 'cambiarEstadoPsicologo');
         Route::get('/dashboard', 'psicologoDashboard');
     });
 });
@@ -142,4 +143,10 @@ Route::controller(PrePacienteController::class)->prefix('pre-pacientes')->group(
     });
 });
 
+Route::controller(UserController::class)->prefix('user')->group(function () {
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
+        Route::post('/', 'register'); 
+    });
+     
+});
 
