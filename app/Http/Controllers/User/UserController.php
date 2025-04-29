@@ -18,11 +18,16 @@ class UserController extends Controller
             $userData['password'] = Hash::make($request['password']);
             $userData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $userData['fecha_nacimiento'])->format('Y-m-d');
             $image = $request->file('imagen');
-            $userData['imagen'] = base64_encode(file_get_contents($image->getRealPath()));
+
+            if ($image) {
+                $userData['imagen'] = base64_encode(file_get_contents($image->getRealPath()));
+            } else {
+                $userData['imagen'] = null; // O puedes manejarlo como prefieras
+            }
 
             $user = User::create($userData);
             $user->assignRole('ADMIN');
-    
+
             return HttpResponseHelper::make()
                 ->successfulResponse('Usuario creado correctamente')
                 ->send();

@@ -45,6 +45,7 @@ class PostUser extends FormRequest
             'fecha_nacimiento' => 'required',
             'fecha_creacion' => 'date',
             'imagen' => 'nullable|string',
+            
         ];
     }
 }
