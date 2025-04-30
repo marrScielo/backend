@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Administradores\AdministradoresController;
 use App\Http\Controllers\Atencion\AtencionController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -16,7 +17,8 @@ use App\Http\Controllers\Pacientes\PacienteController;
 use App\Http\Controllers\Prepaciente\PrePacienteController;
 use App\Http\Controllers\RespuestasBlog\RespuestaComentarioController;
 use App\Http\Controllers\RegistroFamiliar\RegistroFamiliarController;
-use App\Http\Controllers\DashboardController;   
+
+use function PHPUnit\Framework\callback;
 
 Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('/login', 'login');
@@ -53,6 +55,7 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
         Route::get('/dashboard', 'psicologoDashboard');
     });
 });
+
 
 Route::controller(BlogController::class)->prefix('blogs')->group(function () {
     Route::get('/authors', 'showAllAuthors');
@@ -148,5 +151,16 @@ Route::controller(UserController::class)->prefix('user')->group(function () {
         Route::post('/', 'register'); 
     });
      
+});
+
+Route::controller(AdministradoresController::class)->prefix('administradores')->group(function(): void {
+    Route::get('/', 'showAllAdministradores');
+    Route::get('/{id}', 'showById');
+
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
+        Route::post('/', 'createAdministradores');
+        Route::put('/{id}', 'updateAdministradores');
+        Route::delete('/{id}', 'cambiarEstadoAdministrador');
+    });
 });
 
