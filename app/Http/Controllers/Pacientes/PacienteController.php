@@ -102,7 +102,7 @@ class PacienteController extends Controller
         try {
             $paciente = Paciente::findOrFail($id);
             $pacienteData = $requestPaciente->all();
-            $pacienteData['fecha_nacimiento'] = Carbon::createFromFormat('d / m / Y', $pacienteData['fecha_nacimiento'])->format('Y-m-d');
+            $pacienteData['fecha_nacimiento'] = Carbon::parse($pacienteData['fecha_nacimiento'])->format('Y-m-d');
             $paciente->update($pacienteData);
 
             return HttpResponseHelper::make()
@@ -191,4 +191,47 @@ class PacienteController extends Controller
                 ->send();
         }
     }
+
+    public function searchPacientes(Request $request)
+{
+    try {
+        $userId = Auth::id();
+        $psicologo = Psicologo::where('user_id', $userId)->first();
+
+        if (!$psicologo) {
+            return HttpResponseHelper::make()
+                ->unauthorizedResponse('No se tiene acceso como psicólogo')
+                ->send();
+        }
+
+        $search = $request->query('search', '');
+
+        $pacientes = Paciente::where('idPsicologo', $psicologo->idPsicologo)
+            ->where(function ($query) use ($search) {
+                $query->where('nombre', 'LIKE', "%$search%")
+                      ->orWhere('apellido', 'LIKE', "%$search%");
+            })
+            ->select('idPaciente', 'nombre', 'apellido', 'codigo')
+            ->limit(10)
+            ->get();
+
+        $response = $pacientes->map(function ($paciente) {
+            return [
+                'id' => $paciente->idPaciente,
+                'nombre' => $paciente->nombre . ' ' . $paciente->apellido,
+                'codigo' => $paciente->codigo,
+            ];
+        });
+
+        return HttpResponseHelper::make()
+            ->successfulResponse('Resultados encontrados', $response)
+            ->send();
+
+    } catch (\Exception $e) {
+        return HttpResponseHelper::make()
+            ->internalErrorResponse('Ocurrió un error al buscar pacientes. ' . $e->getMessage())
+            ->send();
+    }
+}
+
 }

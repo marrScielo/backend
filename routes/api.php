@@ -41,6 +41,7 @@ Route::controller(PacienteController::class)->prefix('pacientes')->group(functio
         Route::put('/{id}', 'updatePaciente');
         Route::delete('/{id}', 'destroyPaciente');
         Route::get('/citas/{id}', 'getCitasPaciente');
+        Route::get('/search/nombre', 'searchPacienteByNombre');
     });
 });
 
@@ -94,8 +95,11 @@ Route::controller(CategoriaController::class)->prefix('categorias')->group(funct
 });
 
 Route::controller(CitaController::class)->prefix('citas')->group(function () {
-    Route::get('/pendientes/{id}', 'showCitasPendientes');
-    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
+    // Ruta pública
+    Route::get('/pendientes/{id}', 'showCitasPendientes'); 
+
+    // Rutas protegidas
+    Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN,PSICOLOGO']], function () {
         Route::get('/', 'showAllCitasByPsicologo');
         Route::post('/', 'createCita');
         Route::get('/{id}', 'showCitaById');
@@ -103,7 +107,6 @@ Route::controller(CitaController::class)->prefix('citas')->group(function () {
         Route::delete('/{id}', 'destroyCita');
     });
 });
-
 Route::controller(RespuestaComentarioController::class)->prefix('respuestas')->group(function () {
     Route::post('/', 'createRespuesta');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
