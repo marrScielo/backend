@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Pacientes;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostPaciente\PostPaciente;
-use App\Http\Requests\PostUser\PostUser;
 use App\Models\Cita;
 use App\Models\Paciente;
 use App\Models\Psicologo;
@@ -151,30 +150,37 @@ class PacienteController extends Controller
     }
 
     public function showPacienteById($id)
-    {
-        try {
-            $userId = Auth::id();
-            $psicologo = Psicologo::where('user_id', $userId)->first();
+{
+    try {
+        $userId = Auth::id();
+        $psicologo = Psicologo::where('user_id', $userId)->first();
 
-            if (!$psicologo) {
-                return HttpResponseHelper::make()
-                    ->notFoundResponse('No se tiene acceso como psicólogo.')
-                    ->send();
-            }
+        if (!$psicologo) {
+            return HttpResponseHelper::make()
+                ->notFoundResponse('No se tiene acceso como psicólogo.')
+                ->send();
+        }
 
-            $paciente = Paciente::where('idPaciente', $id)
+        $paciente = Paciente::where('idPaciente', $id)
                 ->where('idPsicologo', $psicologo->idPsicologo)
                 ->first();
 
+        // Verificar si el paciente existe
+        if (!$paciente) {
             return HttpResponseHelper::make()
-                ->successfulResponse('Paciente obtenido correctamente', $paciente->toArray())
-                ->send();
-        } catch (\Exception $e) {
-            return HttpResponseHelper::make()
-                ->internalErrorResponse('Ocurrió un problema al procesar la solicitud. ' . $e->getMessage())
+                ->notFoundResponse('No se encontró el paciente solicitado o no tienes acceso a este paciente.')
                 ->send();
         }
+
+        return HttpResponseHelper::make()
+            ->successfulResponse('Paciente obtenido correctamente', $paciente->toArray())
+            ->send();
+    } catch (\Exception $e) {
+        return HttpResponseHelper::make()
+            ->internalErrorResponse('Ocurrió un problema al procesar la solicitud. ' . $e->getMessage())
+            ->send();
     }
+}
 
     public function destroyPaciente(int $id)
     {
@@ -232,6 +238,21 @@ class PacienteController extends Controller
             ->internalErrorResponse('Ocurrió un error al buscar pacientes. ' . $e->getMessage())
             ->send();
     }
-}
+}   
 
+    public function pacientesAll(){
+        try {
+            $pacientes = Paciente::all();
+            return HttpResponseHelper::make()
+                ->successfulResponse('Pacientes obtenidos correctamente', $pacientes)
+                ->send();
+            
+        } catch (\Throwable $th) {
+            //throw $th;
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Ocurrió un problema al procesar la solicitud.')
+                ->send();
+        }
+    }
+        
 }
