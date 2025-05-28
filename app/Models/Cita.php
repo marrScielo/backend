@@ -12,12 +12,11 @@ class Cita extends Model
     public $timestamps = false; 
 
     protected $attributes = [
-        'colores' => '#FFA500', 
-        'estado_Cita' => 'Pendiente',
-        'idCanal' => '1',
-        'idEtiqueta' =>  '3',
-        'idTipoCita' => '2',
-        'duracion' => '60'
+            'colores' => '#FFA500', 
+            'estado_Cita' => 'Pendiente',
+
+
+            'duracion' => '60'
     ];
 
     protected $fillable = [

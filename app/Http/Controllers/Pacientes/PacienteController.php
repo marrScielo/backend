@@ -149,7 +149,7 @@ class PacienteController extends Controller
         }
     }
 
-    public function showPacienteById($id)
+   public function showPacienteById($id)
 {
     try {
         $userId = Auth::id();
@@ -161,11 +161,12 @@ class PacienteController extends Controller
                 ->send();
         }
 
-        $paciente = Paciente::where('idPaciente', $id)
+        // Solo agregar with() a tu consulta existente
+        $paciente = Paciente::with('registroFamiliar')
+                ->where('idPaciente', $id)
                 ->where('idPsicologo', $psicologo->idPsicologo)
                 ->first();
 
-        // Verificar si el paciente existe
         if (!$paciente) {
             return HttpResponseHelper::make()
                 ->notFoundResponse('No se encontró el paciente solicitado o no tienes acceso a este paciente.')
@@ -181,7 +182,6 @@ class PacienteController extends Controller
             ->send();
     }
 }
-
     public function destroyPaciente(int $id)
     {
         try {
