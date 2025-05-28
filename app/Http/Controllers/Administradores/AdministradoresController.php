@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 
 class AdministradoresController extends Controller
 {
-    
+
 
     public function createAdministradores(PostAdministradores $requestAdministradores, PostUser $requestUser)
     {
@@ -33,7 +33,7 @@ class AdministradoresController extends Controller
 
             // Crear usuario
             $usuario = User::create($usuarioData);
-            
+
             // Crear administrador asociado
             $administradorData = $requestAdministradores->validated();
             $administradorData['user_id'] = $usuario->user_id;
@@ -45,12 +45,11 @@ class AdministradoresController extends Controller
             DB::commit();
 
             return HttpResponseHelper::make()
-            ->successfulResponse('Administrador creado correctamente')->send();
-
+                ->successfulResponse('Administrador creado correctamente')->send();
         } catch (\Exception $e) {
             DB::rollBack();
             return HttpResponseHelper::make()
-            ->internalErrorResponse('Error al crear administrador: ' . $e->getMessage())->send();
+                ->internalErrorResponse('Error al crear administrador: ' . $e->getMessage())->send();
         }
     }
 
@@ -61,12 +60,12 @@ class AdministradoresController extends Controller
 
             if (!$administrador) {
                 return HttpResponseHelper::make()
-                ->notFoundResponse('Administrador no encontrado')->send();
+                    ->notFoundResponse('Administrador no encontrado')->send();
             }
 
             if (!$administrador->user) {
                 return HttpResponseHelper::make()
-                ->notFoundResponse('Usuario asociado al administrador no encontrado')->send();
+                    ->notFoundResponse('Usuario asociado al administrador no encontrado')->send();
             }
 
             $response = [
@@ -75,21 +74,20 @@ class AdministradoresController extends Controller
                 'apellido' => $administrador->user->apellido,
                 'email' => $administrador->user->email,
                 'imagen' => $administrador->user->imagen,
-                'fecha_nacimiento' => $administrador->user->fecha_nacimiento 
+                'fecha_nacimiento' => $administrador->user->fecha_nacimiento
                     ? Carbon::parse($administrador->user->fecha_nacimiento)->format('d/m/Y')
                     : null,
                 'estado' => $administrador->estado,
-                'creado_en' => $administrador->created_at 
-                    ? $administrador->created_at->format('d/m/Y H:i:s') 
+                'creado_en' => $administrador->created_at
+                    ? $administrador->created_at->format('d/m/Y H:i:s')
                     : null
             ];
 
             return HttpResponseHelper::make()
-            ->successfulResponse('Administrador obtenido correctamente', $response)->send();
-
+                ->successfulResponse('Administrador obtenido correctamente', $response)->send();
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
-            ->internalErrorResponse('Error al obtener administrador: ' . $e->getMessage())->send();
+                ->internalErrorResponse('Error al obtener administrador: ' . $e->getMessage())->send();
         }
     }
 
@@ -103,7 +101,7 @@ class AdministradoresController extends Controller
                     if (!$admin->user) {
                         return null;
                     }
-                    
+
                     return [
                         'idAdministrador' => $admin->idAdmin,
                         'nombre' => $admin->user->name,
@@ -111,56 +109,47 @@ class AdministradoresController extends Controller
                         'email' => $admin->user->email,
                         'imagen' => $admin->user->imagen,
                         'estado' => $admin->estado,
-                        'ultima_actualizacion' => $admin->updated_at 
-                            ? $admin->updated_at->format('d/m/Y H:i') 
+                        'ultima_actualizacion' => $admin->updated_at
+                            ? $admin->updated_at->format('d/m/Y H:i')
                             : null
                     ];
                 })
                 ->filter();
 
             return HttpResponseHelper::make()
-            ->successfulResponse('Lista de administradores obtenida', $administradores)->send();
-
+                ->successfulResponse('Lista de administradores obtenida', $administradores)->send();
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
-            ->internalErrorResponse('Error al obtener administradores: ' . $e->getMessage())->send();
+                ->internalErrorResponse('Error al obtener administradores: ' . $e->getMessage())->send();
         }
     }
 
     public function updateAdministradores(PutAdministradores $requestAdministradores, PutUser $requestUser, int $id)
     {
-        DB::beginTransaction();
         try {
             $administrador = Administradores::findOrFail($id);
             $usuario = User::findOrFail($administrador->user_id);
-
-            // Actualizar datos de administrador
-            $adminData = $requestAdministradores->validated();
-            $administrador->update($adminData);
-
-            // Actualizar datos de usuario
-            $userData = $requestUser->validated();
-            
+            $administradorData = $requestAdministradores->only([
+                'email',
+                'imagen',
+                'password',
+            ]);
+            $administrador->update($administradorData);
+            $usuarioData = $requestUser->only(['name', 'apellido', 'email', 'password', 'fecha_nacimiento', 'imagen']);
             if ($requestUser->filled('password')) {
-                $userData['password'] = Hash::make($requestUser->password);
+                $usuarioData['password'] = Hash::make($requestUser->password);
             }
-            
             if ($requestUser->filled('fecha_nacimiento')) {
-                $userData['fecha_nacimiento'] = Carbon::createFromFormat('d/m/Y', $requestUser->fecha_nacimiento)
-                    ->format('Y-m-d');
+                $usuarioData['fecha_nacimiento'] = Carbon::createFromFormat('d/m/Y', $requestUser->fecha_nacimiento)->format('Y-m-d');
             }
-            
-            $usuario->update($userData);
-
-            DB::commit();
+            $usuario->update($usuarioData);
 
             return HttpResponseHelper::make()
-            ->successfulResponse('Administrador actualizado correctamente')->send();
-
+                ->successfulResponse('Administrador actualizado correctamente')->send();
         } catch (\Exception $e) {
             DB::rollBack();
             return HttpResponseHelper::make()
-            ->internalErrorResponse('Error al actualizar: ' . $e->getMessage())->send();
+                ->internalErrorResponse('Error al actualizar: ' . $e->getMessage())->send();
         }
     }
 
@@ -171,7 +160,7 @@ class AdministradoresController extends Controller
 
             if (!$administrador) {
                 return HttpResponseHelper::make()
-                ->notFoundResponse('Administrador no encontrado')->send();
+                    ->notFoundResponse('Administrador no encontrado')->send();
             }
 
             $nuevoEstado = $administrador->estado === 'A' ? 'I' : 'A';
@@ -179,13 +168,12 @@ class AdministradoresController extends Controller
             $administrador->save();
 
             return HttpResponseHelper::make()
-            ->successfulResponse(
-                'Estado cambiado a ' . ($nuevoEstado === 'A' ? 'Activo' : 'Inactivo')
-            )->send();
-
+                ->successfulResponse(
+                    'Estado cambiado a ' . ($nuevoEstado === 'A' ? 'Activo' : 'Inactivo')
+                )->send();
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
-            ->internalErrorResponse('Error al cambiar estado: ' . $e->getMessage())->send();
+                ->internalErrorResponse('Error al cambiar estado: ' . $e->getMessage())->send();
         }
     }
 
@@ -194,15 +182,15 @@ class AdministradoresController extends Controller
         DB::beginTransaction();
         try {
             $administrador = Administradores::find($id);
-            
+
             if (!$administrador) {
                 return HttpResponseHelper::make()
-                ->notFoundResponse('Administrador no encontrado')->send();
+                    ->notFoundResponse('Administrador no encontrado')->send();
             }
 
             $userId = $administrador->user_id;
             $administrador->delete();
-            
+
             if ($userId) {
                 User::find($userId)->delete();
             }
@@ -210,12 +198,11 @@ class AdministradoresController extends Controller
             DB::commit();
 
             return HttpResponseHelper::make()
-            ->successfulResponse('Administrador eliminado correctamente')->send();
-
+                ->successfulResponse('Administrador eliminado correctamente')->send();
         } catch (\Exception $e) {
             DB::rollBack();
             return HttpResponseHelper::make()
-            ->internalErrorResponse('Error al eliminar: ' . $e->getMessage())->send();
+                ->internalErrorResponse('Error al eliminar: ' . $e->getMessage())->send();
         }
     }
 }
