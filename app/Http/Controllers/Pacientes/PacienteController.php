@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pacientes;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostPaciente\PostPaciente;
+use App\Http\Requests\PutPaciente\PutPaciente;
 use App\Models\Cita;
 use App\Models\Paciente;
 use App\Models\Psicologo;
@@ -96,23 +97,32 @@ class PacienteController extends Controller
         }
     }
 
-    public function updatePaciente(PostPaciente $requestPaciente, int $id)
-    {
-        try {
-            $paciente = Paciente::findOrFail($id);
-            $pacienteData = $requestPaciente->all();
-            $pacienteData['fecha_nacimiento'] = Carbon::parse($pacienteData['fecha_nacimiento'])->format('Y-m-d');
-            $paciente->update($pacienteData);
+   public function updatePaciente(PutPaciente $request, int $id)
+{
+    try {
+        $paciente = Paciente::findOrFail($id);
 
-            return HttpResponseHelper::make()
-                ->successfulResponse('Paciente actualizado correctamente')
-                ->send();
-        } catch (\Exception $e) {
-            return HttpResponseHelper::make()
-                ->internalErrorResponse('Ocurrio un problema al procesar la solicitud.' . $e->getMessage())
-                ->send();
+        $data = $request->validated();
+
+        // Si vino fecha en formato d/m/Y, ajústala:
+        if (isset($data['fecha_nacimiento'])) {
+            $data['fecha_nacimiento'] = Carbon::createFromFormat('d/m/Y', $data['fecha_nacimiento'])
+                                           ->format('Y-m-d');
         }
+
+        $paciente->update($data);
+
+        return HttpResponseHelper::make()
+            ->successfulResponse('Paciente actualizado correctamente')
+            ->send();
+
+    } catch (\Exception $e) {
+        return HttpResponseHelper::make()
+            ->internalErrorResponse('Error al actualizar: '.$e->getMessage())
+            ->send();
     }
+}
+
 
     public function showPacientesByPsicologo()
     {
