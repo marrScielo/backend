@@ -8,7 +8,7 @@ use Illuminate\Validation\Rule;
 
 class PutUser extends FormRequest
 {
-      /**
+    /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
@@ -16,8 +16,10 @@ class PutUser extends FormRequest
         return true;
     }
 
-
-    public function prepareForValidation()
+    /**
+     * Prepare data for validation: merge actual user_id based on psicólogo route param
+     */
+    protected function prepareForValidation()
     {
         if ($psicologo = Psicologo::find($this->route('id'))) {
             $this->merge(['user_id' => $psicologo->user_id]);
@@ -25,9 +27,7 @@ class PutUser extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * Validation rules for updating user data
      */
     public function rules(): array
     {
@@ -38,7 +38,9 @@ class PutUser extends FormRequest
                 'sometimes',
                 'email',
                 'max:254',
-                Rule::unique('users', 'email')->ignore($this->route('id')), // Ignora el email actual del usuario
+                // Ignore unique check on actual user_id column, not default 'id'
+                Rule::unique('users', 'email')
+                    ->ignore($this->input('user_id'), 'user_id'),
             ],
             'password' => 'sometimes|string|min:8|max:100',
             'fecha_nacimiento' => 'sometimes|date_format:d/m/Y',
