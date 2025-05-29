@@ -1,7 +1,7 @@
-<?php
+ <?php
 
 return [
-
+ 
     /*
     |--------------------------------------------------------------------------
     | Cross-Origin Resource Sharing (CORS) Configuration
@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://frontend-co4g.vercel.app/','https://www.frontend-co4g.vercel.app/','*'],
+    'allowed_origins' => ['http://localhost:3000/','https://frontend-co4g.vercel.app/','https://www.frontend-co4g.vercel.app/','*'],
 
     'allowed_origins_patterns' => [],
 

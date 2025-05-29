@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('user_id')->autoIncrement(); 
             $table->string('name', 100); 
             $table->string('apellido', 100); 
-            $table->string('email', 100)->unique(); 
+            $table->string('email', 254)->unique(); 
             $table->string('password'); 
             $table->date('fecha_nacimiento');
             $table->timestamp('fecha_creacion')->useCurrent();

@@ -38,7 +38,7 @@ class PostUser extends FormRequest
             'email' => [
                 'required',
                 'email',
-                'max:100',
+                'max:254',
                 Rule::unique('users', 'email')->ignore($this->input('user_id'), 'user_id'),
             ],
             'password' => 'required|string|min:8|max:100',

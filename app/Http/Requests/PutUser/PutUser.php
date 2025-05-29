@@ -37,7 +37,7 @@ class PutUser extends FormRequest
             'email' => [
                 'sometimes',
                 'email',
-                'max:100',
+                'max:254',
                 Rule::unique('users', 'email')->ignore($this->route('id')), // Ignora el email actual del usuario
             ],
             'password' => 'sometimes|string|min:8|max:100',
