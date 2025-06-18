@@ -36,18 +36,18 @@ Route::controller(ContactosController::class)->prefix('contactos')->group(functi
 Route::controller(PacienteController::class)->prefix('pacientes')->group(function () {
     Route::group(['middleware' => ['auth:sanctum', 'role:PSICOLOGO']], function () {
         Route::post('/', 'createPaciente');
-        
+
 
         Route::get('all', 'pacientesAll');
         Route::get('citas/{id}', 'getCitasPaciente');
         Route::get('search/nombre', 'searchPacienteByNombre');
-        
-       
+
+
         Route::get('/', 'showPacientesByPsicologo');
         Route::put('/{id}', 'updatePaciente');
         Route::delete('/{id}', 'destroyPaciente');
-        
-        
+
+
         Route::get('/{id}', 'showPacienteById');
     });
 });
@@ -103,7 +103,7 @@ Route::controller(CategoriaController::class)->prefix('categorias')->group(funct
 
 Route::controller(CitaController::class)->prefix('citas')->group(function () {
     // Ruta pública
-    Route::get('/pendientes/{id}', 'showCitasPendientes'); 
+    Route::get('/pendientes/{id}', 'showCitasPendientes');
 
     // Rutas protegidas
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
@@ -124,13 +124,14 @@ Route::controller(RespuestaComentarioController::class)->prefix('respuestas')->g
 
 Route::controller(AtencionController::class)->prefix('atenciones')->group(function () {
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
-        Route::get('/ultima/paciente/{id}', 'showAtencionByPaciente');
+        Route::get('/ultima/cita/{id}', 'showAtencionByCita');
         Route::get('/paciente/{id}', 'showAllAtencionesPaciente');
         Route::get('/', 'showAllAtenciones');
         Route::post('/{idCita}', 'createAtencion');
         Route::put('/{idCita}', 'updateAtencion');
         Route::delete('/{id}', 'destroyAtencion');
         Route::get('/{id}', 'showAtencion');
+        Route::get('/atencion/{idAtencion}/documento/download', 'downloadDocumentoAtencion');
     });
 });
 
@@ -158,12 +159,11 @@ Route::controller(PrePacienteController::class)->prefix('pre-pacientes')->group(
 
 Route::controller(UserController::class)->prefix('user')->group(function () {
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
-        Route::post('/', 'register'); 
+        Route::post('/', 'register');
     });
-     
 });
 
-Route::controller(AdministradoresController::class)->prefix('administradores')->group(function(): void {
+Route::controller(AdministradoresController::class)->prefix('administradores')->group(function (): void {
     Route::get('/', 'showAllAdministradores');
     Route::get('/{id}', 'showById');
 
@@ -173,4 +173,3 @@ Route::controller(AdministradoresController::class)->prefix('administradores')->
         Route::patch('/{id}', 'cambiarEstadoAdministrador');
     });
 });
-

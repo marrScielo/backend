@@ -6,28 +6,32 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PutAtencion extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+    public function authorize()
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
-            'diagnostico' => 'sometimes|string',
-            'tratamiento' => 'sometimes|string',
-            'observacion' => 'sometimes|string',
-            'ultimosObjetivos' => 'sometimes|string',
-            'comentario' => 'sometimes|string',
+            'diagnostico' => 'sometimes|string|max:1000',
+            'tratamiento' => 'sometimes|string|max:1000',
+            'observacion' => 'sometimes|string|max:1000',
+            'ultimosObjetivos' => 'sometimes|string|max:1000',
+            'idEnfermedad' => 'sometimes|integer|exists:enfermedades,idEnfermedad',
             'fechaAtencion' => 'sometimes|date',
+            'comentario' => 'sometimes|string|max:1000',
+            'documentosAdicionales' => 'sometimes|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240', // 10MB máximo
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'documentosAdicionales.file' => 'El documento debe ser un archivo válido.',
+            'documentosAdicionales.mimes' => 'El documento debe ser un archivo de tipo: pdf, doc, docx, jpg, jpeg, png.',
+            'documentosAdicionales.max' => 'El documento no debe ser mayor a 10MB.',
+            'idEnfermedad.exists' => 'La enfermedad seleccionada no existe.',
         ];
     }
 }
