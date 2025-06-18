@@ -22,8 +22,6 @@ class PutAtencion extends FormRequest
     public function rules(): array
     {
         return [
-            'motivoConsulta' => 'sometimes|string|max:255',
-            'formaContacto' => 'sometimes|string|max:100',
             'diagnostico' => 'sometimes|string',
             'tratamiento' => 'sometimes|string',
             'observacion' => 'sometimes|string',

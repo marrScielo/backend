@@ -22,17 +22,14 @@ class PostAtencion extends FormRequest
     public function rules(): array
     {
         return [
-            'motivoConsulta' => 'required|string|max:255',
-            'formaContacto' => 'required|string|max:100',
             'diagnostico' => 'required|string',
             'tratamiento' => 'required|string',
             'observacion' => 'required|string',
             'ultimosObjetivos' => 'required|string',
             'idEnfermedad' => 'required|exists:enfermedades,idEnfermedad',
-            'comentario' => 'nullable|string',
-            'documentosAdicionales' => 'nullable|string',
-            'fechaAtencion' => 'required|date',
-            'descripcion' => 'nullable|string',
+            'comentario' => 'sometimes|string',
+            'documentosAdicionales' => 'sometimes|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240', // Cambiar de string a file
+            'fechaAtencion' => 'sometimes|date', // Cambiar de required a sometimes
         ];
     }
 }
