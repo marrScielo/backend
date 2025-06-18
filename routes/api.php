@@ -170,7 +170,7 @@ Route::controller(AdministradoresController::class)->prefix('administradores')->
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN']], function () {
         Route::post('/', 'createAdministradores');
         Route::put('/{id}', 'updateAdministradores');
-        Route::delete('/{id}', 'cambiarEstadoAdministrador');
+        Route::patch('/{id}', 'cambiarEstadoAdministrador');
     });
 });
 
