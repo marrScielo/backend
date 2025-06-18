@@ -4,13 +4,16 @@ namespace App\Http\Controllers\Atencion;
 
 use App\Http\Controllers\Controller;
 use App\Models\Atencion;
-use Illuminate\Http\Request;
+use App\Http\Requests\PutAtencion\PutAtencion; // Import del FormRequest
+use Illuminate\Support\Facades\Storage; // Import correcto de Storage
+use Illuminate\Support\Facades\Log; // Import de Log
+use Illuminate\Database\Eloquent\ModelNotFoundException; // Import de ModelNotFoundException
 use App\Http\Requests\PostAtencion\PostAtencion;
-use App\Http\Requests\PutAtencion\PutAtencion;
 use App\Models\Cita;
 use App\Traits\HttpResponseHelper;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Http;
 
 class AtencionController extends Controller
 {
@@ -211,76 +214,94 @@ class AtencionController extends Controller
     public function showAtencionByCita(int $idCita)
     {
         try {
-            $atencion = Atencion::with(['cita.paciente', 'enfermedad'])
+            $Atencion = Atencion::with(['cita.paciente', 'enfermedad'])
                 ->where('idCita', $idCita)
                 ->first();
 
-            if (!$atencion) {
+
+            if (!$Atencion) {
                 return HttpResponseHelper::make()
-                    ->notFoundResponse('No se encontró ninguna atención para esta cita.')
+                    ->notFoundResponse('Atención no encontrada para la cita especificada.')
                     ->send();
             }
 
-            $resultado = [
-                'idAtencion' => $atencion->idAtencion,
-                'idCita' => $atencion->idCita,
-                'diagnostico' => $atencion->diagnostico,
-                'tratamiento' => $atencion->tratamiento,
-                'observacion' => $atencion->observacion,
-                'ultimosObjetivos' => $atencion->ultimosObjetivos,
-                'idEnfermedad' => $atencion->idEnfermedad,
-                'comentario' => $atencion->comentario,
-                'documentosAdicionales' => $atencion->documentosAdicionales,
-                'fechaAtencion' => $atencion->fechaAtencion,
-                'descripcion' => $atencion->descripcion,
-                'enfermedad' => $atencion->enfermedad->nombre ?? null,
-                'paciente' => $atencion->cita->paciente ? [
-                    'nombre' => $atencion->cita->paciente->nombre,
-                    'apellido' => $atencion->cita->paciente->apellido,
-                    'DNI' => $atencion->cita->paciente->DNI,
-                ] : null,
+            $response = [
+                'idAtencion' => $Atencion->idAtencion,
+                'idCita' => $Atencion->idCita,
+                'diagnostico' => $Atencion->diagnostico,
+                'tratamiento' => $Atencion->tratamiento,
+                'observacion' => $Atencion->observacion,
+                'ultimosObjetivos' => $Atencion->ultimosObjetivos,
+                'comentario' => $Atencion->comentario,
+                'documentosAdicionales' => $Atencion->documentosAdicionales,
+                'documentoDownloadUrl' => $Atencion->documentosAdicionales ?
+                    url("/api/atencion/{$Atencion->idAtencion}/documento/download") : null,
+                'idEnfermedad' => $Atencion->enfermedad->idEnfermedad,
             ];
 
             return HttpResponseHelper::make()
-                ->successfulResponse('Atención obtenida correctamente', $resultado)
+                ->successfulResponse('Atención obtenida correctamente', $response)
                 ->send();
-        } catch (Exception $e) {
+        } catch (\Throwable $th) {
             return HttpResponseHelper::make()
-                ->internalErrorResponse('Error al obtener la atención: ' . $e->getMessage())
+                ->notFoundResponse('Atención no encontrada para la cita especificada.')
                 ->send();
         }
     }
-
     /**
      * Actualizar una atención existente
      */
-    public function updateAtencionByCita(PutAtencion $request, int $idCita)
+
+
+
+    public function updateAtencion(PutAtencion $request, int $idCita)
     {
         try {
             $atencion = Atencion::where('idCita', $idCita)->firstOrFail();
-
             $data = $request->validated();
 
-            // Manejo de archivo si viene en la actualización
+            // Si llega un archivo nuevo, reemplazar el anterior
             if ($request->hasFile('documentosAdicionales')) {
                 $file = $request->file('documentosAdicionales');
+
+                // Eliminar archivo anterior si existe
+                if (!empty($atencion->documentosAdicionales)) {
+                    $oldFilePath = 'documentos_atencion/' . $atencion->documentosAdicionales;
+                    if (Storage::disk('public')->exists($oldFilePath)) {
+                        Storage::disk('public')->delete($oldFilePath);
+                    }
+                }
+
+                // Guardar el nuevo archivo
                 $filename = time() . '_' . $file->getClientOriginalName();
-                $path = $file->storeAs('documentos_atencion', $filename, 'public');
-                $data['documentosAdicionales'] = $path;
+                $file->storeAs('documentos_atencion', $filename, 'public');
+
+                // Actualizar el nombre del archivo en los datos
+                $data['documentosAdicionales'] = $filename;
+
+                Log::info('Archivo reemplazado', [
+                    'archivo_anterior' => $atencion->documentosAdicionales,
+                    'archivo_nuevo' => $filename
+                ]);
             }
 
+            // Actualizar la atención con los nuevos datos
             $atencion->update($data);
 
             return HttpResponseHelper::make()
                 ->successfulResponse('Atención actualizada correctamente', $atencion->toArray())
                 ->send();
+        } catch (ModelNotFoundException $e) {
+            return HttpResponseHelper::make()
+                ->notFoundResponse('Atención no encontrada')
+                ->send();
         } catch (Exception $e) {
+            Log::error('Error al actualizar atención:', ['error' => $e->getMessage()]);
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Error al actualizar la atención: ' . $e->getMessage())
                 ->send();
         }
     }
-
     /**
      * Eliminar una atención
      */
@@ -296,6 +317,67 @@ class AtencionController extends Controller
         } catch (Exception $e) {
             return HttpResponseHelper::make()
                 ->internalErrorResponse('Error al eliminar la atención: ' . $e->getMessage())
+                ->send();
+        }
+    }
+
+
+    /**
+     * Descargar documento de una atención
+     */
+    public function downloadDocument(int $idAtencion)
+    {
+        try {
+            $atencion = Atencion::findOrFail($idAtencion);
+
+            if (!$atencion->documentosAdicionales) {
+                return HttpResponseHelper::make()
+                    ->notFoundResponse('No hay documentos disponibles para esta atención.')
+                    ->send();
+            }
+
+            $filePath = storage_path('app/public/' . $atencion->documentosAdicionales);
+
+            if (!file_exists($filePath)) {
+                return HttpResponseHelper::make()
+                    ->notFoundResponse('El archivo no existe en el servidor.')
+                    ->send();
+            }
+
+            $fileName = basename($atencion->documentosAdicionales);
+
+            return response()->download($filePath, $fileName);
+        } catch (Exception $e) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Error al descargar el documento: ' . $e->getMessage())
+                ->send();
+        }
+    }
+
+    // En tu controlador de Atención
+    public function downloadDocumentoAtencion(int $idAtencion)
+    {
+        try {
+            $atencion = Atencion::find($idAtencion);
+
+            if (!$atencion || !$atencion->documentosAdicionales) {
+                return HttpResponseHelper::make()
+                    ->notFoundResponse('Documento no encontrado.')
+                    ->send();
+            }
+
+            $filePath = storage_path('app/' . $atencion->documentosAdicionales);
+
+            if (!file_exists($filePath)) {
+                return HttpResponseHelper::make()
+                    ->notFoundResponse('Archivo no encontrado en el servidor.')
+                    ->send();
+            }
+
+            return response()->download($filePath);
+        } catch (\Throwable $th) {
+            return HttpResponseHelper::make()
+                ->internalErrorResponse('Error al descargar el documento.')
                 ->send();
         }
     }
