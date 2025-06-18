@@ -26,6 +26,34 @@ class AuthController extends Controller
                     ->unauthorizedResponse('La contraseña es incorrecta.');
                    
             }
+            if ($user->rol === 'ADMIN') {
+            $admin = \App\Models\Administradores::where('user_id', $user->user_id)->first();
+            if (!$admin) {
+                return HttpResponseHelper::make()
+                    ->unauthorizedResponse('Esta cuenta no está configurada correctamente (Administrador).');
+            }
+
+            if ($admin->estado === 'I') {
+                return HttpResponseHelper::make()
+                    ->unauthorizedResponse('Esta cuenta de administrador está deshabilitada.');
+            }
+        }
+
+        if ($user->rol === 'PSICOLOGO') {
+            $psicologo = Psicologo::where('user_id', $user->user_id)->first();
+            if (!$psicologo) {
+                return HttpResponseHelper::make()
+                    ->unauthorizedResponse('Esta cuenta no está configurada correctamente (Psicólogo).');
+            }
+
+            if ($psicologo->estado === 'I') {
+                return HttpResponseHelper::make()
+                    ->unauthorizedResponse('Esta cuenta de psicólogo está deshabilitada.');
+            }
+
+            $responseData['idpsicologo'] = $psicologo->idPsicologo;
+        }
+        
             $token = $user->createToken('token')->plainTextToken;
             $responseData = [
                 'token' => $token,

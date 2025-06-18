@@ -95,7 +95,7 @@ class AdministradoresController extends Controller
     {
         try {
             $administradores = Administradores::with(['user'])
-                ->where('estado', 'A')
+                
                 ->get()
                 ->map(function ($admin) {
                     if (!$admin->user) {
@@ -177,32 +177,5 @@ class AdministradoresController extends Controller
         }
     }
 
-    public function deleteAdministrador(int $id)
-    {
-        DB::beginTransaction();
-        try {
-            $administrador = Administradores::find($id);
-
-            if (!$administrador) {
-                return HttpResponseHelper::make()
-                    ->notFoundResponse('Administrador no encontrado')->send();
-            }
-
-            $userId = $administrador->user_id;
-            $administrador->delete();
-
-            if ($userId) {
-                User::find($userId)->delete();
-            }
-
-            DB::commit();
-
-            return HttpResponseHelper::make()
-                ->successfulResponse('Administrador eliminado correctamente')->send();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return HttpResponseHelper::make()
-                ->internalErrorResponse('Error al eliminar: ' . $e->getMessage())->send();
-        }
-    }
+    
 }
