@@ -176,6 +176,4 @@ class AdministradoresController extends Controller
                 ->internalErrorResponse('Error al cambiar estado: ' . $e->getMessage())->send();
         }
     }
-
-    
 }

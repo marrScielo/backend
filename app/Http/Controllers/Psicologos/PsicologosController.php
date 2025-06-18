@@ -93,7 +93,7 @@ class PsicologosController extends Controller
     {
         try {
             $psicologos = Psicologo::with(['especialidades', 'users'])
-                ->where('estado', 'A')
+
                 ->get()
                 ->map(function ($psicologo) {
                     return [
@@ -111,6 +111,7 @@ class PsicologosController extends Controller
                         'horario' => $psicologo->horario,
                         'correo' => $psicologo->users->email,
                         'imagen' => $psicologo->users->imagen,
+                        'estado' => $psicologo->estado,
                     ];
                 });
 
@@ -184,36 +185,42 @@ class PsicologosController extends Controller
 
             if (!$psicologo) {
                 return HttpResponseHelper::make()
-                    ->notFoundResponse('No se encontró un psicólogo con el ID proporcionado.')
+                    ->notFoundResponse('Psicólogo no encontrado')
                     ->send();
             }
 
-            $psicologo->estado = $psicologo->estado === 'I' ? 'A' : 'I';
+            $nuevoEstado = $psicologo->estado === 'A' ? 'I' : 'A';
+            $psicologo->estado = $nuevoEstado;
             $psicologo->save();
 
             return HttpResponseHelper::make()
-                ->successfulResponse('Estado del psicólogo cambiado correctamente a ' . ($psicologo->estado === 'A' ? 'Activo' : 'Inactivo'))
+                ->successfulResponse(
+                    'Estado cambiado a ' . ($nuevoEstado === 'A' ? 'Activo' : 'Inactivo')
+                )
                 ->send();
         } catch (\Exception $e) {
             return HttpResponseHelper::make()
-                ->internalErrorResponse('Ocurrió un problema al cambiar el estado del psicólogo: ' . $e->getMessage())
+                ->internalErrorResponse(
+                    'Error al cambiar estado: ' . $e->getMessage()
+                )
                 ->send();
         }
     }
+
 
     public function psicologoDashboard()
     {
         $userId = Auth::id();
         $psicologo = Psicologo::where('user_id', $userId)->first();
-    
+
         if (!$psicologo) {
             return HttpResponseHelper::make()
                 ->notFoundResponse('No se encontró un psicólogo asociado a este usuario.')
                 ->send();
         }
-    
+
         $idPsicologo = $psicologo->idPsicologo;
-    
+
         // Obtener citas del psicólogo
         $totalCitas = Cita::where('idPsicologo', $idPsicologo)->count();
         $citasCompletadas = Cita::where('idPsicologo', $idPsicologo)->where('estado_Cita', 'completada')->count();
@@ -221,61 +228,35 @@ class PsicologosController extends Controller
         $citasCanceladas = Cita::where('idPsicologo', $idPsicologo)->where('estado_Cita', 'cancelada')->count();
 
         $totalMinutosReservados = Cita::where('idPsicologo', $idPsicologo)
-        ->whereIn('estado_Cita', ['completada', 'pendiente'])  
-        ->sum('duracion'); 
-        
+            ->whereIn('estado_Cita', ['completada', 'pendiente'])
+            ->sum('duracion');
+
         // Total de pacientes únicos
         $totalPacientes = Cita::where('idPsicologo', $idPsicologo)
-        ->whereNotNull('idPaciente')
-        ->distinct('idPaciente')
-        ->count('idPaciente');
+            ->whereNotNull('idPaciente')
+            ->distinct('idPaciente')
+            ->count('idPaciente');
 
         // Nuevos pacientes en los últimos 30 días (por su primera cita)
         $nuevosPacientes = Cita::select('idPaciente')
-        ->where('idPsicologo', $idPsicologo)
-        ->whereNotNull('idPaciente')
-        ->selectRaw('MIN(fecha_Cita) as primera_cita, idPaciente')
-        ->groupBy('idPaciente')
-        ->havingRaw('primera_cita >= ?', [now()->subDays(30)])
-        ->get()
-        ->count();
-    
+            ->where('idPsicologo', $idPsicologo)
+            ->whereNotNull('idPaciente')
+            ->selectRaw('MIN(fecha_Cita) as primera_cita, idPaciente')
+            ->groupBy('idPaciente')
+            ->havingRaw('primera_cita >= ?', [now()->subDays(30)])
+            ->get()
+            ->count();
+
         return HttpResponseHelper::make()
-            ->successfulResponse('Datos del dashboard cargados correctamente',[
-               'total_citas' => $totalCitas,
-            'citas_completadas' => $citasCompletadas,
-            'citas_pendientes' => $citasPendientes,
-            'citas_canceladas' => $citasCanceladas,
-            'total_minutos_reservados' => $totalMinutosReservados,
-            'total_pacientes' => $totalPacientes,
-            'nuevos_pacientes' => $nuevosPacientes, 
+            ->successfulResponse('Datos del dashboard cargados correctamente', [
+                'total_citas' => $totalCitas,
+                'citas_completadas' => $citasCompletadas,
+                'citas_pendientes' => $citasPendientes,
+                'citas_canceladas' => $citasCanceladas,
+                'total_minutos_reservados' => $totalMinutosReservados,
+                'total_pacientes' => $totalPacientes,
+                'nuevos_pacientes' => $nuevosPacientes,
             ])
             ->send();
-    }
-
-    public function DeletePsicologo(int $id)
-    {
-        try {
-
-            $psicologo = Psicologo::find($id);
-            if (!$psicologo) {
-                return HttpResponseHelper::make()
-                    ->notFoundResponse('Psicólogo no encontrado')
-                    ->send();
-            }
-            $user_id = $psicologo->user_id;
-            $psicologo->delete();
-            if ($user_id) {
-                User::find($user_id)->delete();
-            }
-
-            return HttpResponseHelper::make()
-                ->successfulResponse('Psicólogo y usuario eliminados correctamente')
-                ->send();
-        } catch (\Exception $e) {
-            return HttpResponseHelper::make()
-                ->internalErrorResponse('Ocurrió un problema al eliminar el psicólogo: ' . $e->getMessage())
-                ->send();
-        }
     }
 }

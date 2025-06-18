@@ -59,7 +59,7 @@ Route::controller(PsicologosController::class)->prefix('psicologos')->group(func
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
         Route::post('/', 'createPsicologo');
         Route::put('/{id}', 'updatePsicologo');
-        Route::delete('/{id}', 'cambiarEstadoPsicologo');
+        Route::patch('/{id}', 'cambiarEstadoPsicologo');
         Route::get('/dashboard', 'psicologoDashboard');
     });
 });
