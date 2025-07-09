@@ -112,8 +112,11 @@ Route::controller(CitaController::class)->prefix('citas')->group(function () {
         Route::get('/{id}', 'showCitaById');
         Route::put('/{id}', 'updateCita');
         Route::delete('/{id}', 'destroyCita');
+        Route::patch('/{id}/estado',  'updateEstadoCita');
+
     });
 });
+
 Route::controller(RespuestaComentarioController::class)->prefix('respuestas')->group(function () {
     Route::post('/', 'createRespuesta');
     Route::group(['middleware' => ['auth:sanctum', 'role:ADMIN|PSICOLOGO']], function () {
